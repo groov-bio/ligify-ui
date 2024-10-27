@@ -14,6 +14,8 @@ import {
   Button,
   InputLabel,
   FormControl,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -31,6 +33,13 @@ const UserDataForm = () => {
     max_alt_chems: 10,
   });
 
+  // State for API response
+  const [apiResponse, setApiResponse] = useState(null);
+
+  // State for loading and error
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   // Handle changes for the main "smiles" input
   const handleSmilesChange = (e) => {
     setSmiles(e.target.value);
@@ -46,38 +55,55 @@ const UserDataForm = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMessage('');
+    setApiResponse(null);
+
     const dataToSend = {
       smiles,
       filters,
     };
-    console.log('Data to send:', JSON.stringify(dataToSend, null, 2));
-    // TODO: Send the data to the API using fetch or axios
+
+    try {
+      const response = await fetch('https://d317tlrtv3fle4.cloudfront.net/ligify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+
+      const responseData = await response.json();
+      console.log('Response from API:', responseData);
+      setApiResponse(responseData);
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      setErrorMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} style={{ padding: '2rem' }}>
       <Grid container spacing={2}>
-        {/* Smiles Input */}
+        {/* SMILES Input */}
         <Grid item xs={12}>
           <TextField
             label="SMILES"
             variant="outlined"
             fullWidth
-            value={smiles}
+            value={"C=CC(=O)[O-]"}
             onChange={handleSmilesChange}
             required
           />
         </Grid>
-
-        {/* Submit Button */}
-        <Grid item xs={12} mb={5}>
-          <Button variant="contained" color="primary" type="submit">
-            Submit
-          </Button>
-        </Grid>
-      </Grid>
 
         {/* Advanced Parameters Accordion */}
         <Grid item xs={12}>
@@ -186,6 +212,40 @@ const UserDataForm = () => {
           </Accordion>
         </Grid>
 
+        {/* Submit Button */}
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={loading}
+            fullWidth
+            startIcon={loading && <CircularProgress size={20} />}
+          >
+            {loading ? 'Submitting...' : 'Submit'}
+          </Button>
+        </Grid>
+
+        {/* API Response */}
+        {apiResponse && (
+          <Grid item xs={12}>
+            <Alert severity="success">
+              <Typography variant="h6">API Response:</Typography>
+              <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
+            </Alert>
+          </Grid>
+        )}
+
+        {/* Error Message */}
+        {errorMessage && (
+          <Grid item xs={12}>
+            <Alert severity="error">
+              <Typography variant="h6">Error:</Typography>
+              <p>{errorMessage}</p>
+            </Alert>
+          </Grid>
+        )}
+      </Grid>
     </form>
   );
 };
