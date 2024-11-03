@@ -21,7 +21,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const UserDataForm = () => {
   // State for the main "smiles" input
-  const [smiles, setSmiles] = useState('');
+  const [smiles, setSmiles] = useState("C=CC(=O)[O-]");
 
   // State for the advanced filters
   const [filters, setFilters] = useState({
@@ -99,7 +99,7 @@ const UserDataForm = () => {
             label="SMILES"
             variant="outlined"
             fullWidth
-            value={"C=CC(=O)[O-]"}
+            value={smiles}
             onChange={handleSmilesChange}
             required
           />
