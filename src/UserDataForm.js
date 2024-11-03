@@ -67,7 +67,8 @@ const UserDataForm = () => {
     };
 
     try {
-      const response = await fetch('https://d317tlrtv3fle4.cloudfront.net/ligify', {
+      //const response = await fetch('https://d317tlrtv3fle4.cloudfront.net/ligify', {
+      const response = await fetch('http://127.0.0.1:3000/ligify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
