@@ -6,18 +6,21 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
-  Grid,
   Checkbox,
   FormControlLabel,
   Select,
   MenuItem,
   Button,
+  Box,
   InputLabel,
   FormControl,
   Alert,
   CircularProgress,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Metrics from './Metrics.js';
+import RegulatorSelector from './RegulatorSelector.js';
 
 const UserDataForm = () => {
   // State for the main "smiles" input
@@ -35,6 +38,7 @@ const UserDataForm = () => {
 
   // State for API response
   const [apiResponse, setApiResponse] = useState(null);
+
 
   // State for loading and error
   const [loading, setLoading] = useState(false);
@@ -67,7 +71,8 @@ const UserDataForm = () => {
     };
 
     try {
-      const response = await fetch('https://d317tlrtv3fle4.cloudfront.net/ligify', {
+
+      const response = await fetch('https://ligify-api.groov.bio/ligify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +99,7 @@ const UserDataForm = () => {
     <form onSubmit={handleSubmit} style={{ padding: '2rem' }}>
       <Grid container spacing={2}>
         {/* SMILES Input */}
-        <Grid item xs={12}>
+        <Grid size={6} style={{margin: "auto"}}>
           <TextField
             label="SMILES"
             variant="outlined"
@@ -106,7 +111,7 @@ const UserDataForm = () => {
         </Grid>
 
         {/* Advanced Parameters Accordion */}
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -118,7 +123,7 @@ const UserDataForm = () => {
             <AccordionDetails>
               <Grid container spacing={2}>
                 {/* Max Reactions */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <TextField
                     label="Max Reactions"
                     variant="outlined"
@@ -132,7 +137,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Proteins per Reaction */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <TextField
                     label="Proteins per Reaction"
                     variant="outlined"
@@ -146,7 +151,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Reviewed */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -161,7 +166,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Lineage */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <FormControl fullWidth>
                     <InputLabel id="lineage-label">Lineage</InputLabel>
                     <Select
@@ -181,7 +186,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Max Operons */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <TextField
                     label="Max Operons"
                     variant="outlined"
@@ -195,7 +200,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Max Alt Chems */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <TextField
                     label="Max Alternative Chems"
                     variant="outlined"
@@ -213,13 +218,14 @@ const UserDataForm = () => {
         </Grid>
 
         {/* Submit Button */}
-        <Grid item xs={12}>
-          <Button
+        <Grid size={12}  style={{margin: "auto"}}>
+          <Button 
             variant="contained"
+
             color="primary"
             type="submit"
             disabled={loading}
-            fullWidth
+
             startIcon={loading && <CircularProgress size={20} />}
           >
             {loading ? 'Submitting...' : 'Submit'}
@@ -227,14 +233,30 @@ const UserDataForm = () => {
         </Grid>
 
         {/* API Response */}
-        {apiResponse && (
-          <Grid item xs={12}>
-            <Alert severity="success">
-              <Typography variant="h6">API Response:</Typography>
-              <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
-            </Alert>
-          </Grid>
-        )}
+
+        {apiResponse ? 
+
+        <Box>
+
+          <Metrics 
+            metrics={apiResponse["metrics"]}
+          />
+
+
+
+        {/* Start Regulator selection */}
+
+          <RegulatorSelector
+            regulators={apiResponse["regulators"]}
+          />
+
+
+        </Box>
+
+              :
+              <Typography variant="h6">Loading...</Typography>
+
+        }
 
         {/* Error Message */}
         {errorMessage && (

@@ -4,7 +4,7 @@ import UserDataForm from './UserDataForm';
 
 function App() {
   return (
-    <Container maxWidth="sm" sx={{
+    <Container maxWidth="md" sx={{
       justifyContent: 'center',
       display: 'flex',
       flexDirection: 'column',
