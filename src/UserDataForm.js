@@ -20,7 +20,9 @@ import {
 import Grid from '@mui/material/Grid2';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Metrics from './Metrics.js';
-import RegulatorSelector from './RegulatorSelector.js';
+import Regulators from './Regulators.js';
+import RegulatorTable from './RegulatorTable.js';
+import data from './example.json'
 
 const UserDataForm = () => {
   // State for the main "smiles" input
@@ -58,6 +60,15 @@ const UserDataForm = () => {
     }));
   };
 
+
+
+  const handleSubmit2 = async (e) => {
+    e.preventDefault();
+    setApiResponse(data);
+    setLoading(false);
+    console.log('Response from API:', data);
+  }
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,7 +96,7 @@ const UserDataForm = () => {
       }
 
       const responseData = await response.json();
-      console.log('Response from API:', responseData);
+      console.log('Response from API:', JSON.stringify(responseData));
       setApiResponse(responseData);
     } catch (error) {
       console.error('Error submitting data:', error);
@@ -96,7 +107,7 @@ const UserDataForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '2rem' }}>
+    <form onSubmit={handleSubmit2} style={{ padding: '2rem' }}>
       <Grid container spacing={2}>
         {/* SMILES Input */}
         <Grid size={6} style={{margin: "auto"}}>
@@ -217,46 +228,48 @@ const UserDataForm = () => {
           </Accordion>
         </Grid>
 
+
+
+
         {/* Submit Button */}
-        <Grid size={12}  style={{margin: "auto"}}>
+        <Grid container size={12}  
+          justifyContent="center"
+          >
           <Button 
             variant="contained"
-
             color="primary"
             type="submit"
             disabled={loading}
-
             startIcon={loading && <CircularProgress size={20} />}
           >
             {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </Grid>
 
+
+
+
+
         {/* API Response */}
 
         {apiResponse ? 
 
-        <Box>
+        <Box style={{width: "100%"}}>
 
           <Metrics 
             metrics={apiResponse["metrics"]}
           />
 
-
-
-        {/* Start Regulator selection */}
-
-          <RegulatorSelector
+          <RegulatorTable
             regulators={apiResponse["regulators"]}
           />
 
-
         </Box>
-
               :
-              <Typography variant="h6">Loading...</Typography>
-
+              <></>
         }
+
+
 
         {/* Error Message */}
         {errorMessage && (

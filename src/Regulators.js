@@ -1,4 +1,4 @@
-// src/RegulatorSelector.js
+// src/Regulators.js
 import React, { useState } from 'react';
 import {
     Box,
@@ -7,25 +7,15 @@ import {
   } from '@mui/material';
   import Grid from '@mui/material/Grid2';
   
-  export default function RegulatorSelector({regulators}) {
+  export default function Regulators({regulators}) {
   
       // State for selected regulator
       const [Regulator, setRegulator] = useState(null);
 
       return (
-        
-        <Box
-              sx={{
-                border: '1px solid black',
-                padding: '1rem',
-                width: '100%',
-                boxSizing: 'border-box',
-              }}
-            >
+  
 
       <Grid container size={12} style={{border:"1px solid black"}}>
-
-        <Grid container size={6} style={{border:"1px solid black"}}>
 
           <Grid size={12} style={{ border:"1px solid black", display:"inline"}}>
             <Typography style={{fontSize:20}}>Sensor candidates</Typography>
@@ -43,14 +33,24 @@ import {
                   </Button>
                 </Grid>
           ))}
-        </Grid>
         </Grid>       
 
 
         {/* End Regulator selection */}
 
 
-        <Grid container size={6} style={{border:"1px solid black"}}>
+
+
+
+
+
+
+
+
+
+
+
+        <Grid container size={12} style={{border:"1px solid black"}}>
           {Regulator ? 
 
           <Grid >
@@ -65,7 +65,6 @@ import {
         </Grid>
 
         </Grid>
-        </Box>
   
       );
   };
