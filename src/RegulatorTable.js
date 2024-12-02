@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 // import { Link, Routes, Route } from 'react-router-dom';
 
-// import SensorPage from './Sensor_Components/SensorPage.js';
+import RegulatorPage from './Regulator_Components/RegulatorPage.js';
 
 import { Box, Grid, Button, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -82,10 +82,11 @@ export default function RegulatorTable(regulators) {
 
         // incorporate scroll function here too
         <Button onClick={() => { setRegulator(params.value) }}>
-            {params.value}
+            {params.value.refseq}
         </Button>
       ),
     },
+    // { field: 'refseq', headerName: 'RefSeq', width: 160 },
     { field: 'rank', headerName: 'Rank', width: 70 },
     { field: 'enzyme', headerName: 'Enzyme', width: 250 },
   ];
@@ -116,8 +117,8 @@ export default function RegulatorTable(regulators) {
       for (var index in regulators['regulators']) {
         var reg = regulators['regulators'][index]
         var entry = {
-          id: counter,
-          refseq: reg.refseq,
+          id: index,
+          refseq: reg,
           rank: reg.rank.rank,
           enzyme: reg.protein.enzyme.description,
         };
@@ -170,22 +171,33 @@ export default function RegulatorTable(regulators) {
       {/* Regulator Table  */}
       <Box
         sx={{
-          height: 300,
+          width: "100%"
         }}
       >
         <DataGrid
           rows={rows}
           columns={columns}
-          autoPageSize
+          autoHeight={true}
           rowsPerPageOptions={[5]}
           density="compact"
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                // Hide id column
+                id: false,
+              },
+            },
+          }}
         />
       </Box>
 
 
 
     {regulator ?
-            <Typography>{regulator}</Typography>
+            <RegulatorPage
+                data={regulator}
+            />
+            // <Typography>{regulator.refseq}</Typography>
             :
             <Typography>Please select a regulator</Typography>
     }

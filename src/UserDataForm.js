@@ -20,7 +20,6 @@ import {
 import Grid from '@mui/material/Grid2';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Metrics from './Metrics.js';
-import Regulators from './Regulators.js';
 import RegulatorTable from './RegulatorTable.js';
 import data from './example.json'
 
