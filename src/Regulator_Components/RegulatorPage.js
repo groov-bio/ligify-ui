@@ -49,7 +49,7 @@ import {
       <Grid container size={12} mt={3}>
 
           <Grid size={6} mb={5}>
-            <Typography mb={3} style={{fontSize:20}}>Regulator Information</Typography>
+            <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Regulator</Typography>
 
           <RegulatorAttributes
             data={data}/>
@@ -59,7 +59,7 @@ import {
 
 
           <Grid size={6} mb={5}>
-            <Typography mb={3} style={{fontSize:20}}>Enzyme Information</Typography>
+            <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Enzyme</Typography>
 
             <EnzymeAttributes
             data={data}/>
@@ -69,7 +69,7 @@ import {
 
 
           <Grid size={6}>
-            <Typography mb={3} style={{fontSize:20}}>Rank Description</Typography>
+            <Typography mb={3} style={{fontSize:20, textAlign:"center"}}>Rank</Typography>
 
             <Rank
             data={data}/>
@@ -79,7 +79,7 @@ import {
 
 
           <Grid size={6}>
-            <Typography mb={3} style={{fontSize:20}}>Alternative Ligands</Typography>
+            <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Alternative Ligands</Typography>
 
             <AltLigands
             data={data}/>
