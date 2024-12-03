@@ -106,22 +106,28 @@ const UserDataForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit2} style={{ padding: '2rem' }}>
+    <form onSubmit={handleSubmit2} style={{ padding: '2rem', maxWidth:'90%' }}>
       <Grid container spacing={2}>
         {/* SMILES Input */}
-        <Grid size={6} style={{margin: "auto"}}>
+
+        <Grid size={12} 
+            display="flex"
+            justifyContent='center'>
           <TextField
             label="SMILES"
             variant="outlined"
-            fullWidth
+            width="300px"
             value={smiles}
             onChange={handleSmilesChange}
             required
           />
         </Grid>
 
+
         {/* Advanced Parameters Accordion */}
-        <Grid size={12}>
+              {/* Spacer */}
+            <Grid size={{xs:0, sm:1, md:2, lg:3}}></Grid>
+        <Grid size={{xs:12, sm:10, md:8, lg:6}} >
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -253,7 +259,10 @@ const UserDataForm = () => {
 
         {apiResponse ? 
 
-        <Box style={{width: "100%"}}>
+        <>
+              {/* Spacer */}
+              <Grid size={{xs:0, sm:1, md:2}}></Grid>
+        <Grid size={{xs:12, sm:10, md:8}}>
 
           <Metrics 
             metrics={apiResponse["metrics"]}
@@ -263,7 +272,9 @@ const UserDataForm = () => {
             regulators={apiResponse["regulators"]}
           />
 
-        </Box>
+        </Grid>
+        </>
+
               :
               <></>
         }

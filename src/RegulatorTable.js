@@ -3,8 +3,9 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import RegulatorPage from './Regulator_Components/RegulatorPage.js';
 
-import { Box, Grid, Button, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import Grid from '@mui/material/Grid2';
 
 // import useSensorStore from '../zustand/sensor.store.js';
 
@@ -12,52 +13,8 @@ import { DataGrid } from '@mui/x-data-grid';
 export default function RegulatorTable(regulators) {
   const [rows, setRows] = useState([]);
   const [regulator, setRegulator] = useState(null);
-//   const [sensorRouteList, setSensorRouteList] = useState(null);
-//   const [sensorTable, setSensorTable] = useState(regulators);
-
-
-
-  // access data from zustand store
-//   const setSensorTable = useSensorStore((context) => context.setSensorTable);
-//   const sensorTable = useSensorStore(
-//     (context) => context.sensorTable[props.family.toLowerCase()]
-//   );
-
   const scrollRef = useRef(null);
 
-
-
-//   useEffect(() => {
-
-//     alert(regulator);
-
-//       }, [regulator]);
-
-
-//     console.log(regulators);
-//     setSensorTable(regulators);
-
-
-    // Only fetch if the data isn't already loaded in the zustand store
-    // if (sensorTable.length === 0) {
-    //   fetch(
-    //     'https://4lsuwlkqoe.execute-api.us-east-2.amazonaws.com/getPages?family=' +
-    //       props.family.toUpperCase(),
-
-    //     {
-    //       headers: {
-    //         Accept: 'application/json',
-    //       },
-    //     }
-    //   )
-    //     .then((res) => res.json())
-    //     .then((sensorData) => {
-    //       setSensorTable(props.family.toLowerCase(), sensorData['data']);
-    //     });
-    // }
-
-
-//   }, [regulators]);
 
   /* scroll function */
   const executeScroll = () => {
@@ -87,8 +44,8 @@ export default function RegulatorTable(regulators) {
       ),
     },
     // { field: 'refseq', headerName: 'RefSeq', width: 160 },
-    { field: 'rank', headerName: 'Rank', width: 70 },
-    { field: 'enzyme', headerName: 'Enzyme', width: 250 },
+    { field: 'rank', headerName: 'Rank', width: 70, color:'red'},
+    { field: 'enzyme', headerName: 'Enzyme', width: 350 },
   ];
 
 //   const selectionPrompt = () => {
@@ -124,25 +81,9 @@ export default function RegulatorTable(regulators) {
         };
         rowsToAdd.push(entry);
 
-        // sensorRouteList.push(
-        //   <Route
-        //     key={counter}
-        //     path={sensorTable[reg].alias}
-        //     element={
-        //       <SensorPage
-        //         sensorID={sensorTable[reg].uniprotID}
-        //         family={props.family}
-        //         dimensions={props.dimensions}
-        //         temp={false}
-        //       />
-        //     }
-        //   />
-        // );
-
         counter += 1;
-    //   }
+
       setRows(rowsToAdd);
-    //   setSensorRouteList(sensorRouteList);
     }
   }, []);
 
@@ -156,19 +97,7 @@ export default function RegulatorTable(regulators) {
       justify="center"
       sx={{ mt: 5 }}
     >
-      {/* Family Name  */}
-      {/* <Typography
-        component="div"
-        gutterBottom
-        sx={{
-          fontSize: { xs: 30, sm: 55 },
-          fontWeight: 300,
-        }}
-      >
-        {regulator}
-      </Typography> */}
 
-      {/* Regulator Table  */}
       <Box
         sx={{
           width: "100%"
@@ -197,28 +126,10 @@ export default function RegulatorTable(regulators) {
             <RegulatorPage
                 data={regulator}
             />
-            // <Typography>{regulator.refseq}</Typography>
             :
-            <Typography>Please select a regulator</Typography>
+            <Typography mt={5} mb={10} sx={{fontSize:20}}><i>Please select a regulator</i></Typography>
     }
 
-
-      {/* Sensor Page Placeholder  */}
-      {/* <Box
-        sx={{
-          width: '95%',
-          mt: 2,
-        }}
-        ref={scrollRef}
-      >
-        <Typography>Please select a regulator</Typography> */}
-{/*         
-                <Routes>
-          <Route path="/" element={selectionPrompt()} />
-
-          {sensorRouteList}
-        </Routes> */}
-      {/* </Box> */}
     </Grid>
   );
 }

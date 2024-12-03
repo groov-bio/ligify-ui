@@ -30,12 +30,16 @@ import {
     return (
 
       <Box>
-        <Typography sx={{textAlign: "center", fontSize:24}} mb={1}>
-          {data.rank.rank}
+        <Typography sx={{textAlign: "center", fontSize:24, color:data.rank.color }} mb={1}>
+          <b>{data.rank.rank}</b>
         </Typography>
 
       <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 200 }}  aria-label="simple table">
+      <Table sx={{ minWidth: 200, 
+                  '& .MuiTableCell-root': {
+                    padding: '9px', // Customize your padding here
+                  },
+      }}  aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell align="left"><b>Metric</b></TableCell>

@@ -11,8 +11,8 @@ export default function Metrics({metrics}) {
 
     return (
 
-        <Grid container >
-        <Grid size={12} >
+        <Grid container mt={3}>
+        <Grid size={12} mb={1}>
             <Typography variant="h6">Search metrics</Typography>
         </Grid>
         <Grid size={3}>

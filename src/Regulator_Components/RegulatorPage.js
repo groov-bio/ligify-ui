@@ -1,9 +1,7 @@
-// src/Regulators.js
-import React, { useState } from 'react';
+// src/RegulatorPage.js
 import {
     Box,
     Button,
-    Link,
     Typography,
   } from '@mui/material';
   import Grid from '@mui/material/Grid2';
@@ -11,7 +9,7 @@ import {
   import RegulatorAttributes from "./RegulatorAttributes.js"
   import EnzymeAttributes from "./EnzymeAttributes.js"
   import Rank from "./Rank.js"
-  import AltLigands from "./AltLigands.js"
+  import CandidateLigands from "./CandidateLigands.js"
 
   export default function RegulatorPage({data}) {
   
@@ -20,16 +18,16 @@ import {
       return (
   
       <Box style={{width:"100%"}}>
-      <Grid container size={12}>
+      <Grid container size={12} mb={6}>
 
           <Grid size={12} mt={3} textAlign="center">
             <Typography style={{fontSize:28}}>{data.refseq}</Typography>
           </Grid>
 
-          <Grid size={12} mt={3}  mb={3} textAlign="center">
+          <Grid size={12} mt={3}  mb={2} textAlign="center">
           <Button 
             variant="contained"
-            color="primary"
+            color="secondary"
             type="submit"
             style={{fontSize:12}}
             // disabled={loading}
@@ -40,15 +38,24 @@ import {
           </Button>
           </Grid>
 
-        </Grid>
+          <Grid size={{xs:0, sm:1, md:2, lg:3}}></Grid>
+          <Grid
+            size={{xs:12, sm:10, md:8, lg:6}}
+            display="flex"
+            justifyContent="center">
+            <Typography align="center" sx={{fontSize:15}}>
+              Designed to induce GFP expression in the presence of the target molecule within E. coli
+            </Typography>
+          </Grid>
 
+        </Grid>
 
 
 
 
       <Grid container size={12} mt={3}>
 
-          <Grid size={6} mb={5}>
+          <Grid size={{xs:12,md:6}} mb={6}>
             <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Regulator</Typography>
 
           <RegulatorAttributes
@@ -58,7 +65,7 @@ import {
 
 
 
-          <Grid size={6} mb={5}>
+          <Grid size={{xs:12,md:6}} mb={6}>
             <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Enzyme</Typography>
 
             <EnzymeAttributes
@@ -68,7 +75,7 @@ import {
 
 
 
-          <Grid size={6}>
+          <Grid size={{xs:12,md:6}} mb={6}>
             <Typography mb={3} style={{fontSize:20, textAlign:"center"}}>Rank</Typography>
 
             <Rank
@@ -78,10 +85,10 @@ import {
 
 
 
-          <Grid size={6}>
-            <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Alternative Ligands</Typography>
+          <Grid size={{xs:12,md:6}} mb={6}>
+            <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Candidate Ligands</Typography>
 
-            <AltLigands
+            <CandidateLigands
             data={data}/>
 
           </Grid>

@@ -1,15 +1,12 @@
-// src/Regulators.js
-import React, { useState } from 'react';
+// src/CandidateLigands.js
 import {
-    Box,
-    Button,
-    Link,
+
     Typography,
   } from '@mui/material';
   import Grid from '@mui/material/Grid2';
 
 
-  export default function AltLigands({data}) {
+  export default function CandidateLigands({data}) {
 
 
     return (
