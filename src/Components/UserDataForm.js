@@ -21,7 +21,7 @@ import Grid from '@mui/material/Grid2';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Metrics from './Metrics.js';
 import RegulatorTable from './RegulatorTable.js';
-import data from './example.json'
+import data from '../example.json'
 
 const UserDataForm = () => {
   // State for the main "smiles" input

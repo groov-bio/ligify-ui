@@ -10,6 +10,8 @@ import {
   import EnzymeAttributes from "./EnzymeAttributes.js"
   import Rank from "./Rank.js"
   import CandidateLigands from "./CandidateLigands.js"
+  import GenomeContext from "./GenomeContext.js"
+  import PredictedPromoter from "./PredictedPromoter.js"
 
   export default function RegulatorPage({data}) {
   
@@ -90,6 +92,22 @@ import {
 
             <CandidateLigands
             data={data}/>
+
+          </Grid>
+
+
+          <Grid size={12} mb={6}>
+            <Typography mb={3} mt={2} style={{fontSize:20, textAlign: "center"}}>Operon</Typography>
+
+            <GenomeContext
+            data={data.protein.context}/>
+
+          </Grid>
+
+          <Grid size={12} mb={6}>
+              <Typography mb={3} mt={2} style={{fontSize:20, textAlign: "center"}}>Predicted Promoter</Typography>
+            <PredictedPromoter
+            promoter={data.protein.context.promoter.regulated_seq}/>
 
           </Grid>
 
