@@ -14,7 +14,7 @@ import {
         <Grid container mt={7}>
           {/* {(data.protein.enzyme.dois).map((name, index) => ( */}
             {(data.alt_ligands).map((name, index) => (
-              <Grid item key={index} width={"100%"}>
+              <Grid key={index} width={"100%"}>
                 <Typography ml={'30%'} textAlign="left" style={{fontSize: "18px"}}>{name}</Typography>
               </Grid>
             ))}

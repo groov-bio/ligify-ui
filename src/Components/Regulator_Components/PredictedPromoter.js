@@ -1,13 +1,9 @@
 //PredictedPromoter.js
 
 import {
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
     Typography,
   } from '@mui/material';
   import Grid from '@mui/material/Grid2';
-  import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   
   export default function PredictedPromoter({ promoter }) {
   

@@ -24,12 +24,12 @@ import {
 
         {Object.keys(reg_attr).map((key, index) => (
 
-        <Grid item size={12} 
+        <Grid size={12} 
             key={index} 
             mb={1}>
               <Grid container>
 
-                <Grid item xs={6} textAlign="right">
+                <Grid xs={6} textAlign="right">
                   <Typography
                     component="div"
                     width="100px"
@@ -43,7 +43,7 @@ import {
                   </Typography>
                 </Grid>
 
-                <Grid item xs={5} textAlign="left" ml={'15px'} >
+                <Grid xs={5} textAlign="left" ml={'15px'} >
                 {reg_attr[key]["link"] != "None" ?
                   <Link
                         href={reg_attr[key]["link"]}
@@ -92,7 +92,7 @@ import {
 
                 {/* Enzyme references */}
 
-                <Grid item xs={6} textAlign="right">
+                <Grid xs={6} textAlign="right">
                   <Typography
                     component="div"
                     width="100px"
@@ -108,7 +108,7 @@ import {
 
 
           {(data.protein.enzyme.dois).map((name, index) => (
-                <Grid item xs={5} textAlign="left" ml={'15px'} key={index}>
+                <Grid xs={5} textAlign="left" ml={'15px'} key={index}>
                 <Link
                         href={"https://doi.org/"+{name}}
                         target="_blank"

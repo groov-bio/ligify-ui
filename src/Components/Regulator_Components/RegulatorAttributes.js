@@ -23,12 +23,12 @@ import {
 
         {Object.keys(reg_attr).map((key, index) => (
 
-        <Grid item size={12} 
+        <Grid size={12} 
             key={index} 
             mb={1}>
               <Grid container>
 
-                <Grid item xs={6} textAlign="right">
+                <Grid xs={6} textAlign="right">
                   <Typography
                     component="div"
                     width="100px"
@@ -43,7 +43,7 @@ import {
                 </Grid>
 
                     {/* Overflow text onto two lines */}
-                <Grid item xs={5} textAlign="left" ml={'15px'} 
+                <Grid xs={5} textAlign="left" ml={'15px'} 
                             >
                 {reg_attr[key]["link"] != "None" ?
                   <Link

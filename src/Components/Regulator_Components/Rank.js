@@ -20,7 +20,6 @@ import {
       return { name, value, deduction };
     }
 
-    console.log(data.rank.metrics["Genes within operon"].value)
     const rows = [
       createData('Genes in operon', data.rank.metrics["Genes within operon"].Value, data.rank.metrics["Genes within operon"].Deduction),
       createData('Enzyme-regulator distance', data.rank.metrics["Enzyme-regulator distance"].Value, data.rank.metrics["Enzyme-regulator distance"].Deduction),
