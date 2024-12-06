@@ -6,22 +6,26 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
-  Grid,
   Checkbox,
   FormControlLabel,
   Select,
   MenuItem,
   Button,
+  Box,
   InputLabel,
   FormControl,
   Alert,
   CircularProgress,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Metrics from './Metrics.js';
+import RegulatorTable from './RegulatorTable.js';
+import data from '../example.json'
 
 const UserDataForm = () => {
   // State for the main "smiles" input
-  const [smiles, setSmiles] = useState('');
+  const [smiles, setSmiles] = useState("C=CC(=O)[O-]");
 
   // State for the advanced filters
   const [filters, setFilters] = useState({
@@ -35,6 +39,7 @@ const UserDataForm = () => {
 
   // State for API response
   const [apiResponse, setApiResponse] = useState(null);
+
 
   // State for loading and error
   const [loading, setLoading] = useState(false);
@@ -54,6 +59,15 @@ const UserDataForm = () => {
     }));
   };
 
+
+
+  const handleSubmit2 = async (e) => {
+    e.preventDefault();
+    setApiResponse(data);
+    setLoading(false);
+    console.log('Response from API:', data);
+  }
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,8 +81,9 @@ const UserDataForm = () => {
     };
 
     try {
-      //const response = await fetch('https://d317tlrtv3fle4.cloudfront.net/ligify', {
-      const response = await fetch('http://127.0.0.1:3000/ligify', {
+
+      const response = await fetch('https://ligify-api.groov.bio/ligify', {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +96,7 @@ const UserDataForm = () => {
       }
 
       const responseData = await response.json();
-      console.log('Response from API:', responseData);
+      console.log('Response from API:', JSON.stringify(responseData));
       setApiResponse(responseData);
     } catch (error) {
       console.error('Error submitting data:', error);
@@ -92,22 +107,28 @@ const UserDataForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '2rem' }}>
+    <form onSubmit={handleSubmit2} style={{ padding: '2rem', maxWidth:'90%' }}>
       <Grid container spacing={2}>
         {/* SMILES Input */}
-        <Grid item xs={12}>
+
+        <Grid size={12} 
+            display="flex"
+            justifyContent='center'>
           <TextField
             label="SMILES"
             variant="outlined"
-            fullWidth
-            value={"C=CC(=O)[O-]"}
+            width="300px"
+            value={smiles}
             onChange={handleSmilesChange}
             required
           />
         </Grid>
 
+
         {/* Advanced Parameters Accordion */}
-        <Grid item xs={12}>
+              {/* Spacer */}
+            <Grid size={{xs:0, sm:1, md:2, lg:3}}></Grid>
+        <Grid size={{xs:12, sm:10, md:8, lg:6}} >
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -119,7 +140,7 @@ const UserDataForm = () => {
             <AccordionDetails>
               <Grid container spacing={2}>
                 {/* Max Reactions */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <TextField
                     label="Max Reactions"
                     variant="outlined"
@@ -133,7 +154,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Proteins per Reaction */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <TextField
                     label="Proteins per Reaction"
                     variant="outlined"
@@ -147,7 +168,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Reviewed */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -162,7 +183,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Lineage */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <FormControl fullWidth>
                     <InputLabel id="lineage-label">Lineage</InputLabel>
                     <Select
@@ -182,7 +203,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Max Operons */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <TextField
                     label="Max Operons"
                     variant="outlined"
@@ -196,7 +217,7 @@ const UserDataForm = () => {
                 </Grid>
 
                 {/* Max Alt Chems */}
-                <Grid item xs={12} sm={6}>
+                <Grid size={6}>
                   <TextField
                     label="Max Alternative Chems"
                     variant="outlined"
@@ -213,29 +234,53 @@ const UserDataForm = () => {
           </Accordion>
         </Grid>
 
+
+
+
         {/* Submit Button */}
-        <Grid item xs={12}>
-          <Button
+        <Grid container size={12}  
+          justifyContent="center"
+          >
+          <Button 
             variant="contained"
             color="primary"
             type="submit"
             disabled={loading}
-            fullWidth
             startIcon={loading && <CircularProgress size={20} />}
           >
             {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </Grid>
 
+
+
+
+
         {/* API Response */}
-        {apiResponse && (
-          <Grid item xs={12}>
-            <Alert severity="success">
-              <Typography variant="h6">API Response:</Typography>
-              <pre>{JSON.stringify(apiResponse, null, 2)}</pre>
-            </Alert>
-          </Grid>
-        )}
+
+        {apiResponse ? 
+
+        <>
+              {/* Spacer */}
+              <Grid size={{xs:0, sm:1, md:2}}></Grid>
+        <Grid size={{xs:12, sm:10, md:8}}>
+
+          <Metrics 
+            metrics={apiResponse["metrics"]}
+          />
+
+          <RegulatorTable
+            regulators={apiResponse["regulators"]}
+          />
+
+        </Grid>
+        </>
+
+              :
+              <></>
+        }
+
+
 
         {/* Error Message */}
         {errorMessage && (
