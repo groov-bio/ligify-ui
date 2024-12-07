@@ -1,4 +1,4 @@
-// src/Regulators.js
+// src/EnzymeAttributes.js
 import React, { useState } from 'react';
 import {
     Box,
@@ -107,8 +107,9 @@ import {
                 </Grid>
 
 
+                <Grid xs={5} >
           {(data.protein.enzyme.dois).map((name, index) => (
-                <Grid xs={5} textAlign="left" ml={'15px'} key={index}>
+                <Grid xs={12} textAlign="left" ml={'15px'} key={index}>
                 <Link
                         href={"https://doi.org/"+{name}}
                         target="_blank"
@@ -125,6 +126,7 @@ import {
                     </Link>
                 </Grid>
           ))}
+              </Grid>
 
 
         </Grid>

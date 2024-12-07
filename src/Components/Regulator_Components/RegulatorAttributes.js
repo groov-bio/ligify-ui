@@ -1,4 +1,4 @@
-// src/Regulators.js
+// src/RegulatorAttributes.js
 import React, { useState } from 'react';
 import {
     Box,
