@@ -12,6 +12,7 @@ import {
   import CandidateLigands from "./CandidateLigands.js"
   import GenomeContext from "./GenomeContext.js"
   import PredictedPromoter from "./PredictedPromoter.js"
+  import Structure from "./Structure.js"
 
   export default function RegulatorPage({data}) {
   
@@ -62,6 +63,9 @@ import {
 
           <RegulatorAttributes
             data={data}/>
+          <Structure
+            accession={data.uniprot_reg_data.id}
+          />
 
           </Grid>
 

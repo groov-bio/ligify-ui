@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Typography, Box } from '@mui/material';
 import UserDataForm from './Components/UserDataForm.js';
-import Grid from '@mui/material/Grid2';
 
 function App() {
   return (

@@ -96,7 +96,7 @@ const UserDataForm = () => {
       }
 
       const responseData = await response.json();
-      console.log('Response from API:', JSON.stringify(responseData));
+      console.log('Response from API:', responseData);
       setApiResponse(responseData);
     } catch (error) {
       console.error('Error submitting data:', error);
