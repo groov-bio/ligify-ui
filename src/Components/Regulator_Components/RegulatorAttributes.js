@@ -15,7 +15,8 @@ import {
     const reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
                         "RefSeq ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
                         "Uniprot ID": {"name": data.uniprot_reg_data.id, "link":"https://www.uniprot.org/uniprotkb/"+(data.uniprot_reg_data.id).toString()},
-                        "Organism": {"name":data.protein.organism[5], "link":"None"} }
+                        // "Organism": {"name":data.protein.organism[5], "link":"None"} 
+                      }
 
       return (
 
@@ -23,7 +24,9 @@ import {
 
         {Object.keys(reg_attr).map((key, index) => (
 
-        <Grid size={12} 
+        <>
+        <Grid size={{sm:0,md:3}}></Grid>
+        <Grid size={{sm:12, md:8}} 
             key={index} 
             mb={1}>
               <Grid container>
@@ -76,6 +79,7 @@ import {
 
               </Grid>
             </Grid>
+            </>
 
                 )
             )}

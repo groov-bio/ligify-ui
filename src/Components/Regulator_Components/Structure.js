@@ -38,6 +38,18 @@ export default function Structure({ accession }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container style={{ width: '100%' }}>
+
+    {/* Component Title */}
+      <Grid size={12}>
+          <Typography
+            component="div"
+            style={{ marginLeft: '5%', fontSize: 22, fontWeight: 300 }}
+          >
+            Predicted Structure
+          </Typography>
+        </Grid>
+
+
         <Grid size={12}>
           {isLoading ? (
             <Typography variant="h6">Loading...</Typography>

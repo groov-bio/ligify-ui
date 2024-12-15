@@ -3,16 +3,18 @@ import {
     Box,
     Button,
     Typography,
+    Paper
   } from '@mui/material';
   import Grid from '@mui/material/Grid2';
 
   import RegulatorAttributes from "./RegulatorAttributes.js"
   import EnzymeAttributes from "./EnzymeAttributes.js"
   import Rank from "./Rank.js"
-  import CandidateLigands from "./CandidateLigands.js"
+  // import CandidateLigands from "./CandidateLigands.js"
   import GenomeContext from "./GenomeContext.js"
   import PredictedPromoter from "./PredictedPromoter.js"
   import Structure from "./Structure.js"
+  import LigandViewer from "./LigandViewer.js"
 
   export default function RegulatorPage({data}) {
   
@@ -58,31 +60,62 @@ import {
 
       <Grid container size={12} mt={3}>
 
-          <Grid size={{xs:12,md:6}} mb={6}>
-            <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Regulator</Typography>
+      <Grid size={12} mb={6} > 
+        <RegulatorAttributes
+        data={data}/>
+      </Grid>
 
-          <RegulatorAttributes
-            data={data}/>
+
+      <Grid size={{xs:12,md:6}} mb={9}>
+        <LigandViewer
+              ligand={[{"SMILES":"C=CC(=O)[O-]","name":"Acrylate"},{"SMILES":"C=CC(=O)[O-]","name":"Acrylate"}]}/>
+      </Grid>
+
+      <Grid size={{xs:12,md:6}} mb={9}>
           <Structure
             accession={data.uniprot_reg_data.id}
           />
-
-          </Grid>
-
+      </Grid>
 
 
-          <Grid size={{xs:12,md:6}} mb={6}>
-            <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Enzyme</Typography>
 
+          <Grid size={{xs:12,md:6}} mb={9} mr={{xs:0, md:7}}>
+                    {/* Component Title */}
+        <Grid size={12} >
+          <Typography
+            component="div"
+            mb={1}
+            style={{ marginLeft: '5%', fontSize: 22, fontWeight: 300 }}
+          >
+            Associated Enzyme
+          </Typography>
+        </Grid>
+            {/* <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Enzyme</Typography> */}
+
+            <Paper
+            elevation={0}
+            sx={{
+              border: '1px solid #c7c7c7',
+              padding: '10px'
+            }}
+          >
             <EnzymeAttributes
             data={data}/>
+          </Paper>
 
           </Grid>
 
 
 
-          <Grid size={{xs:12,md:6}} mb={6}>
-            <Typography mb={3} style={{fontSize:20, textAlign:"center"}}>Rank</Typography>
+          <Grid size={{xs:12,md:5}} mb={9}>
+            {/* <Typography mb={3} style={{fontSize:20, textAlign:"center"}}>Rank</Typography> */}
+            <Typography
+            component="div"
+            mb={3}
+            style={{ marginLeft: '5%', fontSize: 22, fontWeight: 300 }}
+          >
+            Rank
+          </Typography>
 
             <Rank
             data={data}/>
@@ -91,17 +124,26 @@ import {
 
 
 
-          <Grid size={{xs:12,md:6}} mb={6}>
+          {/* <Grid size={{xs:12,md:6}} mb={6}>
             <Typography mb={3} style={{fontSize:20, textAlign: "center"}}>Candidate Ligands</Typography>
 
             <CandidateLigands
             data={data}/>
 
-          </Grid>
+          </Grid> */}
 
 
           <Grid size={12} mb={6}>
-            <Typography mb={3} mt={2} style={{fontSize:20, textAlign: "center"}}>Operon</Typography>
+            {/* <Typography mb={3} mt={2} style={{fontSize:20, textAlign: "center"}}>Operon</Typography> */}
+            <Grid size={12} >
+          <Typography
+            component="div"
+            mb={3}
+            style={{ marginLeft: '5%', fontSize: 22, fontWeight: 300 }}
+          >
+            Operon
+          </Typography>
+        </Grid>
 
             <GenomeContext
             data={data.protein.context}/>
