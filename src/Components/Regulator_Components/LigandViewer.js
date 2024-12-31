@@ -26,10 +26,10 @@ export default function LigandViewer({ ligand }) {
   useEffect(() => {
     if (
       ligand[ligandNumber - 1] !== undefined &&
-      ligand[ligandNumber - 1].SMILES !== ''
+      ligand[ligandNumber - 1].smiles !== ''
     ) {
       setLigandName(ligand[ligandNumber - 1]['name']);
-      let ligandSMILES = ligand[ligandNumber - 1]['SMILES'];
+      let ligandSMILES = ligand[ligandNumber - 1]['smiles'];
       console.log(ligandSMILES);
 
 
@@ -66,7 +66,7 @@ export default function LigandViewer({ ligand }) {
   useEffect(() => {
     let temp = [];
     for (let i = 0; i < ligand.length; i++) {
-      if (ligand[i].SMILES === '') {
+      if (ligand[i].smiles === '') {
         temp.push(false);
       } else {
         temp.push(true);

@@ -19,6 +19,36 @@ import {
   export default function RegulatorPage({data}) {
   
 
+    const handleDownload = () => {
+      const plasmid = data.plasmid_sequence
+  
+      // Define the file name and type
+      const fileName = data.refseq+'_plasmid.gb';
+      const mimeType = 'text/plain';
+  
+      // Create a Blob from the plasmid sequence
+      const blob = new Blob([plasmid], { type: mimeType });
+  
+      // Create a URL for the Blob
+      const url = URL.createObjectURL(blob);
+  
+      // Create a temporary anchor element
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+  
+      // Append the anchor to the body
+      document.body.appendChild(a);
+  
+      // Programmatically click the anchor to trigger the download
+      a.click();
+  
+      // Clean up by removing the anchor and revoking the object URL
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    };
+
+
 
       return (
   
@@ -35,6 +65,7 @@ import {
             color="secondary"
             type="submit"
             style={{fontSize:12}}
+            onClick={handleDownload}
             // disabled={loading}
             // startIcon={loading && <CircularProgress size={20} />}
           >
@@ -68,7 +99,9 @@ import {
 
       <Grid size={{xs:12,md:6}} mb={9}>
         <LigandViewer
-              ligand={[{"SMILES":"C=CC(=O)[O-]","name":"Acrylate"},{"SMILES":"C=CC(=O)[O-]","name":"Acrylate"}]}/>
+              ligand={ data.candidate_ligands
+                // [{"SMILES":"C=CC(=O)[O-]","name":"Acrylate"},{"SMILES":"C=CC(=O)[O-]","name":"Acrylate"}]
+                }/>
       </Grid>
 
       <Grid size={{xs:12,md:6}} mb={9}>
