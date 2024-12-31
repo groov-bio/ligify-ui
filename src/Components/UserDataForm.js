@@ -21,6 +21,8 @@ import Grid from '@mui/material/Grid2';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Metrics from './Metrics.js';
 import RegulatorTable from './RegulatorTable.js';
+
+// This is a cached data file for testing purposes. Not necessary for production
 import data from '../example.json'
 
 const UserDataForm = () => {
@@ -60,7 +62,7 @@ const UserDataForm = () => {
   };
 
 
-
+  // Used for testing purposes. Fetches data from a cached result
   const handleSubmit2 = async (e) => {
     e.preventDefault();
     setApiResponse(data);
@@ -107,7 +109,7 @@ const UserDataForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit2} style={{ padding: '2rem', maxWidth:'90%' }}>
+    <form onSubmit={handleSubmit} style={{ padding: '2rem', maxWidth:'90%' }}>
       <Grid container spacing={2}>
         {/* SMILES Input */}
 
