@@ -14,8 +14,8 @@ import {
     // format the data to display regulator attributes
     const reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
                         "RefSeq ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
-                        "Uniprot ID": {"name": data.uniprot_reg_data.id, "link":"https://www.uniprot.org/uniprotkb/"+(data.uniprot_reg_data.id).toString()},
-                        // "Organism": {"name":data.protein.organism[5], "link":"None"} 
+                        // "Uniprot ID": {"name": data.uniprot_reg_data.id, "link":"https://www.uniprot.org/uniprotkb/"+(data.uniprot_reg_data.id).toString()},
+                        "Organism": {"name":data.protein.organism[5], "link":"None"} 
                       }
 
       return (

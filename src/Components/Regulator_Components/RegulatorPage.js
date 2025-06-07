@@ -100,13 +100,13 @@ import {
       <Grid size={{xs:12,md:6}} mb={9}>
         <LigandViewer
               ligand={ data.candidate_ligands
-                // [{"SMILES":"C=CC(=O)[O-]","name":"Acrylate"},{"SMILES":"C=CC(=O)[O-]","name":"Acrylate"}]
                 }/>
       </Grid>
 
       <Grid size={{xs:12,md:6}} mb={9}>
           <Structure
-            accession={data.uniprot_reg_data.id}
+            // accession={data.uniprot_reg_data.id}
+            accession={data.protein.enzyme.uniprot_id}
           />
       </Grid>
 

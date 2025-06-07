@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Typography, Box } from '@mui/material';
-import UserDataForm from './Components/UserDataForm.js';
+import Search from './Components/Search.js';
 
 function App() {
   return (
@@ -24,7 +24,9 @@ function App() {
           More information <a href="https://pubs.acs.org/doi/10.1021/acssynbio.4c00372" target="_blank" rel="noopener noreferrer"> here</a>.
         </Typography>
       </Box>
-      <UserDataForm />
+
+      <Search />
+      
     </Container>
   );
 }
