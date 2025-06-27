@@ -7,7 +7,6 @@ import { Box, Button, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid2';
 
-// import useSensorStore from '../zustand/sensor.store.js';
 
 
 export default function RegulatorTable(regulators) {
@@ -16,19 +15,6 @@ export default function RegulatorTable(regulators) {
   const scrollRef = useRef(null);
 
 
-  /* scroll function */
-  const executeScroll = () => {
-    if (!scrollRef) return;
-    // Get element coords from Ref
-    const element =
-      scrollRef.current.getBoundingClientRect().top + window.scrollY;
-
-    window.scroll({
-      top: element,
-      behavior: 'smooth',
-    });
-  };
-
   const columns = [
     { field: 'id', headerName: 'Index', width: 80 },
     {
@@ -36,40 +22,19 @@ export default function RegulatorTable(regulators) {
       headerName: 'RefSeq',
       width: 160,
       renderCell: (params) => (
+        <a href={params.value}>
+          {params.value}
+        </a>
 
-        // incorporate scroll function here too
-        <Button onClick={() => { setRegulator(params.value) }}>
-            {params.value.refseq}
-        </Button>
       ),
     },
-    // { field: 'refseq', headerName: 'RefSeq', width: 160 },
     { field: 'rank', headerName: 'Rank', width: 70, color:'red'},
-    { field: 'enzyme', headerName: 'Enzyme', width: 350 },
+    { field: 'annotation', headerName: 'Annotation', width: 350 },
   ];
 
-//   const selectionPrompt = () => {
-//     return (
-//       <Box>
-//         <Grid container spacing={4} columns={12} mt={8} justifyContent="center">
-//           <Grid item xs={10} mb={6}>
-//             <Typography
-//               sx={{ fontSize: { xs: 22, md: 24 }, textAlign: 'center' }}
-//             >
-//               Please select a sensor
-//             </Typography>
-//           </Grid>
-//         </Grid>
-//       </Box>
-//     );
-//   };
 
   useEffect(() => {
     const rowsToAdd = [];
-    // const sensorRouteList = [];
-    // console.log(regulators['regulators'][0]);
-
-    // if (typeof sensorTable !== 'undefined') {
       let counter = 0;
       for (var index in regulators['regulators']) {
         var reg = regulators['regulators'][index]
@@ -77,7 +42,7 @@ export default function RegulatorTable(regulators) {
           id: index,
           refseq: reg,
           rank: reg.rank.rank,
-          enzyme: reg.protein.enzyme.description,
+          annotation: reg.annotation,
         };
         rowsToAdd.push(entry);
 
@@ -107,9 +72,10 @@ export default function RegulatorTable(regulators) {
           rows={rows}
           columns={columns}
           autoHeight={true}
-          rowsPerPageOptions={[5]}
+          pageSizeOptions={[10, 20, 30]}
           density="compact"
           initialState={{
+            pagination: { paginationModel: { pageSize: 10 } },
             columns: {
               columnVisibilityModel: {
                 // Hide id column
