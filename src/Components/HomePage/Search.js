@@ -8,11 +8,13 @@ import {
   CircularProgress,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import LigandTable from './LigandTable.js';
-import RegulatorTable from './RegulatorTable.js';
+import { Link } from 'react-router-dom';
 
-// This is a cached data file for testing purposes.
-import data from '../ligify_regulators.json'
+import LigandTable from '../BrowsePage/LigandTable.js';
+import RegulatorTable from '../BrowsePage/RegulatorTable.js';
+
+// Import data
+import data from '../../ligify_regulators.json'
 
 
 
@@ -22,7 +24,7 @@ const Search = () => {
 
 
   // State for API response
-  const [apiResponse, setApiResponse] = useState(null);
+  const [apiResponse, setApiResponse] = useState(data);
 
 
   // State for loading and error
@@ -44,8 +46,27 @@ const Search = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit2} style={{ padding: '2rem', maxWidth:'90%' }}>
+    <form onSubmit={handleSubmit2} >
       <Grid container spacing={2}>
+
+        <Grid item
+          width="45%"
+          textAlign="center">
+            <Link to="/database">
+        <Button 
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={loading}
+          >
+            Browse
+          </Button>
+          </Link>
+        </Grid>
+
+        <Grid item
+          width="45%"
+          textAlign="right">
         {/* SMILES Input */}
 
         <Grid size={12} 
@@ -59,11 +80,8 @@ const Search = () => {
             onChange={handleSmilesChange}
             required
           />
-        </Grid>
-
-
-        {/* Submit Button */}
-        <Grid container size={12}  
+                  {/* Submit Button */}
+        <Grid  
           justifyContent="center"
           >
           <Button 
@@ -76,6 +94,12 @@ const Search = () => {
             {loading ? 'Submitting...' : 'Submit'}
           </Button>
         </Grid>
+        </Grid>
+
+
+
+
+        </Grid>
 
 
 
@@ -84,8 +108,8 @@ const Search = () => {
         {/* API Response */}
 
               {/* Spacer */}
-              <Grid size={{xs:0, sm:1, md:2}}></Grid>
-        <Grid size={{xs:12, sm:10, md:8}}>
+              {/* <Grid size={{xs:0, sm:1, md:2}}></Grid> */}
+        {/* <Grid size={{xs:12, sm:10, md:8}}> */}
 
 
           {/* <LigandTable
@@ -93,23 +117,25 @@ const Search = () => {
           /> */}
 
 
-        <RegulatorTable
+        {/* <RegulatorTable
             regulators={data}
-          />
+          /> */}
 
-        </Grid>
+        {/* </Grid> */}
 
 
         {/* Error Message */}
-        {errorMessage && (
+        {/* {errorMessage && (
           <Grid item xs={12}>
             <Alert severity="error">
               <Typography variant="h6">Error:</Typography>
               <p>{errorMessage}</p>
             </Alert>
           </Grid>
-        )}
+        )} */}
       </Grid>
+
+
     </form>
   );
 };

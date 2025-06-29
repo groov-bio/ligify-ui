@@ -1,18 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
-// import { Link, Routes, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import RegulatorPage from './Regulator_Components/RegulatorPage.js';
+import RegulatorPage from '../RegulatorPage/RegulatorPage.js';
 
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid2';
 
+// Import data
+import regulators from '../../ligify_regulators.json'
 
 
-export default function RegulatorTable(regulators) {
+export default function RegulatorTable() {
   const [rows, setRows] = useState([]);
-  const [regulator, setRegulator] = useState(null);
-  const scrollRef = useRef(null);
+  // const [regulator, setRegulator] = useState(null);
+  // const scrollRef = useRef(null);
+
+  console.log(regulators[0])
 
 
   const columns = [
@@ -22,9 +26,9 @@ export default function RegulatorTable(regulators) {
       headerName: 'RefSeq',
       width: 160,
       renderCell: (params) => (
-        <a href={params.value}>
+        <Link to={`/database/${params.value}`}>
           {params.value}
-        </a>
+        </Link>
 
       ),
     },
@@ -36,11 +40,11 @@ export default function RegulatorTable(regulators) {
   useEffect(() => {
     const rowsToAdd = [];
       let counter = 0;
-      for (var index in regulators['regulators']) {
-        var reg = regulators['regulators'][index]
+      for (var index in regulators) {
+        var reg = regulators[index]
         var entry = {
           id: index,
-          refseq: reg,
+          refseq: reg.refseq,
           rank: reg.rank.rank,
           annotation: reg.annotation,
         };
@@ -60,6 +64,7 @@ export default function RegulatorTable(regulators) {
       direction="column"
       alignItems="center"
       justify="center"
+      width="80%"
       sx={{ mt: 5 }}
     >
 
@@ -88,13 +93,13 @@ export default function RegulatorTable(regulators) {
 
 
 
-    {regulator ?
+    {/* {regulator ?
             <RegulatorPage
                 data={regulator}
             />
             :
             <Typography mt={5} mb={10} sx={{fontSize:20}}><i>Please select a regulator</i></Typography>
-    }
+    } */}
 
     </Grid>
   );

@@ -7,6 +7,9 @@ import {
   } from '@mui/material';
   import Grid from '@mui/material/Grid2';
 
+  import { useParams } from 'react-router-dom';
+  import regulators from '../../ligify_regulators.json';
+
   import RegulatorAttributes from "./RegulatorAttributes.js"
   import EnzymeAttributes from "./EnzymeAttributes.js"
   import Rank from "./Rank.js"
@@ -16,14 +19,20 @@ import {
   import Structure from "./Structure.js"
   import LigandViewer from "./LigandViewer.js"
 
-  export default function RegulatorPage({data}) {
+  export default function RegulatorPage() {
   
+    // pull data for the relevant regulator from the ligify_regulators database file
+    const { refseq } = useParams();
+    // find the full object (you could also fetch from a server here)
+    const regulator = regulators.find(r => r.refseq === refseq);
+    if (!regulator) return <div>Regulator “{refseq}” not found.</div>;
+
 
     const handleDownload = () => {
-      const plasmid = data.plasmid_sequence
+      const plasmid = regulator.plasmid_sequence
   
       // Define the file name and type
-      const fileName = data.refseq+'_plasmid.gb';
+      const fileName = regulator.refseq+'_plasmid.gb';
       const mimeType = 'text/plain';
   
       // Create a Blob from the plasmid sequence
@@ -56,7 +65,7 @@ import {
       <Grid container size={12} mb={6}>
 
           <Grid size={12} mt={3} textAlign="center">
-            <Typography style={{fontSize:28}}>{data.refseq}</Typography>
+            <Typography style={{fontSize:28}}>{regulator.refseq}</Typography>
           </Grid>
 
           <Grid size={12} mt={3}  mb={2} textAlign="center">
@@ -93,20 +102,20 @@ import {
 
       <Grid size={12} mb={6} > 
         <RegulatorAttributes
-        data={data}/>
+        data={regulator}/>
       </Grid>
 
 
       <Grid size={{xs:12,md:6}} mb={9}>
         <LigandViewer
-              ligand={ data.candidate_ligands
+              ligand={ regulator.candidate_ligands
                 }/>
       </Grid>
 
       <Grid size={{xs:12,md:6}} mb={9}>
           <Structure
             // accession={data.uniprot_reg_data.id}
-            accession={data.protein.enzyme.uniprot_id}
+            accession={regulator.protein.enzyme.uniprot_id}
           />
       </Grid>
 
@@ -133,7 +142,7 @@ import {
             }}
           >
             <EnzymeAttributes
-            data={data}/>
+            data={regulator}/>
           </Paper>
 
           </Grid>
@@ -151,7 +160,7 @@ import {
           </Typography>
 
             <Rank
-            data={data}/>
+            data={regulator}/>
 
           </Grid>
 
@@ -179,14 +188,14 @@ import {
         </Grid>
 
             <GenomeContext
-            data={data.protein.context}/>
+            data={regulator.protein.context}/>
 
           </Grid>
 
           <Grid size={12} mb={6}>
               <Typography mb={3} mt={2} style={{fontSize:20, textAlign: "center"}}>Predicted Promoter</Typography>
             <PredictedPromoter
-            promoter={data.protein.context.promoter.regulated_seq}/>
+            promoter={regulator.protein.context.promoter.regulated_seq}/>
 
           </Grid>
 

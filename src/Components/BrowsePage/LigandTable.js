@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 // import { Link, Routes, Route } from 'react-router-dom';
 
-import RegulatorPage from './Regulator_Components/RegulatorPage.js';
+import RegulatorPage from '../RegulatorPage/RegulatorPage.js';
 
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
