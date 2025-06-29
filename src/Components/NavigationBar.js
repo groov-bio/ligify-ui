@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import {
   AppBar,
@@ -24,14 +24,13 @@ import { Link } from 'react-router-dom';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import Person from '@mui/icons-material/Person';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
 
-const navItems = ['Browse', 'Tools', 'About'];
-const linkItems = ['/database', '/tools', '/about/about-groovdb'];
+const navItems = ['Home', 'Browse', 'About'];
+const linkItems = ['/home', '/database', '/about'];
 const aboutTitles = [
   'About groovDB',
   'Citing',
@@ -67,17 +66,6 @@ export default function NavigationBar(props) {
   const handleAboutToggle = () => {
     setAboutOpen(!aboutOpen);
   };
-
-  const [avatarAnchorEl, setAvatarAnchorEl] = useState(null);
-  const [avatarOpen, setAvatarOpen] = useState(false);
-  const handleAvatarClick = (event) => {
-    setAvatarAnchorEl(event.currentTarget);
-    setAvatarOpen(!avatarOpen);
-  };
-  const handleAvatarClose = () => {
-    setAvatarAnchorEl(null);
-  };
-
 
 
 

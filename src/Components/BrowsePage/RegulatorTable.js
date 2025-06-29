@@ -64,15 +64,26 @@ export default function RegulatorTable() {
       direction="column"
       alignItems="center"
       justify="center"
-      width="80%"
       sx={{ mt: 5 }}
     >
 
       <Box
         sx={{
-          width: "100%"
+          width: "60%"
         }}
       >
+        <Typography
+            textAlign="center"
+            sx={{
+              fontSize: { xs: 24, md: 32 },
+              mb: 10,
+              mt: { xs: '-50%', sm: '-50%', md: '5%' },
+              fontWeight: 500,
+            }}
+        >
+          Predicted Regulators
+        </Typography>
+
         <DataGrid
           rows={rows}
           columns={columns}
