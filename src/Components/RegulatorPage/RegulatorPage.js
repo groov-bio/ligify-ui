@@ -61,7 +61,20 @@ import {
 
       return (
   
-      <Box style={{width:"100%"}}>
+
+        <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        sx={{ mt: 5 }}
+      >
+        
+        <Box width="80vw">
+
+
+
       <Grid container size={12} mb={6}>
 
           <Grid size={12} mt={3} textAlign="center">
@@ -200,7 +213,13 @@ import {
           </Grid>
 
       </Grid>
+
+
       </Box>
+          </Grid>
+
+      
+
 
   
       );
