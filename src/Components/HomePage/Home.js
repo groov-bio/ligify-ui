@@ -1,5 +1,4 @@
 import Search from './Search.js';
-// import AdvancedSearch from './AdvancedSearch.js';
 import Stats from './Stats.js';
 
 import { Box, Paper, Grid, Typography, styled, Tabs, Tab } from '@mui/material';
@@ -32,7 +31,9 @@ export default function Home() {
       alignItems="center"
       sx={{ minHeight: '100%' }}
       style={{
-        background: '#ffe957',
+        // background: '#ffe957',   yellow
+        // background: '#fff',
+        background: 'linear-gradient(to right bottom, #fffa91, #ffffff)',
         // background: 'linear-gradient(to right bottom, #91baff, #ffffff)',
       }}
     >
@@ -86,13 +87,6 @@ export default function Home() {
         >
           A database of predicted ligand-inducible transcription factors
         </Typography>
-
-        {/* <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-          <Tabs value={searchTab} onChange={handleTabChange} centered>
-            <Tab label="Text Search" />
-            <Tab label="Ligand Search" />
-          </Tabs>
-        </Box> */}
 
 
           <Search width="100%" />

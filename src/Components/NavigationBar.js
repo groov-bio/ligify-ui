@@ -91,8 +91,8 @@ export default function NavigationBar(props) {
               <Box
                 component="img"
                 sx={{ height: '50px' }}
-                src="/groovDB_Icon.png"
-                alt="groovDB_icon"
+                src="/Ligify_Logo_Dark.png"
+                alt="Ligify logo dark"
               />
             </Link>
           </Button>
@@ -119,9 +119,9 @@ export default function NavigationBar(props) {
                 component="img"
                 display="flex"
                 justifyContent="center"
-                sx={{ height: '30px', ml: 5 }}
-                src="/groovDB_icon_mobile.png"
-                alt="groovDB_icon"
+                sx={{ height: '40px', ml: 5 }}
+                src="/Ligify_Logo_Dark.png"
+                alt="Ligify logo dark"
               />
             </Link>
           </IconButton>
