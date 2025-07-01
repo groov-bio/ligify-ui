@@ -86,7 +86,7 @@ export default function LigandViewer({ ligand }) {
         <Grid size={12} >
           <Typography
             component="div"
-            style={{ marginLeft: '5%', fontSize: 22, fontWeight: 300 }}
+            style={{ marginLeft: '5%', fontSize: 28, fontWeight: 300 }}
           >
             Candidate Ligands
           </Typography>
@@ -98,7 +98,7 @@ export default function LigandViewer({ ligand }) {
             elevation={0}
             sx={{
               border: '1px solid #c7c7c7',
-              height: { xs: '300px', sm: '400px' },
+              height: { xs: '300px', sm: '500px' },
             }}
           >
             <Box
@@ -125,7 +125,9 @@ export default function LigandViewer({ ligand }) {
               mt={{xs:7,sm:-6}}
               sx={{ textAlign: 'center', fontSize: 18, fontWeight: 400 }}
             >
-              {ligandName}
+              { ligandName.length > 50 ? 
+                    ligandName.slice(0, 50) + "..." 
+              : ligandName}
             </Typography>
           </Paper>
         </Grid>

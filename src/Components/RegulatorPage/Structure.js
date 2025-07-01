@@ -43,7 +43,7 @@ export default function Structure({ accession }) {
       <Grid size={12}>
           <Typography
             component="div"
-            style={{ marginLeft: '5%', fontSize: 22, fontWeight: 300 }}
+            style={{ marginLeft: '5%', fontSize: 28, fontWeight: 300 }}
           >
             Predicted Structure
           </Typography>
@@ -63,7 +63,7 @@ export default function Structure({ accession }) {
             ) : (
               <protvista-structure
                 key={accession} // Forces re-mounting on accession change
-                height="400px"
+                height="500px"
                 accession={accession}
                 structureID={`AF-${accession}-F1`}
                 // data={structureData} // Pass fetched data directly

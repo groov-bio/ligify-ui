@@ -4,6 +4,7 @@ import {
     Box,
     Button,
     Link,
+    Paper,
     Typography,
   } from '@mui/material';
   import Grid from '@mui/material/Grid2';
@@ -20,7 +21,28 @@ import {
 
       return (
 
-        <Grid container>
+      <Box sx={{ flexGrow: 1 }} mr={1}>
+        <Grid container style={{ width: '100%' }}>
+
+          <Grid size={12} >
+            <Typography
+              component="div"
+              style={{ marginLeft: '5%', fontSize: 28, fontWeight: 300 }}
+            >
+              Associated Enzyme
+            </Typography>
+          </Grid>
+
+          <Grid size={12}>
+          <Paper
+            elevation={0}
+            sx={{
+              border: '1px solid #c7c7c7',
+              padding: "40px",
+              height: { xs: '150px', sm: '250px' },
+            }}
+          >
+
 
         {Object.keys(reg_attr).map((key, index) => (
 
@@ -129,7 +151,13 @@ import {
               </Grid>
 
 
+          </Paper>
+          </Grid>
+
+
         </Grid>
+
+        </Box>
 
 
 

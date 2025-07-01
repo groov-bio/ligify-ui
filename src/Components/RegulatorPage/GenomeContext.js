@@ -135,12 +135,34 @@ export default function GenomeContext({ data, alias }) {
   }, [formattedData, geneFocus]);
 
   return (
+
+
     <Box sx={{ flexGrow: 1 }}>
       <Grid container style={{ width: '100%' }}>
 
+          {/* Component Title */}
+        <Grid size={12} >
+          <Typography
+            component="div"
+            style={{ marginLeft: '5%', fontSize: 28, fontWeight: 300 }}
+          >
+            Genome Context
+          </Typography>
+        </Grid>
+
         {/* Operon */}
 
-        <Grid size={12} mt={1}>
+        <Grid size={12}>
+          <Paper
+            elevation={0}
+            sx={{
+              border: '1px solid #c7c7c7',
+              padding: 3,
+              // height: { xs: '300px', sm: '500px' },
+            }}
+          >
+
+        {/* <Grid size={12} mt={1}> */}
 
             <Grid container spacing={5} columns={12}>
               <Grid size={12} align="center" >
@@ -243,12 +265,12 @@ export default function GenomeContext({ data, alias }) {
 
               {/* Gene Annotation Table */}
 
-              {/* <Grid
+              <Grid
                 size={12}
                 mb={3}
                 align="left"
-                style={{ height: 100, textAlign: 'center' }}
-              > */}
+                style={{ textAlign: 'center' }}
+              >
                 {geneFocus != undefined ? (
 
 
@@ -336,6 +358,7 @@ export default function GenomeContext({ data, alias }) {
                         >
                           {formattedData[geneFocus].description}
                         </Typography>
+
                       </Grid>
 
                 </Grid>
@@ -346,17 +369,22 @@ export default function GenomeContext({ data, alias }) {
                 ) : (
                   <Typography
                     component="div"
-                    textAlign="center"
+                    align="center"
                     sx={{ fontSize: 24 }}
                   >
                     <i>Please select a gene</i>
                   </Typography>
                 )}
-              {/* </Grid> */}
+              </Grid>
             </Grid>
 
+
+            </Paper>
         </Grid>
+
+
       </Grid>
+      
     </Box>
   );
 }

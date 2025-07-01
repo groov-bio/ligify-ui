@@ -8,13 +8,13 @@ import { DataGrid } from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid2';
 
 // Import data
-import regulators from '../../ligify_regulators.json'
+// import regulators from '../../ligify_regulators.json'
+// import regulators from '../../ligify_regulators_with_uniprot.json'
+import regulators from '../../ligify_regulators_with_seq.json'
 
 
 export default function RegulatorTable() {
   const [rows, setRows] = useState([]);
-  // const [regulator, setRegulator] = useState(null);
-  // const scrollRef = useRef(null);
 
   console.log(regulators[0])
 
@@ -33,7 +33,21 @@ export default function RegulatorTable() {
       ),
     },
     { field: 'rank', headerName: 'Rank', width: 70, color:'red'},
+    { field: 'length', headerName: 'Length', width: 100},
+    {
+      field: 'uniprot',
+      headerName: 'Uniprot',
+      width: 120,
+      renderCell: (params) => (
+        <a href={`https://www.uniprot.org/uniprotkb/${params.value}`}
+            target="_blank">
+          {params.value}
+        </a>
+
+      ),
+    },
     { field: 'annotation', headerName: 'Annotation', width: 350 },
+    { field: 'organism', headerName: 'Organism class', width: 200 },
   ];
 
 
@@ -46,7 +60,10 @@ export default function RegulatorTable() {
           id: index,
           refseq: reg.refseq,
           rank: reg.rank.rank,
+          length: reg.protein_seq.length,
+          uniprot: reg.uniprot_id,
           annotation: reg.annotation,
+          organism: reg.protein.organism[3],
         };
         rowsToAdd.push(entry);
 
@@ -101,16 +118,6 @@ export default function RegulatorTable() {
           }}
         />
       </Box>
-
-
-
-    {/* {regulator ?
-            <RegulatorPage
-                data={regulator}
-            />
-            :
-            <Typography mt={5} mb={10} sx={{fontSize:20}}><i>Please select a regulator</i></Typography>
-    } */}
 
     </Grid>
   );

@@ -10,11 +10,9 @@ import {
 import Grid from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
 
-import LigandTable from '../BrowsePage/LigandTable.js';
-import RegulatorTable from '../BrowsePage/RegulatorTable.js';
 
 // Import data
-import data from '../../ligify_regulators.json'
+import data from '../../ligify_regulators_with_uniprot.json'
 
 
 

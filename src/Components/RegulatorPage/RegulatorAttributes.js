@@ -10,11 +10,20 @@ import {
 
 
   export default function RegulatorAttributes({data}) {
+
   
+    if (data.uniprot_id !== null){
+      var uniprot_link = "https://www.uniprot.org/uniprotkb/"+(data.uniprot_id).toString()
+      var uniprot_name = data.uniprot_id
+    } else {
+      var uniprot_link = "None"
+      var uniprot_name = "None"
+    }
+
     // format the data to display regulator attributes
     const reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
                         "RefSeq ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
-                        // "Uniprot ID": {"name": data.uniprot_reg_data.id, "link":"https://www.uniprot.org/uniprotkb/"+(data.uniprot_reg_data.id).toString()},
+                        "Uniprot ID": {"name": uniprot_name, "link":uniprot_link},
                         "Organism": {"name":data.protein.organism[5], "link":"None"} 
                       }
 
