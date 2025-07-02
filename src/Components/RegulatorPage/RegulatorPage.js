@@ -169,8 +169,10 @@ import {
 
           </Grid>
 
+            {/* Predicted Promoter Component */}
+
           <Grid size={12} mb={6}>
-              <Typography mb={3} mt={2} style={{fontSize:20, textAlign: "center"}}>Predicted Promoter</Typography>
+
             <PredictedPromoter
             promoter={regulator.protein.context.promoter.regulated_seq}/>
 
