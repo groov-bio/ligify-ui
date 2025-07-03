@@ -133,7 +133,7 @@ import {
           {(data.protein.enzyme.dois).map((name, index) => (
                 <Grid xs={12} textAlign="left" ml={'15px'} key={index}>
                 <Link
-                        href={"https://doi.org/"+{name}}
+                        href={"https://doi.org/"+name}
                         target="_blank"
                         style={{ textDecoration: 'None', color: '#243fab'}} 
                       >
