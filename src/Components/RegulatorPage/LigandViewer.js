@@ -20,6 +20,7 @@ export default function LigandViewer({ ligand }) {
 
   const changeLigand = (event, value) => {
     setLigandNumber(value);
+    console.log(ligandName)
   };
 
   // Set the displayed chemical structure
@@ -30,7 +31,6 @@ export default function LigandViewer({ ligand }) {
     ) {
       setLigandName(ligand[ligandNumber - 1]['name']);
       let ligandSMILES = ligand[ligandNumber - 1]['smiles'];
-      console.log(ligandSMILES);
 
 
       let options = {
@@ -101,6 +101,7 @@ export default function LigandViewer({ ligand }) {
               height: { xs: '300px', sm: '500px' },
             }}
           >
+            <a href={"https://pubchem.ncbi.nlm.nih.gov/#query="+ligandName} target="_blank">
             <Box
               sx={{
                 width: { xs: '300px' }, //This is being driven by the paper above
@@ -120,6 +121,7 @@ export default function LigandViewer({ ligand }) {
                 id="SMILEScanvas"
               />
             </Box>
+            </a>
             <Typography
               component="div"
               mt={{xs:7,sm:-6}}
