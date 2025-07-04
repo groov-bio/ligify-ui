@@ -8,9 +8,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid2';
 
 // Import data
-// import regulators from '../../ligify_regulators.json'
-// import regulators from '../../ligify_regulators_with_uniprot.json'
-import regulators from '../../ligify_regulators_with_seq.json'
+import regulators from '../../ligifyDB.json'
 
 
 export default function RegulatorTable() {

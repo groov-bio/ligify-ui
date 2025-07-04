@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 
 
 // Import data
-import data from '../../ligify_regulators_with_uniprot.json'
+import data from '../../ligifyDB.json'
 
 
 

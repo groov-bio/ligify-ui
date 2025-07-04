@@ -8,9 +8,7 @@ import {
   import Grid from '@mui/material/Grid2';
 
   import { useParams } from 'react-router-dom';
-  // import regulators from '../../ligify_regulators.json';
-  // import regulators from '../../ligify_regulators_with_uniprot.json'
-  import regulators from '../../ligify_regulators_with_seq.json'
+  import regulators from '../../ligifyDB.json'
 
   import RegulatorAttributes from "./RegulatorAttributes.js"
   import EnzymeAttributes from "./EnzymeAttributes.js"
