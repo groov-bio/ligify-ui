@@ -46,6 +46,7 @@ export default function RegulatorTable() {
     },
     { field: 'annotation', headerName: 'Annotation', width: 350 },
     { field: 'organism', headerName: 'Organism class', width: 200 },
+    { field: 'aligned', headerName: 'Aligned', width: 200 },
   ];
 
 
@@ -62,6 +63,7 @@ export default function RegulatorTable() {
           uniprot: reg.uniprot_id,
           annotation: reg.annotation,
           organism: reg.protein.organism[3],
+          aligned: reg.hits.length,
         };
         rowsToAdd.push(entry);
 
