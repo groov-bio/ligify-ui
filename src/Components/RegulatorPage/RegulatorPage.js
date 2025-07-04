@@ -18,6 +18,7 @@ import {
   import Structure from "./Structure.js"
   import LigandViewer from "./LigandViewer.js"
   import ProteinSeq from "./ProteinSeq.js"
+  import SimilarProteins from "./SimilarProteins.js"
 
   export default function RegulatorPage() {
   
@@ -175,6 +176,19 @@ import {
             promoter={regulator.protein.context.promoter.regulated_seq}/>
 
           </Grid>
+
+
+            {/* Similar Proteins Component */}
+
+          { regulator.hits.length > 0 ? 
+            <Grid size={12} mb={6}>
+
+                <SimilarProteins
+                data={regulator.hits}/>
+
+            </Grid>
+            : <></>
+          }
 
       </Grid>
 
