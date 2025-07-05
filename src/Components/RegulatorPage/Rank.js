@@ -52,21 +52,21 @@ import {
           >
 
       {/* <Box> */}
-        <Typography sx={{textAlign: "center", fontSize:24, color:data.rank.color }} mb={1}>
+        <Typography sx={{textAlign: "center", fontSize:24, color:data.rank.color }} mb={2}>
           <b>{data.rank.rank}</b>
         </Typography>
 
-      <TableContainer component={Paper}>
+      <TableContainer>
       <Table sx={{ minWidth: 200, 
                   '& .MuiTableCell-root': {
                     padding: '9px', // Customize your padding here
                   },
       }}  aria-label="simple table">
-        <TableHead>
+        <TableHead sx={{borderBottom: "1.5px solid black"}}>
           <TableRow>
-            <TableCell align="left"><b>Metric</b></TableCell>
-            <TableCell align="right"><b>Value</b></TableCell>
-            <TableCell align="right"><b>Deduction</b></TableCell>
+            <TableCell align="left" sx={{fontSize: "18px"}}><b>Metric</b></TableCell>
+            <TableCell align="right" sx={{fontSize: "18px"}}><b>Value</b></TableCell>
+            <TableCell align="right" sx={{fontSize: "18px"}}><b>Deduction</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -75,11 +75,11 @@ import {
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" sx={{fontSize: "16px"}}>
                 {row.name}
               </TableCell>
-              <TableCell align="right">{row.value}</TableCell>
-              <TableCell align="right">{row.deduction}</TableCell>
+              <TableCell sx={{fontSize: "18px"}} align="right">{row.value}</TableCell>
+              <TableCell sx={{fontSize: "18px"}} align="right">{row.deduction}</TableCell>
             </TableRow>
           ))}
         </TableBody>
