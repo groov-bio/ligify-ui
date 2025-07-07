@@ -1,9 +1,9 @@
-import { Grid2, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 export default function Stats() {
 
   return (
-    <Grid2
+    <Grid
       sx={{
         borderRadius: 1,
         padding: 1.5,
@@ -18,6 +18,6 @@ export default function Stats() {
       <Typography sx={{ fontSize: { xs: 14, sm: 22 } }}>
         Unique ligands: 1,667
       </Typography>
-    </Grid2>
+    </Grid>
   );
 }

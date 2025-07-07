@@ -10,7 +10,7 @@ import Paper from '@mui/material/Paper';
 import {
   Box,
   Typography,
-  Grid2
+  Grid
 } from '@mui/material';
 
 
@@ -30,18 +30,18 @@ import {
     return (
 
       <Box sx={{ flexGrow: 1 }} mr={1}>
-        <Grid2 container style={{ width: '100%' }}>
+        <Grid container style={{ width: '100%' }}>
 
-          <Grid2 size={12} >
+          <Grid size={12} >
             <Typography
               component="div"
               style={{ marginLeft: '5%', fontSize: 28, fontWeight: 300 }}
             >
               Rank
             </Typography>
-          </Grid2>
+          </Grid>
 
-          <Grid2 size={12}>
+          <Grid size={12}>
           <Paper
             elevation={0}
             sx={{
@@ -88,8 +88,8 @@ import {
     {/* </Box>    */}
 
     </Paper>
-    </Grid2>
-    </Grid2>
+    </Grid>
+    </Grid>
     </Box> 
 
     )

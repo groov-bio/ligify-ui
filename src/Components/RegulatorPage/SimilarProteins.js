@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
     Box,
-    Grid2,
+    Grid,
     Link,
     Paper,
     Typography,
@@ -22,18 +22,18 @@ import {
     return (
 
         <Box sx={{ flexGrow: 1 }} mr={1}>
-          <Grid2 container style={{ width: '100%' }}>
+          <Grid container style={{ width: '100%' }}>
   
-            <Grid2 size={12} >
+            <Grid size={12} >
               <Typography
                 component="div"
                 style={{ marginLeft: '5%', fontSize: 28, fontWeight: 300 }}
               >
                 Similar Proteins
               </Typography>
-            </Grid2>
+            </Grid>
 
-            <Grid2 size={12}>
+            <Grid size={12}>
           <Paper
             elevation={0}
             sx={{
@@ -79,9 +79,9 @@ import {
 
 
           </Paper>
-          </Grid2>
+          </Grid>
 
-          </Grid2>
+          </Grid>
         </Box>
 
     )

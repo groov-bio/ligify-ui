@@ -1,11 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-import RegulatorPage from '../RegulatorPage/RegulatorPage.js';
+import { Box, Typography, Tooltip, Badge, Grid } from '@mui/material';
+import ViewColumnIcon from '@mui/icons-material/ViewColumn';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import {
+  DataGrid,
+  Toolbar,
+  ToolbarButton,
+  ColumnsPanelTrigger,
+  FilterPanelTrigger,
+} from '@mui/x-data-grid';
 
-import { Box, Button, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-import Grid from '@mui/material/Grid2';
 
 // Import data
 import regulators from '../../ligifyDB.json'
@@ -13,8 +19,6 @@ import regulators from '../../ligifyDB.json'
 
 export default function RegulatorTable() {
   const [rows, setRows] = useState([]);
-
-  console.log(regulators[0])
 
 
   const columns = [
@@ -51,8 +55,9 @@ export default function RegulatorTable() {
 
 
   useEffect(() => {
+
     const rowsToAdd = [];
-      let counter = 0;
+
       for (var index in regulators) {
         var reg = regulators[index]
         var entry = {
@@ -67,11 +72,42 @@ export default function RegulatorTable() {
         };
         rowsToAdd.push(entry);
 
-        counter += 1;
-
       setRows(rowsToAdd);
     }
   }, []);
+
+
+
+
+  function CustomToolbar() {
+  
+    return (
+      <Toolbar>
+  
+        <Tooltip title="Columns">
+          <ColumnsPanelTrigger render={<ToolbarButton />}>
+            <ViewColumnIcon fontSize="small" />
+          </ColumnsPanelTrigger>
+        </Tooltip>
+  
+        <Tooltip title="Filters">
+          <FilterPanelTrigger
+            render={(props, state) => (
+              <ToolbarButton {...props} color="default">
+                <Badge badgeContent={state.filterCount} color="primary" variant="dot">
+                  <FilterListIcon fontSize="small" />
+                </Badge>
+              </ToolbarButton>
+            )}
+          />
+        </Tooltip>
+      </Toolbar>
+    );
+  }
+  
+
+
+
 
   return (
     // Container
@@ -107,6 +143,7 @@ export default function RegulatorTable() {
           autoHeight={true}
           pageSizeOptions={[10, 20, 30]}
           density="compact"
+
           initialState={{
             pagination: { paginationModel: { pageSize: 10 } },
             columns: {
@@ -116,6 +153,8 @@ export default function RegulatorTable() {
               },
             },
           }}
+          slots={{ toolbar: CustomToolbar }}
+          showToolbar
         />
       </Box>
 

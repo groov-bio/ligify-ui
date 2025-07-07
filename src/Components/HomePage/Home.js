@@ -1,28 +1,15 @@
 import Search from './Search.js';
 import Stats from './Stats.js';
 
-import { Box, Paper, Grid, Typography, styled, Tabs, Tab } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { useState } from 'react';
 
 export default function Home() {
-  const [searchTab, setSearchTab] = useState(0);
 
-  const handleTabChange = (event, newValue) => {
-    setSearchTab(newValue);
-  };
-
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
 
   return (
     <Grid
@@ -31,23 +18,19 @@ export default function Home() {
       alignItems="center"
       sx={{ minHeight: '100%' }}
       style={{
-        // background: '#ffe957',   yellow
-        // background: '#fff',
         background: 'linear-gradient(to right bottom, #fffa91, #ffffff)',
-        // background: 'linear-gradient(to right bottom, #91baff, #ffffff)',
       }}
     >
       <Grid
         item
-        xs={12}
-        sm={12}
-        md={6}
+        size={{xs:12, sm:12, md:6}}
+
         sx={{ position: { xs: 'absolute', sm: 'absolute', md: 'relative' } }}
       >
         <Box
           component="img"
           sx={{
-            width: { xs: '100%', sm: '100%', md: '90%' },
+            width: { xs: '100%', sm: '100%', md: '75%' },
             opacity: { xs: '40%', sm: '40%', md: '100%' },
             marginTop: { xs: '200px', sm: '200px', md: 0 },
           }}
@@ -58,10 +41,12 @@ export default function Home() {
       </Grid>
 
       {/* Spacer for mobile format */}
-      <Grid item xs={1} sx={{ display: { sm: 'block', md: 'none' } }}></Grid>
+      <Grid item size={1} sx={{ display: { sm: 'block', md: 'none' } }}></Grid>
 
       {/* Text and search bar */}
-      <Grid item xs={10} sm={10} md={4}>
+      <Grid item  
+          size={{xs:10, sm:10, md:4}} >
+
       <Typography
           sx={{
             fontSize: { xs: 50, md: 60 },
@@ -77,8 +62,8 @@ export default function Home() {
 
         <Typography
           sx={{
-            fontSize: { xs: 24, md: 32 },
-            mb: 10,
+            fontSize: { xs: 20, md: 28 },
+            mb: 5,
             mt: { xs: '-50%', sm: '-50%', md: '0%' },
             fontWeight: 500,
           }}

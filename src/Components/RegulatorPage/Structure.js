@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProtvistaStructure from 'protvista-structure';
 
 import { Box, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 
 export default function Structure({ accession }) {
   const [hasError, setHasError] = useState(false);
