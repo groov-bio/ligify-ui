@@ -4,17 +4,21 @@ import { Link } from 'react-router-dom';
 import { Box, Typography, Tooltip, Badge, Grid } from '@mui/material';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import {
   DataGrid,
   Toolbar,
   ToolbarButton,
   ColumnsPanelTrigger,
   FilterPanelTrigger,
+  ExportCsv,
 } from '@mui/x-data-grid';
 
 
 // Import data
 import regulators from '../../ligifyDB.json'
+
+console.log(regulators[0])
 
 
 export default function RegulatorTable() {
@@ -86,7 +90,7 @@ export default function RegulatorTable() {
   
         <Tooltip title="Columns">
           <ColumnsPanelTrigger render={<ToolbarButton />}>
-            <ViewColumnIcon fontSize="small" />
+            <ViewColumnIcon />
           </ColumnsPanelTrigger>
         </Tooltip>
   
@@ -95,12 +99,16 @@ export default function RegulatorTable() {
             render={(props, state) => (
               <ToolbarButton {...props} color="default">
                 <Badge badgeContent={state.filterCount} color="primary" variant="dot">
-                  <FilterListIcon fontSize="small" />
+                  <FilterListIcon />
                 </Badge>
               </ToolbarButton>
             )}
           />
         </Tooltip>
+        <ExportCsv variant="outlined"
+        >Export
+          <FileDownloadIcon/>
+        </ExportCsv>
       </Toolbar>
     );
   }
@@ -143,6 +151,7 @@ export default function RegulatorTable() {
           autoHeight={true}
           pageSizeOptions={[10, 20, 30]}
           density="compact"
+          sx={{fontSize: {xs:12, sm: 16} }}
 
           initialState={{
             pagination: { paginationModel: { pageSize: 10 } },
