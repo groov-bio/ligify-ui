@@ -29,7 +29,7 @@ export default function RegulatorTable() {
     { field: 'id', headerName: 'Index', width: 80 },
     {
       field: 'refseq',
-      headerName: 'RefSeq',
+      headerName: 'RefSeq ID',
       width: 160,
       renderCell: (params) => (
         <Link to={`/database/${params.value}`}>
@@ -42,7 +42,7 @@ export default function RegulatorTable() {
     { field: 'length', headerName: 'Length', width: 100},
     {
       field: 'uniprot',
-      headerName: 'Uniprot',
+      headerName: 'Uniprot ID',
       width: 120,
       renderCell: (params) => (
         <a href={`https://www.uniprot.org/uniprotkb/${params.value}`}
@@ -53,8 +53,28 @@ export default function RegulatorTable() {
       ),
     },
     { field: 'annotation', headerName: 'Annotation', width: 350 },
-    { field: 'organism', headerName: 'Organism class', width: 200 },
-    { field: 'aligned', headerName: 'Aligned', width: 200 },
+    { field: 'organismKingdom', headerName: 'Organism kingdom', width: 170 },
+    { field: 'organismPhylum', headerName: 'Organism phylum', width: 170 },
+    { field: 'organismClass', headerName: 'Organism class', width: 190 },
+    { field: 'organismOrder', headerName: 'Organism order', width: 170 },
+    { field: 'organismFamily', headerName: 'Organism family', width: 170 },
+    { field: 'organismGenus', headerName: 'Organism genus', width: 170 },
+    { field: 'aligned', headerName: 'Similar to characterized', width: 200 },
+    { field: 'operonLength', headerName: 'Operon length', width: 120 },
+    { field: 'enzymeDistance', headerName: 'Distance to enzyme', width: 170 },
+    { field: 'additionalRegulators', headerName: 'Additional regulators', width: 170 },
+    {
+      field: 'enzyme_uniprot',
+      headerName: 'Enzyme',
+      width: 120,
+      renderCell: (params) => (
+        <a href={`https://www.uniprot.org/uniprotkb/${params.value}`}
+            target="_blank">
+          {params.value}
+        </a>
+
+      ),
+    },
   ];
 
 
@@ -71,8 +91,17 @@ export default function RegulatorTable() {
           length: reg.protein_seq.length,
           uniprot: reg.uniprot_id,
           annotation: reg.annotation,
-          organism: reg.protein.organism[3],
+          organismKingdom: reg.protein.organism[1],
+          organismPhylum: reg.protein.organism[2],
+          organismClass: reg.protein.organism[3],
+          organismOrder: reg.protein.organism[4],
+          organismFamily: reg.protein.organism[5],
+          organismGenus: reg.protein.organism[6],
           aligned: reg.hits.length,
+          operonLength: reg.rank.metrics["Genes within operon"].Value,
+          enzymeDistance: reg.rank.metrics["Enzyme-regulator distance"].Value,
+          additionalRegulators: reg.rank.metrics["Additional regulators"].Value,
+          enzyme_uniprot: reg.protein.enzyme.uniprot_id,
         };
         rowsToAdd.push(entry);
 
@@ -157,8 +186,19 @@ export default function RegulatorTable() {
             pagination: { paginationModel: { pageSize: 10 } },
             columns: {
               columnVisibilityModel: {
-                // Hide id column
+                // Hide these columns
                 id: false,
+                uniprot: false,
+                organismKingdom: false,
+                organismPhylum: false,
+                organismFamily: false,
+                organismOrder: false,
+                organismGenus: false,
+                aligned: false,
+                enzymeDistance: false,
+                additionalRegulators: false,
+                operonLength: false,
+                enzyme_uniprot: false,
               },
             },
           }}
