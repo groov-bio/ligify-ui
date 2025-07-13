@@ -20,24 +20,32 @@ import {
       var uniprot_name = "None"
     }
 
+    if (data.protein.organism[6] !== undefined){
+      var organismName = data.protein.organism[5] + ", " + data.protein.organism[6]
+    }
+    else {
+      var organismName = data.protein.organism[5]
+    }
+
     // format the data to display regulator attributes
     const reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
                         "RefSeq ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
                         "Uniprot ID": {"name": uniprot_name, "link":uniprot_link},
-                        "Organism": {"name":data.protein.organism[5], "link":"None"} 
+                        "Organism": {"name":organismName, "link":"None"} 
                       }
 
       return (
 
+        <Grid size={{xs:12, sm:8}} offset={{xs:0, sm:2}} mb={3}>
         <Grid container>
 
         {Object.keys(reg_attr).map((key, index) => (
 
         <>
-        <Grid size={{sm:0,md:3}}></Grid>
-        <Grid size={{sm:12, md:8}} 
+        <Grid size={{xs:12, sm:6}} 
             key={index} 
             mb={1}>
+
               <Grid container>
 
                 <Grid xs={6} textAlign="right">
@@ -95,7 +103,7 @@ import {
 
         </Grid>
 
-
+        </Grid>
 
   
       )
