@@ -2,34 +2,78 @@ import React from 'react';
 
 import { Box, Grid, Typography, Paper } from '@mui/material';
 
-export default function ProteinSeq(data) {
+export default function PlasmidDesigner(data) {
 
-  var protein_seq = data["protein_seq"]
 
-  function splitStringIntoChunks(str, chunkSize) {
-    let result = [];
-    for (let i = 0; i < str.length; i += chunkSize) {
-      result.push(str.slice(i, i + chunkSize));
-    }
-    return result;
-  }
 
-  const proteinChunks = splitStringIntoChunks(protein_seq, 10);
+
+    const handleDownload = () => {
+        const plasmid = "ATGCTAGC"
+        // const plasmid = regulator.plasmid_sequence
+    
+        // Define the file name and type
+        const fileName = data.refseq+'_plasmid.gb';
+        const mimeType = 'text/plain';
+    
+        // Create a Blob from the plasmid sequence
+        const blob = new Blob([plasmid], { type: mimeType });
+    
+        // Create a URL for the Blob
+        const url = URL.createObjectURL(blob);
+    
+        // Create a temporary anchor element
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+    
+        // Append the anchor to the body
+        document.body.appendChild(a);
+    
+        // Programmatically click the anchor to trigger the download
+        a.click();
+    
+        // Clean up by removing the anchor and revoking the object URL
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      };
+
+
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+
+
+
+
+        {/* <Grid size={12} mt={3}  mb={2} textAlign="center">
+          <Button 
+            variant="contained"
+            color="secondary"
+            type="submit"
+            style={{fontSize:12}}
+            onClick={handleDownload}
+            // disabled={loading}
+            // startIcon={loading && <CircularProgress size={20} />}
+          >
+            Download Plasmid
+          </Button>
+          </Grid> */}
+
+
+
       <Grid container style={{ width: '100%' }}>
+
         {/* Component Title */}
         <Grid size={12}>
           <Typography
             component="div"
             sx={{ ml: { xs: '5%', sm: '2.5%' }, fontSize: 28, fontWeight: 300 }}
           >
-            Protein Sequence
+            Plasmid Designer
           </Typography>
         </Grid>
 
-        <Grid item xs={12} mt={1}>
+        <Grid size={12} mt={1}>
           <Paper
             elevation={0}
             sx={{
@@ -38,9 +82,9 @@ export default function ProteinSeq(data) {
               background: '#f2f2f2',
             }}
           >
-            {/* Protein length indicator */}
+            {/* Plasmid length indicator */}
 
-            <Grid item xs={6} sm={10} md={6} mb={3}>
+            <Grid size={{xs:6, sm:10, md:6}} mb={3}>
               <Grid container>
                 <Grid item xs={5} sm={2} textAlign="right">
                   <Typography
@@ -52,7 +96,7 @@ export default function ProteinSeq(data) {
                       borderRight: '2px solid #0084ff',
                     }}
                   >
-                    <b>Length</b>
+                    <b>Size</b>
                   </Typography>
                 </Grid>
 
@@ -62,31 +106,13 @@ export default function ProteinSeq(data) {
                     width="100px"
                     sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }}
                   >
-                    {protein_seq.length}
+                    4,128 bp
                   </Typography>
                 </Grid>
               </Grid>
             </Grid>
 
-            {/* Protein Sequence */}
 
-            {proteinChunks.map((seq, index) => (
-              <Box
-                key={index}
-                sx={{
-                  width: { xs: '100px', sm: '130px' },
-                  marginBottom: { xs: '0px', sm: '7px' },
-                  display: 'inline-block',
-                }}
-              >
-                <Typography
-                  component="span"
-                  sx={{ fontSize: { xs: 12, sm: 16 } }}
-                >
-                  {seq}
-                </Typography>
-              </Box>
-            ))}
             {/* <Typography
               component="div"
               sx={{ fontSize: { xs: 16, sm: 22 }, overflowWrap: 'anywhere' }}
