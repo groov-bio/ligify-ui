@@ -87,7 +87,7 @@ import {
 
       <Grid size={{xs:12}} mb={9}>
           <PlasmidDesigner
-            data={regulator.protein_seq}
+            data={regulator}
           />
       </Grid>
 
