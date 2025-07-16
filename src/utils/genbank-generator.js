@@ -115,15 +115,22 @@ class GenBankGenerator {
         const sequenceLength = record.sequence.length;
         
         let genbank = '';
-        
-        // Header
-        genbank += `LOCUS       ${record.name.padEnd(16)} ${sequenceLength.toString().padStart(11)} bp    DNA     ${record.annotations.topology || 'linear'}   ${date}\n`;
+
+        // Header - ensure proper spacing and formatting
+        const locusName = record.name.substring(0, 16).padEnd(16);
+        const lengthStr = sequenceLength.toString().padStart(11);
+        const topology = record.annotations.topology === 'circular' ? 'circular' : 'linear';
+
+        genbank += `LOCUS       ${locusName} ${lengthStr} bp    DNA     ${topology} SYN ${date}\n`;
         genbank += `DEFINITION  ${record.description}\n`;
         genbank += `ACCESSION   ${record.id}\n`;
         genbank += `VERSION     ${record.id}\n`;
+        genbank += `KEYWORDS    .\n`;
         genbank += `SOURCE      synthetic DNA construct\n`;
-        genbank += `FEATURES            Location/Qualifiers\n`;
-        genbank += `                    1..${sequenceLength}\n`;
+        genbank += `  ORGANISM  synthetic DNA construct\n`;
+        genbank += `            other sequences; artificial sequences; synthetic DNA construct.\n`;
+        genbank += `FEATURES             Location/Qualifiers\n`;
+        
         
         // Features
         record.features.forEach(feature => {
@@ -141,31 +148,143 @@ class GenBankGenerator {
     /**
      * Main function to create GenBank file
      */
-    createGenBank(regulatorName, reporter, promoterSeq) {
+    createGenBank(regulatorName, reporter, promoterSeq, expressionPromoter) {
         // Codon optimize the natural sequence
         // const optRegulatorSeq = this.codonOptimize ? 
         //     this.codonOptimize(regulatorProteinSeq) : 
         //     regulatorProteinSeq;
-        // placeholder
-        const optRegulatorSeq = "ATGTGTAGTA"
         
-        // Create the plasmid sequence
+        // Initialize annotations
+        const annotations = [
+            {"type": "misc_feature",
+            "label": "L3S2P00 terminator",
+            "color": "#a6a6a6",
+            "start": 0,
+            "end": 64,
+            "strand": -1}
+        ]
+
         const terminator = "ggaccaaaacgaaaaaaggggagcggtttcccgctcccctcttttctggaatttggtaccgaggaatgaagcaggatta"
+        var index = terminator.length;
+        
+        // Create the component sequences
         let reporterSeq;
+        let reporterRBS;
         if (reporter === "GFP"){
             reporterSeq = "ttatttgtatagttcatccatgccatgtgtaatcccagcagctgttacaaactcaagaaggaccatgtggtctctcttttcgttgggatctttcgaaagggcagattgtgtggacaggtaatggttgtctggtaaaaggacagggccatcgccaattggagtattttgttgataatggtctgctagttgaacgcttccatcttcaatgttgtgtctaattttgaagttaactttgattccattcttttgtttgtctgccatgatgtatacattgtgtgagttatagttgtattccaatttgtgtccaagaatgtttccatcttctttaaaatcaataccttttaactcgattctattaacaagggtatcaccttcaaatttgacttcagcacgtgtcttgtagttcccgtcatctttgaaaaatatagttctttcctgtacataaccttcgggcatggcactcttgaaaaagtcatgctgtttcatatgatctgggtatctcgcaaagcattgaagaccatacgcgaaagtagtgacaagtgttggccatggaacaggtagttttccagtagtgcaaataaatttaagggtaagttttccgtatgttgcatcaccttcaccctctccactgacagaaaatttgtgcccattaacatcaccatctaattcaacaagaattgggacaactccagtgaaaagttcttctcctttactcat"
+            reporterRBS = "ATATACCCCCTTATTCTCCCGTA"
+            // add reporter annotation
+            annotations.push(
+                {"type": "misc_feature",
+                "label": "GFP_mut2",
+                "color": "#00ff1e",
+                "start": index,
+                "end": index+reporterSeq.length,
+                "strand": -1}
+            )
+
+            // add reporter RBS annotation
+            annotations.push(
+                {"type": "misc_feature",
+                "label": "GFP_RBS",
+                "color": "#94ffa4",
+                "start": index+reporterSeq.length,
+                "end": index+reporterSeq.length+reporterRBS.length,
+                "strand": -1}
+            )
+            index += (reporterSeq.length + reporterRBS.length)
         } else {
             reporterSeq = "ttagctccccccggaaccaccagtgctatggcgtgccacggagcgttcgtactgttctactacggtgtagtcctcgttatgagaggtgatatccaatttgcgatcaatattaaacgctcctggcatttgaacaggttttttagctttgtaggtcgttttgaaatcggctaagtagcgcccgccatctttaagacgtaaagccatcttaatatcccccttcaataccacgtcctctgggtataagcgctcagtactcgcctcccatcccatagtgcgcttttgcatgaccggaccatcgggcgggaagttgccaccacgcaattttactttgtagatcagggtcccatcctccaagcttgtatcttgggttactgagacagtacccccgtcctcaaagatcatcacgcgctcccatttgaagccttcggggaagctctgcttccaataatcaggaatatccgctggatgcttaataaaggcgcgagatccgtacatgaactggggacttaagatgtcccaactaaacggcagcgggcccccttttgtcaccttcaattttgctgtttgtgtaccctcataggggcggccttcgccctcgccctcaatctcaaactcgtgaccgttcatcgagccttccatgtgaaccttgaagcgcatgaactctttaatcacagcctctgtcgagtccat"
+            reporterRBS = "aattactccttattaacccggaggtttacg"
+            // add reporter annotation
+            annotations.push(
+                {"type": "misc_feature",
+                "label": "RFP (mScarlet-i)",
+                "color": "#ff0037",
+                "start": index,
+                "end": index+reporterSeq.length,
+                "strand": -1}
+            )
+            // add reporter RBS annotation
+            annotations.push(
+                {"type": "misc_feature",
+                "label": "RFP RBS",
+                "color": "#ffdb94",
+                "start": index+reporterSeq.length,
+                "end": index+reporterSeq.length+reporterRBS.length,
+                "strand": -1}
+            )
+            index += (reporterSeq.length + reporterRBS.length)
         }
-        const reporterRBSInsulator = "atatacccccttattctcccgtattaaacaaaattatttgtagaggccccatttcgtccttttggactcatcaggggtggtacacaccaccctatggggct"
-        const seq = terminator + reporterSeq + reporterRBSInsulator + promoterSeq
+
+        // add insulator
+        const reporterInsulator = "atatacccccttattctcccgtattaaacaaaattatttgtagaggccccatttcgtccttttggactcatcaggggtggtacacaccaccctatggggct"
+        annotations.push(
+            {"type": "misc_feature",
+            "label": "ElvJ",
+            "color": "#c587ff",
+            "start": index,
+            "end": index+reporterInsulator.length,
+            "strand": -1}
+        )
+        index += reporterInsulator.length
+
+        // add regulated_promoter annotation
+        annotations.push(
+            {"type": "misc_feature",
+            "label": regulatorName+"_promoter",
+            "color": "#fffb80",
+            "start": index,
+            "end": index+promoterSeq.length,
+            "strand": -1}
+        )
+        index += promoterSeq.length
+
+
+        // add bidirectional terminator
+        const bidirectionalTerminator = "ggaccaaaacgaaaaaaggcccccctttcgggaggcctcttttctggaatttggtaccgagtgcagacgtaaaaaaagcggcgtggttagccgcttttttaattgccgga"
+        annotations.push(
+            {"type": "misc_feature",
+            "label": "DT5 double terminator",
+            "color": "#a6a6a6",
+            "start": index,
+            "end": index+bidirectionalTerminator.length,
+            "strand": -1}
+        )
+        index += bidirectionalTerminator.length
+
+
+        // add expression promoter
+        const promoters = {
+            "P1": "aacgggctgtcgacctttgaaaagttcgATTACAgctagctcagtcctaggGACAATgctagcggatggc",
+            "P10": "aacgggctgtcgaccggcgaaaagttcgATTACAgctagctcagtcctaggTACAATgctagcggatggc",
+            "P50": "aacgggctgtcgaccggcgtgccgttcgTTTACCgctagctcagtcctaggTACAATgctagcggatggc",
+            "P150": "aacgggctgtcgacctttgaaaagttcgTTTACCgctagctcagtcctaggTACAATgctagcggatggc",
+            "P250": "aacgaaaatatatttttcaaaagtatcgTTTACCgctagctcagtcctaggTACAATgctagcggatggc",
+            "P500": "aacgggctgtcgacctttgaaaagttcgTTTACAgctagctcagtcctaggTACAATgctagcggatggc",
+            "P750": "aacgctcagtggcgcgcctcagtcctcgTTGACAgctagctcagtcctaggTACAATgctagcggatggc",
+            "P1000": "aacgaaaatatatttttcaaaagtatcgTTGACAgctagctcagtcctaggTACAATgctagcggatggc",
+        }
+        var expressionPromoterSeq = promoters[expressionPromoter]
+        annotations.push(
+            {"type": "misc_feature",
+            "label": expressionPromoter,
+            "color": "#ff8080",
+            "start": index,
+            "end": index+expressionPromoterSeq.length,
+            "strand": 1}
+        )
+        index += expressionPromoterSeq.length
+
+
+
+
+        
+        const seq = terminator + reporterSeq + reporterRBS + reporterInsulator + promoterSeq + bidirectionalTerminator + expressionPromoterSeq
         
         
-        // this.plasmidComponents.before_promoter + 
-        //            promoterSeq + 
-        //            this.plasmidComponents.before_regulator + 
-        //            optRegulatorSeq + 
-        //            this.plasmidComponents.after_regulator;
+
+
         
         // Create sequence record
         const record = new SeqRecord(
@@ -179,20 +298,11 @@ class GenBankGenerator {
             }
         );
 
-        const annotations = [
-            {"type": "misc_feature",
-            "label": "L3S2P00 terminator",
-            "color": "#7a7a7a",
-            "start": 0,
-            "end": 63,
-            "strand": -1}
-        ]
-
         annotations.forEach(annotation => {
                 const qualifiers = {
-                    ApEinfo_fwdcolor: [annotation["color"]],
+                    label: annotation.label,
                     ApEinfo_revcolor: [annotation["color"]],
-                    label: annotation.label
+                    ApEinfo_fwdcolor: [annotation["color"]]
                 };
                 const feature = new SeqFeature(
                     annotation['start'],
@@ -255,9 +365,9 @@ export const createGenBankGenerator = (options = {}) => {
 /**
  * Convenience function for quick GenBank generation
  */
-export const generateGenBank = (regulatorName, reporter, promoterSeq) => {
+export const generateGenBank = (regulatorName, reporter, promoterSeq, expressionPromoter) => {
     const generator = createGenBankGenerator();
-    return generator.createGenBank(regulatorName, reporter, promoterSeq);
+    return generator.createGenBank(regulatorName, reporter, promoterSeq, expressionPromoter);
 };
 
 /**

@@ -55,7 +55,7 @@ export default function PlasmidDesigner(data) {
     const handleDownload = () => {
         var refseq = data['data']["refseq"]
         var regulated_seq = data['data']['protein']['context']['promoter']['regulated_seq']
-        const genbank = generateGenBank(refseq, reporter, regulated_seq);
+        const genbank = generateGenBank(refseq, reporter, regulated_seq, expressionPromoter);
         downloadGenBank(genbank, data['data']['refseq']);
     }
 
