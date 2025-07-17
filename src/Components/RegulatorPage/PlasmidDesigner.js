@@ -12,6 +12,7 @@ import {
     generateGenBank,
     downloadGenBank
 } from "../../utils/genbank-generator.js";
+import optimizeForEcoli from "../../utils/codon-optimizer.js";
 
 export default function PlasmidDesigner(data) {
 
@@ -51,6 +52,9 @@ export default function PlasmidDesigner(data) {
     //   };
 
     console.log(data["data"]["refseq"])
+
+    var protSeq = optimizeForEcoli(data['data']['protein_seq'])
+    console.log(protSeq);
 
     const handleDownload = () => {
         var refseq = data['data']["refseq"]
