@@ -18,48 +18,11 @@ export default function PlasmidDesigner(data) {
 
 
 
-
-
-
-    // const handleDownload = () => {
-    //     const plasmid = "ATGCTAGC"
-    //     // const plasmid = regulator.plasmid_sequence
-    
-    //     // Define the file name and type
-    //     const fileName = data.refseq+'_plasmid.gb';
-    //     const mimeType = 'text/plain';
-    
-    //     // Create a Blob from the plasmid sequence
-    //     const blob = new Blob([plasmid], { type: mimeType });
-    
-    //     // Create a URL for the Blob
-    //     const url = URL.createObjectURL(blob);
-    
-    //     // Create a temporary anchor element
-    //     const a = document.createElement('a');
-    //     a.href = url;
-    //     a.download = fileName;
-    
-    //     // Append the anchor to the body
-    //     document.body.appendChild(a);
-    
-    //     // Programmatically click the anchor to trigger the download
-    //     a.click();
-    
-    //     // Clean up by removing the anchor and revoking the object URL
-    //     document.body.removeChild(a);
-    //     URL.revokeObjectURL(url);
-    //   };
-
-    console.log(data["data"]["refseq"])
-
-    var protSeq = optimizeForEcoli(data['data']['protein_seq'])
-    console.log(protSeq);
-
     const handleDownload = () => {
         var refseq = data['data']["refseq"]
         var regulated_seq = data['data']['protein']['context']['promoter']['regulated_seq']
-        const genbank = generateGenBank(refseq, reporter, regulated_seq, expressionPromoter);
+        var codonOptimizedReg = optimizeForEcoli(data['data']['protein_seq'])
+        const genbank = generateGenBank(refseq, reporter, regulated_seq, expressionPromoter, rbs, codonOptimizedReg, backbone);
         downloadGenBank(genbank, data['data']['refseq']);
     }
 
@@ -247,7 +210,7 @@ export default function PlasmidDesigner(data) {
                                         <MenuItem value={"P250"}>P250</MenuItem>
                                         <MenuItem value={"P500"}>P500</MenuItem>
                                         <MenuItem value={"P750"}>P750</MenuItem>
-                                        <MenuItem value={"P1000"}>P71000</MenuItem>
+                                        <MenuItem value={"P1000"}>P1000</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>

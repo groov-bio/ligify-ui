@@ -148,11 +148,7 @@ class GenBankGenerator {
     /**
      * Main function to create GenBank file
      */
-    createGenBank(regulatorName, reporter, promoterSeq, expressionPromoter) {
-        // Codon optimize the natural sequence
-        // const optRegulatorSeq = this.codonOptimize ? 
-        //     this.codonOptimize(regulatorProteinSeq) : 
-        //     regulatorProteinSeq;
+    createGenBank(regulatorName, reporter, promoterSeq, expressionPromoter, regulatorRBS, regulatorCDS, backbone) {
         
         // Initialize annotations
         const annotations = [
@@ -276,11 +272,98 @@ class GenBankGenerator {
         )
         index += expressionPromoterSeq.length
 
+        // add Regulator bicistronic RBS
+        const RBSs = {
+            "0.75": "GGGCCCAAGTTCACTTAAAAAGGAGATCAACAATGAAAGCAATTTTCGTACTGAAACATCTTAATCATGCGGATTCTAGTTAAAT",
+            "2.3": "GGGCCCAAGTTCACTTAAAAAGGAGATCAACAATGAAAGCAATTTTCGTACTGAAACATCTTAATCATGCTATGTGTTTTTAAAT",
+            "4.6": "GGGCCCAAGTTCACTTAAAAAGGAGATCAACAATGAAAGCAATTTTCGTACTGAAACATCTTAATCATGCGCCGGTGTTTTAAAT",
+            "8.5": "GGGCCCAAGTTCACTTAAAAAGGAGATCAACAATGAAAGCAATTTTCGTACTGAAACATCTTAATCATGCGGCGCGGTGTTAAAT",
+            "13": "GGGCCCAAGTTCACTTAAAAAGGAGATCAACAATGAAAGCAATTTTCGTACTGAAACATCTTAATCATGCTTATCGGGGTTAAAT",
+            "18": "GGGCCCAAGTTCACTTAAAAAGGAGATCAACAATGAAAGCAATTTTCGTACTGAAACATCTTAATCATGCTTGCAGAGGTTAAAT",
+            "23": "GGGCCCAAGTTCACTTAAAAAGGAGATCAACAATGAAAGCAATTTTCGTACTGAAACATCTTAATCATGCGGAGGCAGCTTAAAT",
+        }
+        var regulatorRBSSeq = RBSs[regulatorRBS]
+        annotations.push(
+            {"type": "misc_feature",
+            "label": regulatorRBS,
+            "color": "#ff8080",
+            "start": index,
+            "end": index+regulatorRBSSeq.length,
+            "strand": 1}
+        )
+        index += regulatorRBSSeq.length
 
+        // Add regulator coding sequence
+        annotations.push(
+            {"type": "misc_feature",
+            "label": regulatorName,
+            "color": "#ffa3fa",
+            "start": index,
+            "end": index+regulatorCDS.length,
+            "strand": 1}
+        )
+        index += regulatorCDS.length
+
+        // Add regulator's terminator
+        const regTerminator = "TAATCCTAATCACTTTCAGCCAAAAAACTTAAGACCGCCGGTCTTGTCCACTACCTTGCAGTAATGCGGTGGACAGGATCGGCGGTTTTCTTTTCTCTTCTCAA"
+        annotations.push(
+            {"type": "misc_feature",
+            "label": "ECK12_spy_terminator",
+            "color": "#a6a6a6",
+            "start": index + 14,
+            "end": index + regTerminator.length,
+            "strand": 1}
+        )
+        index += regTerminator.length
+
+
+        if (backbone === "pTWIST_Kan_Medium"){
+            // Add p15A-Kan backbone
+            var backboneSeq = 'AGGCTAGGTGGAGGCTCAGTGATGATAAGTCTGCGATGGTGGATGCATGTGTCATGGTCATAGCTGTTTCCTGTGTGAAATTGTTATCCGCTCAGAGGGCACAATCCTATTCCGCGCTATCCGACAATCTCCAAGACATTAGGTGGAGTTCAGTTCGGCGAGCGGAAATGGCTTACGAACGGGGCGGAGATTTCCTGGAAGATGCCAGGAAGATACTTAACAGGGAAGTGAGAGGGCCGCGGCAAAGCCGTTTTTCCATAGGCTCCGCCCCCCTGACAAGCATCACGAAATCTGACGCTCAAATCAGTGGTGGCGAAACCCGACAGGACTATAAAGATACCAGGCGTTTCCCCCTGGCGGCTCCCTCGTGCGCTCTCCTGTTCCTGCCTTTCGGTTTACCGGTGTCATTCCGCTGTTATGGCCGCGTTTGTCTCATTCCACGCCTGACACTCAGTTCCGGGTAGGCAGTTCGCTCCAAGCTGGACTGTATGCACGAACCCCCCGTTCAGTCCGACCGCTGCGCCTTATCCGGTAACTATCGTCTTGAGTCCAACCCGGAAAGACATGCAAAAGCACCACTGGCAGCAGCCACTGGTAATTGATTTAGAGGAGTTAGTCTTGAAGTCATGCGCCGGTTAAGGCTAAACTGAAAGGACAAGTTTTGGTGACTGCGCTCCTCCAAGCCAGTTACCTCGGTTCAAAGAGTTGGTAGCTCAGAGAACCTTCGAAAAACCGCCCTGCAAGGCGGTTTTTTCGTTTTCAGAGCAAGAGATTACGCGCAGACCAAAACGATCTCAAGAAGATCATCTTATTAAGTCTGACGCTCTATTCAACAAAGCCGCCGTCCATGGGTAGGGGGCTTCAAATCGTCCGCTCTGCCAGTGTTACAACCAATTAACAAATTCTGATTAGAAAAACTCATCGAGCATCAAATGAAACTGCAATTTATTCATATCAGGATTATCAATACCATATTTTTGAAAAAGCCGTTTCTGTAATGAAGGAGAAAACTCACCGAGGCAGTTCCATAGGATGGCAAGATCCTGGTATCGGTCTGCGATTCCGACTCGTCCAACATCAATACAACCTATTAATTTCCCCTCGTCAAAAATAAGGTTATCAAGTGAGAAATCACCATGAGTGACGACTGAATCCGGTGAGAATGGCAAAAGCTTATGCATTTCTTTCCAGACTTGTTCAACAGGCCAGCCATTACGCTCGTCATCAAAATCACTCGCATCAACCAAACCGTTATTCATTCGTGATTGCGCCTGAGCGAGACGAAATACGCGATCGCTGTTAAAAGGACAATTACAAACAGGAATCGAATGCAACCGGCGCAGGAACACTGCCAGCGCATCAACAATATTTTCACCTGAATCAGGATATTCTTCTAATACCTGGAATGCTGTTTTCCCGGGGATCGCAGTGGTGAGTAACCATGCATCATCAGGAGTACGGATAAAATGCTTGATGGTCGGAAGAGGCATAAATTCCGTCAGCCAGTTTAGTCTGACCATCTCATCTGTAACATCATTGGCAACGCTACCTTTGCCATGTTTCAGAAACAACTCTGGCGCATCGGGCTTCCCATACAATCGATAGATTGTCGCACCTGATTGCCCGACATTATCGCGAGCCCATTTATACCCATATAAATCAGCATCCATGTTGGAATTTAATCGCGGCCTCGAGCAAGACGTTTCCCGTTGAATATGGCTCATAACACCCCTTGTATTACTGTTTATGTAAGCAGACAGTTTTATTGTTCATGATGATATATTTTTATCTTGTGCAATGTAACATCAGAGATTTTGAGACACAACGTGGCTTTCCCCCGCCGCTCTAGAACTAGTGGATCCAAATAAAACGAAAGGCTCAGTCGAAAGACTGGGCCTTTCGTTTTATCTGTTGTTTGTCGCATTATACGAGACGTCCAGGTTGGGATACCTGAAACAAAACCCATCGTACGGCCAAGGAAGTCTCCAATAACTGTGATCCACCACAAGCGCCAGGGTTTTCCCAGTCACGACGTTGTAAAACGACGGCCAGTCATGCATAATCCGCACGCATCTGGAATAAGGAAGTGCCATTCCGCCTGACCT'
+            annotations.push(
+                {"type": "misc_feature",
+                "label": "pTWIST_Kan_Medium",
+                "color": "#ffffff",
+                "start": index,
+                "end": index + backboneSeq.length,
+                "strand": 1}
+            )
+            // origin
+            annotations.push(
+                {"type": "misc_feature",
+                "label": "p15A origin",
+                "color": "#ffb92e",
+                "start": index + 252,
+                "end": index + 252 + 546,
+                "strand": -1}
+            )
+            index += 798
+            // kan
+            annotations.push(
+                {"type": "misc_feature",
+                "label": "Kan",
+                "color": "#94ffa4",
+                "start": index + 110,
+                "end": index + 110 + 816,
+                "strand": -1}
+            )
+            index += 926
+            // terminator
+            annotations.push(
+                {"type": "misc_feature",
+                "label": "rrnB T1 terminator",
+                "color": "#a6a6a6",
+                "start": index + 137,
+                "end": index + 137 + 47,
+                "strand": 1}
+            )
+        } else {
+            var backboneSeq = ""
+        }
 
 
         
-        const seq = terminator + reporterSeq + reporterRBS + reporterInsulator + promoterSeq + bidirectionalTerminator + expressionPromoterSeq
+        const seq = terminator + reporterSeq + reporterRBS + reporterInsulator + promoterSeq + bidirectionalTerminator + expressionPromoterSeq + regulatorCDS + regTerminator + backboneSeq
         
         
 
@@ -315,31 +398,7 @@ class GenBankGenerator {
                 record.addFeature(feature);
             });
 
-        // Add annotations if function provided
-        // if (this.getAnnotations) {
-        //     const annotations = this.getAnnotations(promoterSeq, optRegulatorSeq, regulatorName, regulatorProteinSeq);
-            
-        //     annotations.forEach(annotation => {
-        //         const qualifiers = {
-        //             ApEinfo_fwdcolor: [annotation.color],
-        //             label: annotation.label
-        //         };
-                
-        //         if (annotation.translation) {
-        //             qualifiers.translation = [annotation.translation];
-        //         }
-                
-        //         const feature = new SeqFeature(
-        //             annotation.start,
-        //             annotation.end,
-        //             annotation.strand,
-        //             annotation.type,
-        //             qualifiers
-        //         );
-                
-        //         record.addFeature(feature);
-        //     });
-        // }
+    
         
         return this.recordToGenBank(record);
     }
@@ -365,9 +424,9 @@ export const createGenBankGenerator = (options = {}) => {
 /**
  * Convenience function for quick GenBank generation
  */
-export const generateGenBank = (regulatorName, reporter, promoterSeq, expressionPromoter) => {
+export const generateGenBank = (regulatorName, reporter, promoterSeq, expressionPromoter, regulatorRBS, regulatorCDS, backbone) => {
     const generator = createGenBankGenerator();
-    return generator.createGenBank(regulatorName, reporter, promoterSeq, expressionPromoter);
+    return generator.createGenBank(regulatorName, reporter, promoterSeq, expressionPromoter, regulatorRBS, regulatorCDS, backbone);
 };
 
 /**

@@ -132,23 +132,7 @@ const ECOLI_CODON_TABLE = {
     'GGT': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G'
   };
   
-  /**
-   * Validates DNA sequence contains only valid nucleotides
-   * @param {string} sequence - DNA sequence to validate
-   * @returns {boolean} - True if valid, false otherwise
-   */
-  function validateDnaSequence(sequence) {
-    return /^[ATCG]*$/i.test(sequence);
-  }
-  
-  /**
-   * Validates protein sequence contains only valid amino acids
-   * @param {string} sequence - Protein sequence to validate
-   * @returns {boolean} - True if valid, false otherwise
-   */
-  function validateProteinSequence(sequence) {
-    return /^[FLSYCWPHQRIMTNKVADEG*]*$/i.test(sequence);
-  }
+
   
   /**
    * Translates DNA sequence to protein sequence
@@ -156,13 +140,6 @@ const ECOLI_CODON_TABLE = {
    * @returns {string} - Translated protein sequence
    */
   function translateDnaToProtein(dnaSequence) {
-    if (!validateDnaSequence(dnaSequence)) {
-      throw new Error('Invalid DNA sequence. Must contain only A, T, C, G nucleotides.');
-    }
-    
-    if (dnaSequence.length % 3 !== 0) {
-      throw new Error('DNA sequence length must be divisible by 3 (complete codons).');
-    }
     
     let protein = '';
     for (let i = 0; i < dnaSequence.length; i += 3) {
@@ -487,7 +464,6 @@ const ECOLI_CODON_TABLE = {
   function optimizeForEcoli(proteinSequence, options = {}) {
     const {
       strategy = 'most_frequent',
-      removeStopCodons = true,
       minGc = 35,
       maxGc = 70,
       maxHomopolymer = 10,
@@ -496,21 +472,10 @@ const ECOLI_CODON_TABLE = {
       maxRetries = 3
     } = options;
     
-    if (!validateProteinSequence(proteinSequence)) {
-      throw new Error('Invalid protein sequence. Must contain only standard amino acid letters.');
-    }
     
     const upperProtein = proteinSequence.toUpperCase();
     let processedProtein = upperProtein;
     
-    // Remove internal stop codons if requested
-    if (removeStopCodons) {
-      processedProtein = upperProtein.replace(/\*/g, '');
-      // Add stop codon at the end if it was removed
-      if (upperProtein.endsWith('*')) {
-        processedProtein += '*';
-      }
-    }
     
     const constraints = {
       minGc,
@@ -567,10 +532,6 @@ const ECOLI_CODON_TABLE = {
         
         // Calculate optimization statistics
         const stats = {
-          originalLength: proteinSequence.length,
-          optimizedLength: processedProtein.length,
-          dnaLength: optimizedDna.length,
-          stopCodonsRemoved: upperProtein.length - processedProtein.length,
           codonUsage: codonUsage,
           gcContent: finalGcContent,
           homopolymerViolations: homopolymerViolations,
@@ -579,13 +540,15 @@ const ECOLI_CODON_TABLE = {
           warnings: warnings,
           attempt: attempt + 1
         };
-        
-        const result = {
-          originalProtein: proteinSequence,
-          optimizedProtein: processedProtein,
-          optimizedDna: optimizedDna,
-          statistics: stats
-        };
+
+            // keep just to know that there are useful stats that we can pull later if needed
+        // const result = {
+        //     optimizedDna: optimizedDna,
+        //     statistics: stats
+        //   };
+
+        // Add a stop codon
+        const result =  optimizedDna + "TAA";
         
         // Keep track of best result
         if (score > bestScore) {
@@ -593,9 +556,9 @@ const ECOLI_CODON_TABLE = {
           bestResult = result;
         }
         
-        // If perfect score achieved, return immediately
+        // If perfect score achieved, return immediately (with a stop codon)
         if (score >= 100) {
-          return result;
+          return optimizedDna + "TAA";
         }
         
       } catch (error) {
@@ -613,24 +576,11 @@ const ECOLI_CODON_TABLE = {
     return bestResult;
   }
   
-  /**
-   * Reverse optimizes a DNA sequence by translating it to protein and re-optimizing
-   * @param {string} dnaSequence - DNA sequence to reverse optimize
-   * @param {Object} options - Optimization options
-   * @returns {Object} - Optimization result
-   */
-  function reverseOptimize(dnaSequence, options = {}) {
-    const protein = translateDnaToProtein(dnaSequence);
-    return optimizeForEcoli(protein, options);
-  }
   
   // Export functions for use in React app
   export {
     optimizeForEcoli,
-    reverseOptimize,
     translateDnaToProtein,
-    validateDnaSequence,
-    validateProteinSequence,
     calculateGcContent,
     findHomopolymerViolations,
     findForbiddenSequenceViolations,
