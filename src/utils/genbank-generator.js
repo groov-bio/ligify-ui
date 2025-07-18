@@ -107,6 +107,48 @@ class GenBankGenerator {
         return featureStr;
     }
     
+
+    /**
+     * Translates DNA sequence to protein using standard genetic code
+     */
+     translateDNA(dnaSequence, strand = 1) {
+        const geneticCode = {
+            'TTT': 'F', 'TTC': 'F', 'TTA': 'L', 'TTG': 'L',
+            'TCT': 'S', 'TCC': 'S', 'TCA': 'S', 'TCG': 'S',
+            'TAT': 'Y', 'TAC': 'Y', 'TAA': '*', 'TAG': '*',
+            'TGT': 'C', 'TGC': 'C', 'TGA': '*', 'TGG': 'W',
+            'CTT': 'L', 'CTC': 'L', 'CTA': 'L', 'CTG': 'L',
+            'CCT': 'P', 'CCC': 'P', 'CCA': 'P', 'CCG': 'P',
+            'CAT': 'H', 'CAC': 'H', 'CAA': 'Q', 'CAG': 'Q',
+            'CGT': 'R', 'CGC': 'R', 'CGA': 'R', 'CGG': 'R',
+            'ATT': 'I', 'ATC': 'I', 'ATA': 'I', 'ATG': 'M',
+            'ACT': 'T', 'ACC': 'T', 'ACA': 'T', 'ACG': 'T',
+            'AAT': 'N', 'AAC': 'N', 'AAA': 'K', 'AAG': 'K',
+            'AGT': 'S', 'AGC': 'S', 'AGA': 'R', 'AGG': 'R',
+            'GTT': 'V', 'GTC': 'V', 'GTA': 'V', 'GTG': 'V',
+            'GCT': 'A', 'GCC': 'A', 'GCA': 'A', 'GCG': 'A',
+            'GAT': 'D', 'GAC': 'D', 'GAA': 'E', 'GAG': 'E',
+            'GGT': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G'
+        };
+        
+        let sequence = dnaSequence.toUpperCase();
+        
+        // If negative strand, reverse complement first
+        if (strand === -1) {
+            const complement = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G'};
+            sequence = sequence.split('').reverse().map(base => complement[base] || base).join('');
+        }
+        
+        let protein = '';
+        for (let i = 0; i < sequence.length - 2; i += 3) {
+            const codon = sequence.slice(i, i + 3);
+            protein += geneticCode[codon] || 'X';
+        }
+        
+        return protein;
+    }
+
+
     /**
      * Converts SeqRecord to GenBank format string
      */
@@ -169,7 +211,17 @@ class GenBankGenerator {
         if (reporter === "GFP"){
             reporterSeq = "ttatttgtatagttcatccatgccatgtgtaatcccagcagctgttacaaactcaagaaggaccatgtggtctctcttttcgttgggatctttcgaaagggcagattgtgtggacaggtaatggttgtctggtaaaaggacagggccatcgccaattggagtattttgttgataatggtctgctagttgaacgcttccatcttcaatgttgtgtctaattttgaagttaactttgattccattcttttgtttgtctgccatgatgtatacattgtgtgagttatagttgtattccaatttgtgtccaagaatgtttccatcttctttaaaatcaataccttttaactcgattctattaacaagggtatcaccttcaaatttgacttcagcacgtgtcttgtagttcccgtcatctttgaaaaatatagttctttcctgtacataaccttcgggcatggcactcttgaaaaagtcatgctgtttcatatgatctgggtatctcgcaaagcattgaagaccatacgcgaaagtagtgacaagtgttggccatggaacaggtagttttccagtagtgcaaataaatttaagggtaagttttccgtatgttgcatcaccttcaccctctccactgacagaaaatttgtgcccattaacatcaccatctaattcaacaagaattgggacaactccagtgaaaagttcttctcctttactcat"
             reporterRBS = "ATATACCCCCTTATTCTCCCGTA"
+            const gfpTranslation = this.translateDNA(reporterSeq, -1);
             // add reporter annotation
+            annotations.push(
+                {"type": "CDS",
+                "label": "GFP_mut2",
+                "color": "#00ff1e",
+                "start": index,
+                "end": index+reporterSeq.length,
+                "strand": -1,
+                "translation": gfpTranslation}
+            )
             annotations.push(
                 {"type": "misc_feature",
                 "label": "GFP_mut2",
@@ -192,7 +244,17 @@ class GenBankGenerator {
         } else {
             reporterSeq = "ttagctccccccggaaccaccagtgctatggcgtgccacggagcgttcgtactgttctactacggtgtagtcctcgttatgagaggtgatatccaatttgcgatcaatattaaacgctcctggcatttgaacaggttttttagctttgtaggtcgttttgaaatcggctaagtagcgcccgccatctttaagacgtaaagccatcttaatatcccccttcaataccacgtcctctgggtataagcgctcagtactcgcctcccatcccatagtgcgcttttgcatgaccggaccatcgggcgggaagttgccaccacgcaattttactttgtagatcagggtcccatcctccaagcttgtatcttgggttactgagacagtacccccgtcctcaaagatcatcacgcgctcccatttgaagccttcggggaagctctgcttccaataatcaggaatatccgctggatgcttaataaaggcgcgagatccgtacatgaactggggacttaagatgtcccaactaaacggcagcgggcccccttttgtcaccttcaattttgctgtttgtgtaccctcataggggcggccttcgccctcgccctcaatctcaaactcgtgaccgttcatcgagccttccatgtgaaccttgaagcgcatgaactctttaatcacagcctctgtcgagtccat"
             reporterRBS = "aattactccttattaacccggaggtttacg"
+            const rfpTranslation = this.translateDNA(reporterSeq, -1);
             // add reporter annotation
+            annotations.push(
+                {"type": "CDS",
+                "label": "RFP (mScarlet-i)",
+                "color": "#ff0037",
+                "start": index,
+                "end": index+reporterSeq.length,
+                "strand": -1,
+                "translation": rfpTranslation}
+            )
             annotations.push(
                 {"type": "misc_feature",
                 "label": "RFP (mScarlet-i)",
@@ -205,7 +267,7 @@ class GenBankGenerator {
             annotations.push(
                 {"type": "misc_feature",
                 "label": "RFP RBS",
-                "color": "#ffdb94",
+                "color": "#ff9191",
                 "start": index+reporterSeq.length,
                 "end": index+reporterSeq.length+reporterRBS.length,
                 "strand": -1}
@@ -238,10 +300,10 @@ class GenBankGenerator {
 
 
         // add bidirectional terminator
-        const bidirectionalTerminator = "ggaccaaaacgaaaaaaggcccccctttcgggaggcctcttttctggaatttggtaccgagtgcagacgtaaaaaaagcggcgtggttagccgcttttttaattgccgga"
+        const bidirectionalTerminator = "CATAAAAAAATGGCGCCGATGGGCGCCATTTTTCACTGTGTCATACGTAAAAAAGGGCGATCTTGCGACCGCCCTTTTTTTATTAAATGT"
         annotations.push(
             {"type": "misc_feature",
-            "label": "DT5 double terminator",
+            "label": "DT60 double terminator",
             "color": "#a6a6a6",
             "start": index,
             "end": index+bidirectionalTerminator.length,
@@ -264,10 +326,26 @@ class GenBankGenerator {
         var expressionPromoterSeq = promoters[expressionPromoter]
         annotations.push(
             {"type": "misc_feature",
-            "label": expressionPromoter,
+            "label": expressionPromoter + " sigma70 Promoter",
             "color": "#ff8080",
             "start": index,
             "end": index+expressionPromoterSeq.length,
+            "strand": 1}
+        )
+        annotations.push(
+            {"type": "misc_feature",
+            "label": "-35",
+            "color": "#ff8080",
+            "start": index + 28,
+            "end": index + 28 + 6,
+            "strand": 1}
+        )
+        annotations.push(
+            {"type": "misc_feature",
+            "label": "-10",
+            "color": "#ff8080",
+            "start": index + 51,
+            "end": index + 51 + 6,
             "strand": 1}
         )
         index += expressionPromoterSeq.length
@@ -283,17 +361,53 @@ class GenBankGenerator {
             "23": "GGGCCCAAGTTCACTTAAAAAGGAGATCAACAATGAAAGCAATTTTCGTACTGAAACATCTTAATCATGCGGAGGCAGCTTAAAT",
         }
         var regulatorRBSSeq = RBSs[regulatorRBS]
+        const leaderPeptideTranslation = this.translateDNA(regulatorRBSSeq.slice(32,83), 1)
         annotations.push(
             {"type": "misc_feature",
-            "label": regulatorRBS,
-            "color": "#ff8080",
+            "label": "Bicistronic RBS "+regulatorRBS,
+            "color": "#ffbd52",
             "start": index,
             "end": index+regulatorRBSSeq.length,
             "strand": 1}
         )
+        annotations.push(
+            {"type": "misc_feature",
+            "label": "5'-UTR",
+            "color": "#ffcb87",
+            "start": index,
+            "end": index + 32,
+            "strand": 1}
+        )
+        annotations.push(
+            {"type": "misc_feature",
+            "label": "RBS",
+            "color": "#ffbd52",
+            "start": index + 70,
+            "end": index + 79,
+            "strand": 1}
+        )
+        annotations.push(
+            {"type": "CDS",
+            "label": "Leader peptide",
+            "color": "#ffbd52",
+            "start": index + 32,
+            "end": index + regulatorRBSSeq.length - 2,
+            "strand": 1,
+            "translation":leaderPeptideTranslation}
+        )
         index += regulatorRBSSeq.length
 
         // Add regulator coding sequence
+        const regulatorTranslation = this.translateDNA(regulatorCDS, 1);
+        annotations.push(
+            {"type": "CDS",
+            "label": regulatorName,
+            "color": "#ffa3fa",
+            "start": index,
+            "end": index+regulatorCDS.length,
+            "strand": 1,
+            "translation":regulatorTranslation}
+        )
         annotations.push(
             {"type": "misc_feature",
             "label": regulatorName,
@@ -323,7 +437,7 @@ class GenBankGenerator {
             annotations.push(
                 {"type": "misc_feature",
                 "label": "pTWIST_Kan_Medium",
-                "color": "#ffffff",
+                "color": "#c2c2c2",
                 "start": index,
                 "end": index + backboneSeq.length,
                 "strand": 1}
@@ -363,7 +477,7 @@ class GenBankGenerator {
 
 
         
-        const seq = terminator + reporterSeq + reporterRBS + reporterInsulator + promoterSeq + bidirectionalTerminator + expressionPromoterSeq + regulatorCDS + regTerminator + backboneSeq
+        const seq = terminator + reporterSeq + reporterRBS + reporterInsulator + promoterSeq + bidirectionalTerminator + expressionPromoterSeq + regulatorRBSSeq + regulatorCDS + regTerminator + backboneSeq
         
         
 
