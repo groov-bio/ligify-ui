@@ -63,8 +63,8 @@ import {
                 </Grid>
 
                     {/* Overflow text onto two lines */}
-                <Grid xs={5} textAlign="left" ml={'15px'} 
-                            >
+                    
+                <Grid xs={5} textAlign="left" ml={'15px'}  >
                 {reg_attr[key]["link"] != "None" ?
                   <Link
                         href={reg_attr[key]["link"]}

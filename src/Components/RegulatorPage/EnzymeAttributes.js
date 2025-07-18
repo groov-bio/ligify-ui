@@ -1,8 +1,7 @@
 // src/EnzymeAttributes.js
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Box,
-    Button,
     Link,
     Paper,
     Typography,
@@ -51,7 +50,7 @@ import {
             mb={1}>
               <Grid container>
 
-                <Grid xs={6} textAlign="right">
+                <Grid textAlign="right">
                   <Typography
                     component="div"
                     width="100px"
@@ -65,7 +64,7 @@ import {
                   </Typography>
                 </Grid>
 
-                <Grid xs={5} textAlign="left" ml={'15px'} >
+                <Grid size={5} textAlign="left" ml={'15px'} >
                 {reg_attr[key]["link"] != "None" ?
                   <Link
                         href={reg_attr[key]["link"]}
@@ -114,7 +113,9 @@ import {
 
                 {/* Enzyme references */}
 
-                <Grid xs={6} textAlign="right">
+                <Grid container size={12}>
+
+                <Grid textAlign="right">
                   <Typography
                     component="div"
                     width="100px"
@@ -129,9 +130,10 @@ import {
                 </Grid>
 
 
-                <Grid xs={5} >
+                <Grid container size={5} textAlign="left" ml={'15px'}>
           {(data.protein.enzyme.dois).map((name, index) => (
-                <Grid xs={12} textAlign="left" ml={'15px'} key={index}>
+
+                <Grid key={index}>
                 <Link
                         href={"https://doi.org/"+name}
                         target="_blank"
@@ -148,8 +150,8 @@ import {
                     </Link>
                 </Grid>
           ))}
-              </Grid>
-
+          </Grid>
+</Grid>
 
           </Paper>
           </Grid>
