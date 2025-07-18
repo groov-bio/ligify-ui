@@ -36,7 +36,7 @@ import {
             >
               {/* Length indicator */}
   
-              <Grid size={{xs:12, sm:12, md:12}} mb={3}>
+              <Grid size={12} mb={3}>
                 <Grid container>
 
                   <Grid  size={{xs:3, sm:1}} textAlign="right">
@@ -64,7 +64,7 @@ import {
                   </Grid>
 
                       {/* Copy button */}
-                  <Grid size={{xs:3, sm:6.5}} textAlign="right">
+                  <Grid size={{xs:3, sm:6.6}} textAlign="right" mb={-3}>
                       <Button
                       variant="outlined">
                         Copy

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Grid, Typography, Paper } from '@mui/material';
+import { Box, Grid, Typography, Paper, Button } from '@mui/material';
 
 export default function ProteinSeq(data) {
 
@@ -40,9 +40,9 @@ export default function ProteinSeq(data) {
           >
             {/* Protein length indicator */}
 
-            <Grid item xs={6} sm={10} md={6} mb={3}>
+            <Grid size={12} mb={3}>
               <Grid container>
-                <Grid item xs={5} sm={2} textAlign="right">
+                <Grid size={{xs:3, sm:1}} textAlign="right">
                   <Typography
                     component="span"
                     width="100px"
@@ -56,7 +56,7 @@ export default function ProteinSeq(data) {
                   </Typography>
                 </Grid>
 
-                <Grid item xs={5} sm={4} textAlign="left" ml={'15px'}>
+                <Grid size={{xs:5, sm:4}} textAlign="left" ml={'15px'}>
                   <Typography
                     component="span"
                     width="100px"
@@ -65,6 +65,15 @@ export default function ProteinSeq(data) {
                     {protein_seq.length}
                   </Typography>
                 </Grid>
+
+                    {/* Copy button */}
+                  <Grid size={{xs:3, sm:6.6}} textAlign="right" mb={-3}>
+                      <Button
+                      variant="outlined">
+                        Copy
+                      </Button>
+                  </Grid>
+
               </Grid>
             </Grid>
 
@@ -81,18 +90,13 @@ export default function ProteinSeq(data) {
               >
                 <Typography
                   component="span"
-                  sx={{ fontSize: { xs: 12, sm: 16 } }}
+                  sx={{ fontSize: { xs: 12, sm:16, md: 18 } }}
                 >
                   {seq}
                 </Typography>
               </Box>
             ))}
-            {/* <Typography
-              component="div"
-              sx={{ fontSize: { xs: 16, sm: 22 }, overflowWrap: 'anywhere' }}
-            >
-              {props.sequence}
-            </Typography> */}
+
           </Paper>
         </Grid>
       </Grid>

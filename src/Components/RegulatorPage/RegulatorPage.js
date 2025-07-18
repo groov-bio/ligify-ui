@@ -85,22 +85,38 @@ import {
           />
       </Grid>
 
-      <Grid size={{xs:12}} mb={9}>
+      <Grid size={{xs:12}} mb={6}>
           <PlasmidDesigner
             data={regulator}
           />
       </Grid>
 
-      <Grid size={{xs:12}} mb={9}>
+      <Grid size={{xs:12}} mb={6}>
           <ProteinSeq
             protein_seq={regulator.protein_seq}
           />
       </Grid>
 
 
+      {/* Predicted Promoter Component */}
+
+      <Grid size={12} mb={6}>
+          <PredictedPromoter
+          promoter={regulator.protein.context.promoter.regulated_seq}/>
+      </Grid>
+
+
+            {/* Genome Context Component */}
+
+      <Grid size={12} mb={6}>
+          <GenomeContext
+          data={regulator.protein.context}/>
+      </Grid>
+
+
             {/* Enzyme Attributes Component */}
 
-          <Grid size={{xs:12,md:6}} mb={9} >
+          <Grid size={{xs:12,md:6}} mb={6} >
 
             <EnzymeAttributes
               data={regulator}/>
@@ -110,29 +126,10 @@ import {
 
             {/* Rank Component */}
 
-          <Grid size={{xs:12,md:6}} mb={9}>
+          <Grid size={{xs:12,md:6}} mb={6}>
 
             <Rank
               data={regulator}/>
-
-          </Grid>
-
-
-            {/* Genome Context Component */}
-
-          <Grid size={12} mb={6}>
-
-            <GenomeContext
-            data={regulator.protein.context}/>
-
-          </Grid>
-
-            {/* Predicted Promoter Component */}
-
-          <Grid size={12} mb={6}>
-
-            <PredictedPromoter
-            promoter={regulator.protein.context.promoter.regulated_seq}/>
 
           </Grid>
 
