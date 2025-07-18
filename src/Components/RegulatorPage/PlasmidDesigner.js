@@ -1,27 +1,29 @@
 import React from 'react';
 
-import { Box, Grid, Typography, Paper, Button } from '@mui/material';
+import { Box, Grid, Typography, Paper, Button, Link } from '@mui/material';
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+
 import Select from '@mui/material/Select';
 
 import {
-    createGenBankGenerator,
     generateGenBank,
     downloadGenBank
 } from "../../utils/genbank-generator.js";
 import optimizeForEcoli from "../../utils/codon-optimizer.js";
+import { Toys } from '@mui/icons-material';
 
 export default function PlasmidDesigner(data) {
 
-
+    const regulated_seq = data['data']['protein']['context']['promoter']['regulated_seq']
+    const protein_seq = data['data']['protein_seq']
 
     const handleDownload = () => {
         var refseq = data['data']["refseq"]
-        var regulated_seq = data['data']['protein']['context']['promoter']['regulated_seq']
-        var codonOptimizedReg = optimizeForEcoli(data['data']['protein_seq'])
+        var codonOptimizedReg = optimizeForEcoli(protein_seq)
         const genbank = generateGenBank(refseq, reporter, regulated_seq, expressionPromoter, rbs, codonOptimizedReg, backbone);
         downloadGenBank(genbank, data['data']['refseq']);
     }
@@ -46,36 +48,15 @@ export default function PlasmidDesigner(data) {
     const changeBackbone = (event) => {
     setBackbone(event.target.value);
     };
+    const [plasmidSize, setPlasmidSize] = React.useState(3374 + regulated_seq.length + (protein_seq.length * 3) + 3);
+    const changePlasmid = (event) => {
+    setPlasmidSize(event.target.value);
+    };
 
-
-    // const create_plasmid(reporter, induciblePromoter, expressionPromoter, rbs, backbone) {
-
-
-
-    // }
 
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-
-
-
-
-        {/* <Grid size={12} mt={3}  mb={2} textAlign="center">
-          <Button 
-            variant="contained"
-            color="secondary"
-            type="submit"
-            style={{fontSize:12}}
-            onClick={handleDownload}
-            // disabled={loading}
-            // startIcon={loading && <CircularProgress size={20} />}
-          >
-            Download Plasmid
-          </Button>
-          </Grid> */}
-
-
 
       <Grid container style={{ width: '100%' }}>
 
@@ -95,7 +76,7 @@ export default function PlasmidDesigner(data) {
             sx={{
               padding: 3,
               border: '1px solid #c7c7c7',
-              background: '#f2f2f2',
+            //   background: '#f2f2f2',
             }}
           >
             {/* Plasmid length indicator */}
@@ -121,7 +102,7 @@ export default function PlasmidDesigner(data) {
                             width="100px"
                             sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }}
                         >
-                            4,128 bp
+                            {plasmidSize} bp
                         </Typography>
                     </Grid>
             </Grid>
@@ -130,7 +111,7 @@ export default function PlasmidDesigner(data) {
             {/* Plasmid designer image */}
 
                 <Grid container size={12}>
-                    <Grid size={{xs:12, md:6}} mt={3 } pr={2}>
+                    <Grid size={{xs:12, md:6}} mt={3 } pr={2} sx={{borderRight: "1px solid black"}}>
                         <Box
                         component="img"
                         justifyContent="center"
@@ -141,10 +122,9 @@ export default function PlasmidDesigner(data) {
                         <Typography
                             sx={{fontSize: 16}}
                             mt={2}
+                            textAlign="center"
                         >
                             <b>Reporter plasmid architecture</b>
-                            <br/>
-                            other words
                         </Typography>
                     </Grid>
 
@@ -159,7 +139,7 @@ export default function PlasmidDesigner(data) {
 
                     <Grid size={{xs:12, md:6}} mt={3} pl={2}>
                         
-                        <Grid container>
+                        <Grid container >
 
                             <Grid size={{xs:12, md:6}} p={2}>
                                 <FormControl fullWidth>
@@ -173,6 +153,14 @@ export default function PlasmidDesigner(data) {
                                     >
                                         <MenuItem value={"GFP"}>GFP</MenuItem>
                                         <MenuItem value={"RFP"}>RFP</MenuItem>
+
+                                    <FormHelperText>
+                                        <Typography sx={{fontSize:16, width:220, borderTop:"1px solid black"}} p={2}>
+                                            Fluorescent reporter info: <br/>
+                                            <a style={{paddingLeft:50}} href="https://www.fpbase.org/protein/gfpmut2/"  target="_blank">GFP</a>
+                                            <a style={{paddingLeft:50}} href="https://www.fpbase.org/protein/mscarlet-i3/"  target="_blank">RFP</a>
+                                        </Typography>
+                                    </FormHelperText>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -189,8 +177,14 @@ export default function PlasmidDesigner(data) {
                                     >
                                         <MenuItem value={"Forward"}>Forward</MenuItem>
                                         <MenuItem value={"Reverse"}>Reverse</MenuItem>
+                                    <FormHelperText>
+                                        <Typography sx={{fontSize:16, width:220, borderTop:"1px solid black"}} p={2}>
+                                            Set the orientation of the regulator-controlled promoter
+                                        </Typography>
+                                    </FormHelperText>
                                     </Select>
                                 </FormControl>
+
                             </Grid>
 
                             <Grid size={{xs:12, md:6}} p={2}>
@@ -211,6 +205,13 @@ export default function PlasmidDesigner(data) {
                                         <MenuItem value={"P500"}>P500</MenuItem>
                                         <MenuItem value={"P750"}>P750</MenuItem>
                                         <MenuItem value={"P1000"}>P1000</MenuItem>
+
+                                        <FormHelperText>
+                                            <Typography sx={{fontSize:16, width:220, borderTop:"1px solid black"}} p={2}>
+                                                An extension of the sigma70 Anderson series promoters <br/>
+                                                <a href="https://pubmed.ncbi.nlm.nih.gov/34985281/"  target="_blank">More info here</a>
+                                            </Typography>
+                                        </FormHelperText>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -232,6 +233,14 @@ export default function PlasmidDesigner(data) {
                                         <MenuItem value={"13"}>13</MenuItem>
                                         <MenuItem value={"18"}>18</MenuItem>
                                         <MenuItem value={"23"}>23</MenuItem>
+
+                                        <FormHelperText>
+                                            <Typography sx={{fontSize:16, width:220, borderTop:"1px solid black"}} p={2}>
+                                                A series of bicistronic context-independent RBSs <br/>
+                                                <a href="https://pubs.acs.org/doi/10.1021/acssynbio.3c00093"  target="_blank">More info here</a>
+                                            </Typography>
+                                        </FormHelperText>
+
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -250,6 +259,13 @@ export default function PlasmidDesigner(data) {
                                         <MenuItem value={"pTWIST_Amp_Medium"}>pTWIST_Amp_Medium</MenuItem>
                                         <MenuItem value={"pTWIST_Chlor_Medium"}>pTWIST_Chlor_Medium</MenuItem>
                                         <MenuItem value={"None"}>None</MenuItem>
+
+                                        <FormHelperText>
+                                            <Typography sx={{fontSize:16, width:220, borderTop:"1px solid black"}} p={2}>
+                                                Twist Biosciences cloning vectors. .
+                                                <a href="https://www.twistbioscience.com/products/genes/vectors?tab=catalog-vectors"  target="_blank">More info here</a>
+                                            </Typography>
+                                        </FormHelperText>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -271,23 +287,11 @@ export default function PlasmidDesigner(data) {
 
                         </Grid>
 
+                    </Grid>
 
                     </Grid>
 
 
-
-
-
-                    </Grid>
-
-
-
-            {/* <Typography
-              component="div"
-              sx={{ fontSize: { xs: 16, sm: 22 }, overflowWrap: 'anywhere' }}
-            >
-              {props.sequence}
-            </Typography> */}
           </Paper>
         </Grid>
       </Grid>
