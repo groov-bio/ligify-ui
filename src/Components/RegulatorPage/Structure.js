@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ProtvistaStructure from 'protvista-structure';
+import '@nightingale-elements/nightingale-structure';
 
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -61,12 +61,10 @@ export default function Structure({ accession }) {
                 </Typography>
               </div>
             ) : (
-              <protvista-structure
-                key={accession} // Forces re-mounting on accession change
+              <nightingale-structure
+                protein-accession={accession} // Forces re-mounting on accession change
                 height="500px"
-                accession={accession}
-                structureID={`AF-${accession}-F1`}
-                // data={structureData} // Pass fetched data directly
+                structure-id={`AF-${accession}-F1`}
                 hide-table
               />
             )
@@ -79,9 +77,4 @@ export default function Structure({ accession }) {
       </Grid>
     </Box>
   );
-}
-
-// Define the custom element if not already defined elsewhere
-if (!window.customElements.get('protvista-structure')) {
-  window.customElements.define('protvista-structure', ProtvistaStructure);
 }
