@@ -181,7 +181,7 @@ export default function GenomeContext({ data, alias }) {
                     pt={1}
                     pb={1}
                     sx={{
-                      fontSize: { xs: 10, sm: 12, md: 12 },
+                      fontSize: { xs: 10, sm: 12, md: 16 },
                       width: '90%',
                       display: 'inline-block',
                       backgroundColor: 'red',
@@ -198,7 +198,7 @@ export default function GenomeContext({ data, alias }) {
                     pt={1}
                     pb={1}
                     sx={{
-                      fontSize: { xs: 10, sm: 12, md: 12 },
+                      fontSize: { xs: 10, sm: 12, md: 16 },
                       width: '90%',
                       display: 'inline-block',
                       backgroundColor: 'yellow',
@@ -215,7 +215,7 @@ export default function GenomeContext({ data, alias }) {
                     pt={1}
                     pb={1}
                     sx={{
-                      fontSize: { xs: 10, sm: 12, md: 12 },
+                      fontSize: { xs: 10, sm: 12, md: 16 },
                       width: '90%',
                       display: 'inline-block',
                       backgroundColor: 'blue',
@@ -232,7 +232,7 @@ export default function GenomeContext({ data, alias }) {
                     pt={1}
                     pb={1}
                     sx={{
-                      fontSize: { xs: 10, sm: 12, md: 12 },
+                      fontSize: { xs: 10, sm: 12, md: 16 },
                       width: '90%',
                       display: 'inline-block',
                       backgroundColor: 'black',
@@ -249,8 +249,8 @@ export default function GenomeContext({ data, alias }) {
                     pt={1}
                     pb={1}
                     sx={{
-                      fontSize: { xs: 10, sm: 12, md: 12 },
-                      width: '90%',
+                      fontSize: { xs: 10, sm: 12, md: 14 },
+                      width: '100%',
                       display: 'inline-block',
                       backgroundColor: 'green',
                       borderRadius: '10px',
@@ -298,7 +298,7 @@ export default function GenomeContext({ data, alias }) {
                       <Grid
                         size={{xs:8, sm:3, md:2}}
                         textAlign="left"
-                        ml={'15px'}
+                        ml={'25px'}
                       >
                         <Link
                           href={
@@ -348,7 +348,8 @@ export default function GenomeContext({ data, alias }) {
                       <Grid
                         size={{xs:8,sm:4,md:5}}
                         textAlign="left"
-                        ml={'15px'}
+                        ml={'35px'}
+                        pl={'15px'}
                         maxWidth={{sm:'50%',md:'300px'}}
                         sx={{overFlow:"wrap"}}
                       >
