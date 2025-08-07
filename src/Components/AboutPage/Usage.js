@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, Typography } from '@mui/material';
 
-export default function LigifyDB() {
+export default function Usage() {
   return (
     <Box
       mb={5}
@@ -16,8 +16,17 @@ export default function LigifyDB() {
         fontWeight="300"
         gutterBottom
       >
-        A database of predicted biosensors
+        Usage
       </Typography>
+
+      <Typography
+        sx={{ fontSize: { xs: 18, sm: 22, md: 24 } }}
+        mt={1}
+        fontWeight="300"
+        gutterBottom
+      >
+        Querying LigifyDB
+      </Typography >
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
         ligify<sup>DB</sup> is an open-source database of bacterial transcription factor-ligand associations
         predicted by genome context. The objective of ligify<sup>DB</sup> is to help researchers reveal the 
@@ -29,17 +38,6 @@ export default function LigifyDB() {
         and Joshua D. Love.
       </Typography>
 
-      <Typography
-        sx={{ fontSize: { xs: 18, sm: 22, md: 24 } }}
-        mt={3}
-        fontWeight="300"
-        gutterBottom
-      >
-        Prediction method
-      </Typography >
-      <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
-        --Description of method --
-      </Typography >        
 
         <Typography
         sx={{ fontSize: { xs: 18, sm: 22, md: 24 } }}
@@ -47,7 +45,7 @@ export default function LigifyDB() {
         fontWeight="300"
         gutterBottom
       >
-        Comparison to previous version
+        Building biosensor plasmids
       </Typography >
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
         The core algorithm behind Ligify predictions has been previously published
@@ -56,12 +54,6 @@ export default function LigifyDB() {
         <b>First</b>, accessing predictions is much faster (milliseconds vs minutes) and computationally less expensive, since 
         all data is pulled from a JSON file and requires virtually zero compute. Furthermore, the entire database can be downloaded locally
         (available here).
-        <b>Second</b>, data visualizations are much more rich and interactive since they are now hosted from a React application 
-        rather than a streamlit server. This includes features for protein structure, ligand structure, and genome context.
-        <b>Third</b>, advanced searches can be performed by applying various filters to the entire dataset. For example, a user can 
-        filter the dataset based on a regulator's size, annotation, rank, organism, operon size, or distance to the associated enzyme. In 
-        addition, characterized regulators in groovDB with over 40% identity to ligifyDB regulators are linked, enabling users to support
-        inferences about the ligand or DNA binding properties of the predicted regulator.
 
       </Typography>
 

@@ -136,7 +136,7 @@ export default function Search() {
           <Tabs value={searchTab} onChange={handleTabChange} centered>
             <Tab label="RefSeq" />
             <Tab label="Ligand" />
-            <Tab label="Sequence" />
+            {/* <Tab label="Sequence" /> */}
           </Tabs>
         </Box>
 
@@ -152,7 +152,7 @@ export default function Search() {
               />
     </Box>
 
-        ) :  searchTab == 1 ? (
+        ) : (
           
       <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
           <TextField
@@ -164,19 +164,22 @@ export default function Search() {
                 />
       </Box>
 
-        ) : (
+        ) 
 
-      <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
-          <TextField
-                  name="seq"
-                  sx={{ width: '100%' }}
-                  label= 'Regulator sequence'
-                  variant="outlined"
-                  placeholder="Enter sequence (e.g., MPEVQTDHPETAELSKP...)"
-                />
-      </Box>
+        // Eventually enable "search via sequencing" using BLAST
 
-        )
+      //   : (
+
+      // <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
+      //     <TextField
+      //             name="seq"
+      //             sx={{ width: '100%' }}
+      //             label= 'Regulator sequence'
+      //             variant="outlined"
+      //             placeholder="Enter sequence (e.g., MPEVQTDHPETAELSKP...)"
+      //           />
+      // </Box>
+      //   )
       }    
 
     </>

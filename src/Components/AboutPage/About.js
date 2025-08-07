@@ -1,3 +1,4 @@
+import React, { useRef } from 'react';
 import {
     Box,
     Grid,
@@ -11,8 +12,9 @@ import {
   } from '@mui/material';
 
 import LigifyDB from "./LigifyDB.js";
-import Citation from "./Citation.js"
+import Usage from "./Usage.js"
 import Statistics from "./Statistics.js"
+import Citation from "./Citation.js"
 import Contact from "./Contact.js"
 
 export default function About() {
@@ -20,6 +22,19 @@ export default function About() {
     const theme = useTheme();
     const isNotSmallScreen = useMediaQuery(theme.breakpoints.up('sm'));
 
+      // Create refs for each section
+    const ligifyDBRef    = useRef(null);
+    const usageRef    = useRef(null);
+    const statisticsRef  = useRef(null);
+    const citationRef    = useRef(null);
+    const contactRef     = useRef(null);
+
+      // Generic scroll handler
+  const handleScroll = (ref) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
     return (
 
@@ -47,9 +62,42 @@ export default function About() {
                 <List sx={{ marginTop: 15 }}>
                     <ListItem
                     button
+                    onClick={() => handleScroll(ligifyDBRef)}
                     style={{ marginLeft: '10px' }}
                     >
-                    <ListItemText primary="topic" />
+                    <ListItemText primary="Introduction" />
+                    </ListItem>
+
+                    <ListItem
+                    button
+                    onClick={() => handleScroll(usageRef)}
+                    style={{ marginLeft: '10px' }}
+                    >
+                    <ListItemText primary="Usage" />
+                    </ListItem>
+
+                    <ListItem
+                    button
+                    onClick={() => handleScroll(statisticsRef)}
+                    style={{ marginLeft: '10px' }}
+                    >
+                    <ListItemText primary="Statistics" />
+                    </ListItem>
+
+                    <ListItem
+                    button
+                    onClick={() => handleScroll(citationRef)}
+                    style={{ marginLeft: '10px' }}
+                    >
+                    <ListItemText primary="Citation" />
+                    </ListItem>
+
+                    <ListItem
+                    button
+                    onClick={() => handleScroll(contactRef)}
+                    style={{ marginLeft: '10px' }}
+                    >
+                    <ListItemText primary="Contact" />
                     </ListItem>
                 </List>
             </Drawer>
@@ -68,10 +116,45 @@ export default function About() {
             >
                 {/* Default About section */}
 
-        <LigifyDB/>
-        <Citation/>
-        <Statistics/>
-        <Contact/>
+        <Box
+            ref={ligifyDBRef}
+            id="introduction"
+            sx={{ scrollMarginTop: '80px' }}  // adjust for any fixed headers
+          >
+            <LigifyDB/>
+        </Box>
+
+        <Box
+            ref={usageRef}
+            id="usage"
+            sx={{ scrollMarginTop: '80px' }}
+          >
+            <Usage />
+          </Box>
+
+          <Box
+            ref={statisticsRef}
+            id="statistics"
+            sx={{ scrollMarginTop: '80px' }}
+          >
+            <Statistics />
+          </Box>
+
+          <Box
+            ref={citationRef}
+            id="citation"
+            sx={{ scrollMarginTop: '80px' }}
+          >
+            <Citation />
+          </Box>
+
+          <Box
+            ref={contactRef}
+            id="contact"
+            sx={{ scrollMarginTop: '80px' }}
+          >
+            <Contact />
+          </Box>
 
 
             </Box>
@@ -80,22 +163,5 @@ export default function About() {
     );
           
 
-
-
-
-//     <Box>
-    
-//     <Typography align="center" sx={{fontSize:15}}>
-//         Predict microbial transcription factors responsive to your chemical
-//         using a guilt-by-association model.
-//     </Typography>
-//     <Typography align="center" sx={{fontSize:15}} mt={1}>
-//         Previous version of Ligify <a href="https://ligify.streamlit.app/" target="_blank" rel="noopener noreferrer"> here</a>.
-//     </Typography>
-//     <Typography align="center" sx={{fontSize:15}} mt={1}>
-//         More information <a href="https://pubs.acs.org/doi/10.1021/acssynbio.4c00372" target="_blank" rel="noopener noreferrer"> here</a>.
-//     </Typography>
-
-//   </Box>
 
 };
