@@ -36,26 +36,24 @@ import {
 
       return (
 
-        <Grid size={{xs:12, sm:8}} offset={{xs:0, sm:2}} mb={3}>
-        <Grid container>
+      <Grid size={{xs:12, sm:12}} offset={{xs:0, lg:1}} mb={3}>
+        <Grid container style={{ width: '100%' }}>
 
         {Object.keys(reg_attr).map((key, index) => (
 
         <>
-        <Grid size={{xs:12, sm:6}} 
+        <Grid size={{xs:12, md:6, lg:5}} 
             key={index} 
             mb={1}>
 
               <Grid container>
 
-                <Grid xs={6} textAlign="right">
+                <Grid size={{xs:5, sm:4, md:5}} textAlign="right" style={{borderRight: '2px solid #0084ff', paddingRight: '25px',}}>
                   <Typography
                     component="div"
-                    width="100px"
                     sx={{
-                      fontSize: { xs: 14, sm: 16, md: 16 },
-                      paddingRight: '15px',
-                      borderRight: '2px solid #0084ff',
+                      fontSize: { xs: 12, sm: 14, md: 16 },
+
                     }}
                   >
                     <b>{key}</b>
@@ -64,7 +62,7 @@ import {
 
                     {/* Overflow text onto two lines */}
                     
-                <Grid xs={5} textAlign="left" ml={'15px'}  >
+                <Grid size={{xs:5, sm:6, md:4}} textAlign="left" ml={3}>
                 {reg_attr[key]["link"] != "None" ?
                   <Link
                         href={reg_attr[key]["link"]}
@@ -74,7 +72,7 @@ import {
                         <Typography
                           component="span"
                           width="100px"
-                          sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }}
+                          sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
 
                         >
                           {reg_attr[key]["name"]}
@@ -86,7 +84,7 @@ import {
                     <Typography
                       component="div"
                       width="250px"
-                      sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }}
+                      sx={{ fontSize: { xs: 12, sm: 14, md: 16 } }}
                     >
                       {reg_attr[key]["name"]}
                     </Typography>
