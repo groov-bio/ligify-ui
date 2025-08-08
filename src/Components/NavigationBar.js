@@ -3,70 +3,28 @@ import React, { useState } from 'react';
 import {
   AppBar,
   Box,
-  Collapse,
   IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   Toolbar,
-  Typography,
   Button,
-  Menu,
-  MenuItem,
-  Fade,
   useMediaQuery,
   useTheme,
-  Avatar,
 } from '@mui/material';
 
 import { Link } from 'react-router-dom';
 
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
 
 const navItems = ['Home', 'Browse', 'About'];
 const linkItems = ['/home', '/database', '/about'];
-const aboutTitles = [
-  'About groovDB',
-  'Citing',
-  'Contributing',
-  'Contact',
-  'Change Log',
-];
-const aboutLinks = [
-  '/about/about-groovdb',
-  '/about/cite',
-  '/about/contributing',
-  '/about/contact',
-  '/about/change-log',
-];
+
 const indexes = [0, 1, 2];
 
-export default function NavigationBar(props) {
-  // State that defines whether or not the top left button was clicked
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  // State to manage the open/close status of the "About" dropdown
-  const [aboutOpen, setAboutOpen] = useState(false);
+export default function NavigationBar() {
 
   //To detect size of screen
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-  // Open or close side bar menu in mobile format.
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const handleAboutToggle = () => {
-    setAboutOpen(!aboutOpen);
-  };
-
 
 
   return (
@@ -81,7 +39,7 @@ export default function NavigationBar(props) {
       >
         {/* Home section */}
 
-        {/* groovDB logo that links to Home */}
+        {/* LigifyDB logo that links to Home ONLY IN DESKTOP */}
         <Box
           sx={{ display: { xs: 'none', sm: 'block' } }}
           style={{ position: 'absolute', left: 0 }}
@@ -98,39 +56,13 @@ export default function NavigationBar(props) {
           </Button>
         </Box>
 
+
         <Toolbar>
-          {/* show only in mobile format */}
-          {/* three little slits icon */}
-          <IconButton
-            disableRipple
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            {mobileOpen ? (
-              <CloseIcon onClick={handleDrawerToggle} sx={{ width: 70 }} />
-            ) : (
-              <MenuIcon onClick={handleDrawerToggle} sx={{ width: 70 }} />
-            )}
-
-            <Link to="/home">
-              <Box
-                component="img"
-                display="flex"
-                justifyContent="center"
-                sx={{ height: '40px', ml: 5 }}
-                src="/Ligify_Logo_Dark.png"
-                alt="Ligify logo dark"
-              />
-            </Link>
-          </IconButton>
-
+            {/* Home/Browse/About sections ONLY IN DESKTOP */}
           <Box
             sx={{ display: { xs: 'none', sm: 'block' } }}
             style={{ alignItems: 'center' }}
           >
-            {/* Browse sections */}
             {indexes.map((index) => (
               <Button
                 key={index}
@@ -155,96 +87,84 @@ export default function NavigationBar(props) {
               </Button>
             ))}
           </Box>
+
+
+
+
+
+
+
+                    {/* LigifyDB logo that links to Home ONLY IN MOBILE */}
+          <IconButton
+            disableRipple
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            sx={{ display: { sm: 'none' } }}
+          >
+
+            <Link to="/home">
+              <Box
+                component="img"
+                display="flex"
+                justifyContent="center"
+                sx={{ height: '40px' }}
+                src="/Ligify_Logo_Dark.png"
+                alt="Ligify logo dark"
+              />
+            </Link>
+
+
+            <Button
+                sx={{
+                  color: '#fff',
+                  marginLeft: 3,
+                  marginRight: { sm: 2, md: 5 },
+                }}
+              >
+                <Link
+                  to={'/database'}
+                  style={{
+                    color: 'white',
+                    textDecoration: 'none',
+                    textTransform: 'none',
+                    fontSize: 16,
+                    fontWeight: 300,
+                  }}
+                >
+                  Browse
+                </Link>
+            </Button>
+
+            <Button
+                sx={{
+                  color: '#fff',
+                  marginLeft: 5,
+                  marginRight: { sm: 2, md: 5 },
+                }}
+              >
+                <Link
+                  to={'/about'}
+                  style={{
+                    color: 'white',
+                    textDecoration: 'none',
+                    textTransform: 'none',
+                    fontSize: 16,
+                    fontWeight: 300,
+                  }}
+                >
+                  About
+                </Link>
+            </Button>
+
+          </IconButton>
+          
         </Toolbar>
 
       </AppBar>
 
-      {/* This is the white box that flips out from the top */}
-      {mobileOpen ? (
-        <List
-          style={{
-            backgroundColor: 'white',
-            position: 'fixed',
-            width: '100%',
-            paddingTop: '70px',
-            zIndex: 1000,
-            borderBottom: '1px solid black',
-          }}
-        >
-          {indexes.map((index) => (
-            <React.Fragment key={index}>
-              {navItems[index] === 'About' ? (
-                <>
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={handleAboutToggle}>
-                      <Typography
-                        style={{
-                          fontSize: 20,
-                          fontWeight: 300,
-                          marginRight: '75%',
-                        }}
-                      >
-                        About
-                      </Typography>
-                      {aboutOpen ? (
-                        <KeyboardArrowUpIcon />
-                      ) : (
-                        <KeyboardArrowDownIcon />
-                      )}
-                    </ListItemButton>
-                  </ListItem>
-                  <Collapse in={aboutOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                      {aboutTitles.map((title, subIndex) => (
-                        <Link
-                          to={aboutLinks[subIndex]}
-                          onClick={handleDrawerToggle}
-                          key={subIndex}
-                          style={{
-                            color: 'black',
-                            textDecoration: 'none',
-                            textTransform: 'none',
-                            width: '100vw',
-                            fontSize: 18,
-                            fontWeight: 300,
-                          }}
-                        >
-                          <ListItem key={subIndex} disablePadding>
-                            <ListItemButton sx={{ pl: 4 }}>
-                              {title}
-                            </ListItemButton>
-                          </ListItem>
-                        </Link>
-                      ))}
-                    </List>
-                  </Collapse>
-                </>
-              ) : (
-                <ListItem disablePadding>
-                  <Link
-                    to={linkItems[index]}
-                    onClick={handleDrawerToggle}
-                    style={{
-                      width: '100%',
-                      textDecoration: 'None',
-                    }}
-                  >
-                    <ListItemButton>
-                      <ListItemText>
-                        <Typography
-                          sx={{ fontSize: 20, fontWeight: 300, color: 'black' }}
-                        >
-                          {navItems[index]}
-                        </Typography>
-                      </ListItemText>
-                    </ListItemButton>
-                  </Link>
-                </ListItem>
-              )}
-            </React.Fragment>
-          ))}
-        </List>
-      ) : null}
+
+
     </>
   );
 }
