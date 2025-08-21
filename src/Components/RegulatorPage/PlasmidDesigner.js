@@ -100,7 +100,8 @@ export default function PlasmidDesigner(data) {
                         <Typography
                             component="span"
                             width="100px"
-                            sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }}
+                            sx={{ fontSize: { xs: 14, sm: 16, md: 16 },
+                                    paddingLeft: {xs:0, sm:3, md:1.5} }}
                         >
                             {plasmidSize} bp
                         </Typography>
@@ -111,7 +112,7 @@ export default function PlasmidDesigner(data) {
             {/* Plasmid designer image */}
 
                 <Grid container size={12}>
-                    <Grid size={{xs:12, md:6}} mt={3 } pr={2} sx={{borderRight: "1px solid black"}}>
+                    <Grid size={{xs:12, md:6}} mt={3 } pr={2} sx={{borderRight: {xs:'none', sm:'none', md:"1px solid black"} }}>
                         <Box
                         component="img"
                         justifyContent="center"
