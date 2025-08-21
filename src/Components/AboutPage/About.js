@@ -151,7 +151,7 @@ export default function About() {
           <Box
             ref={contactRef}
             id="contact"
-            sx={{ scrollMarginTop: '80px' }}
+            sx={{ scrollMarginTop: '80px', width:{md:'100vw', lg:'85vw'}, ml:{md:0, lg:'13vw'} }}
           >
             <Contact />
           </Box>
