@@ -22,7 +22,6 @@ export default function Home() {
       }}
     >
       <Grid
-        item
         size={{xs:12, sm:12, md:6}}
 
         sx={{ position: { xs: 'absolute', sm: 'absolute', md: 'relative' } }}
@@ -41,15 +40,15 @@ export default function Home() {
       </Grid>
 
       {/* Spacer for mobile format */}
-      <Grid item size={1} sx={{ display: { sm: 'block', md: 'none' } }}></Grid>
+      <Grid size={1} sx={{ display: { sm: 'block', md: 'none' } }}></Grid>
 
       {/* Text and search bar */}
-      <Grid item  
-          size={{xs:10, sm:10, md:4}} >
+      <Grid size={{xs:10, sm:10, md:4}} 
+        sx={{mt: {xs:-45, sm:-45,md:0} }}>
 
       <Typography
           sx={{
-            fontSize: { xs: 50, md: 60 },
+            fontSize: { xs: 40, md: 50 },
             mb: 1,
             fontWeight: 500,
           }}
@@ -66,6 +65,7 @@ export default function Home() {
             mb: 5,
             mt: { xs: '-50%', sm: '-50%', md: '0%' },
             fontWeight: 500,
+            display: {xs:'none', sm:'none', md:'block'}
           }}
           component="div"
           textAlign="center"
