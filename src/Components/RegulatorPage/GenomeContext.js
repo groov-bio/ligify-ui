@@ -9,17 +9,12 @@ import {
   Link,
   useMediaQuery,
   useTheme,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 import { generateGraphic } from '../../lib/FormatOperon';
 
-export default function GenomeContext({ data, alias }) {
+export default function GenomeContext({ data }) {
 
   const [operon, setOperon] = useState([]);
   const [geneFocus, setGeneFocus] = useState(undefined);
@@ -158,11 +153,9 @@ export default function GenomeContext({ data, alias }) {
             sx={{
               border: '1px solid #c7c7c7',
               padding: 3,
-              // height: { xs: '300px', sm: '500px' },
             }}
           >
 
-        {/* <Grid size={12} mt={1}> */}
 
             <Grid container spacing={5} columns={12}>
               <Grid size={12} align="center" >
@@ -277,7 +270,7 @@ export default function GenomeContext({ data, alias }) {
                   <Grid container size={12} mt={3} spacing={1}>
 
                   {/* Accession label */}
-            <Grid size={{xs:12,sm:6}} >
+            <Grid size={{xs:12,sm:12, md:6}} >
 
                   <Grid container size={12}>
 
@@ -299,6 +292,7 @@ export default function GenomeContext({ data, alias }) {
                         size={{xs:8, sm:3, md:2}}
                         textAlign="left"
                         ml={'25px'}
+                        sx={{overFlow:"wrap", pl:{xs:0, sm:'30px'} }}
                       >
                         <Link
                           href={
@@ -326,13 +320,13 @@ export default function GenomeContext({ data, alias }) {
 
 
                     {/* Description label */}
-            <Grid size={{xs:12,sm:6}}>
+            <Grid size={{xs:12,sm:12, md:6}}>
 
               <Grid container size={12}>
 
-                      <Grid  size={{xs:3,sm:2}} textAlign="right">
+                      <Grid  size={{xs:3,sm:2, md:2}} textAlign="right">
                         <Typography
-                          component="div"
+                          component="span"
                           width="100px"
                           sx={{
                             fontSize: { xs: 14, sm: 16, md: 16 },
@@ -346,12 +340,11 @@ export default function GenomeContext({ data, alias }) {
 
 
                       <Grid
-                        size={{xs:8,sm:4,md:5}}
+                        size={{xs:8,sm:5,md:6}}
                         textAlign="left"
-                        ml={'35px'}
-                        pl={'15px'}
+                        ml={'25px'}
                         maxWidth={{sm:'50%',md:'300px'}}
-                        sx={{overFlow:"wrap"}}
+                        sx={{overFlow:"wrap", pl:{xs:0, sm:'30px'} }}
                       >
                         <Typography
                           component="div"
