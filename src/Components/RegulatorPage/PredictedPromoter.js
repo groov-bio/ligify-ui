@@ -57,7 +57,8 @@ import {
                     <Typography
                       component="span"
                       width="100px"
-                      sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }}
+                      sx={{ fontSize: { xs: 14, sm: 16, md: 16 }, 
+                            paddingLeft: {xs:0, sm:3, md:1.5}   }}
                     >
                       {promoter.length}
                     </Typography>
@@ -82,7 +83,8 @@ import {
                     display: 'inline-block',
                   }}
                 >
-             <Typography fontSize={18} sx={{wordBreak:"break-word", overflowWrap:"break-word"}}>
+             <Typography
+                sx={{fontSize: { xs: 12, sm:16, md: 18 }, wordBreak:"break-word", overflowWrap:"break-word"}}>
                  {promoter}
              </Typography>
                 </Box>

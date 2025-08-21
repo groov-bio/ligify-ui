@@ -42,8 +42,9 @@ import {
         sx={{ mt: 5 }}
       >
         
-        <Box width="63vw">
-
+        <Box 
+          sx={{width: {xs:'90vw',sm: '80vw', md:"67vw"} }}
+          >
 
 
       <Grid container size={12} mb={6}>

@@ -42,7 +42,7 @@ export default function ProteinSeq(data) {
 
             <Grid size={12} mb={3}>
               <Grid container>
-                <Grid size={{xs:3, sm:1}} textAlign="right">
+                <Grid size={{xs:2, sm:1}} textAlign="right">
                   <Typography
                     component="span"
                     width="100px"
@@ -60,7 +60,8 @@ export default function ProteinSeq(data) {
                   <Typography
                     component="span"
                     width="100px"
-                    sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }}
+                    sx={{ fontSize: { xs: 14, sm: 16, md: 16 },
+                          paddingLeft: {xs:0, sm:3, md:1.5}  }}
                   >
                     {protein_seq.length}
                   </Typography>
