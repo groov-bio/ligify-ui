@@ -38,7 +38,7 @@ import {
             elevation={0}
             sx={{
               border: '1px solid #c7c7c7',
-              padding: "40px",
+              padding: {xs:'20px', sm:'30px', md:'40px'},
             }}
           >
 
@@ -46,10 +46,10 @@ import {
                 <Table size="small" aria-label="DIAMOND hits">
                     <TableHead style={{borderBottom: "1.5px solid black"}}>
                     <TableRow>
-                        <TableCell sx={{fontSize:18}}><strong>Uniprot&nbsp;ID</strong></TableCell>
-                        <TableCell sx={{fontSize:18}}><strong>GroovDB&nbsp;ID</strong></TableCell>
-                        <TableCell sx={{fontSize:18}} align="right"><strong>% Identity</strong></TableCell>
-                        <TableCell sx={{fontSize:18}} align="right"><strong>% Coverage</strong></TableCell>
+                        <TableCell sx={{fontSize: {xs:14, sm:16}}}><strong>Uniprot&nbsp;ID</strong></TableCell>
+                        <TableCell sx={{fontSize: {xs:14, sm:16}}}><strong>GroovDB&nbsp;ID</strong></TableCell>
+                        <TableCell sx={{fontSize: {xs:14, sm:16}}} align="right"><strong>% Identity</strong></TableCell>
+                        <TableCell sx={{fontSize: {xs:14, sm:16}}} align="right"><strong>% Coverage</strong></TableCell>
                     </TableRow>
                     </TableHead>
 
@@ -57,20 +57,20 @@ import {
                     {data.map(({ match_id, alias, pident, coverage }) => (
                         <TableRow key={match_id}>
 
-                                <TableCell component="th" scope="row" sx={{fontSize:18}}>
+                                <TableCell component="th" scope="row" sx={{fontSize: {xs:14, sm:16}}}>
                                    <a href={`https://www.uniprot.org/uniprotkb/${match_id}`} target="_blank" >
                                     {match_id}
                                     </a>
                                 </TableCell>
                               
-                                <TableCell component="th" scope="row" sx={{fontSize:18}}>
-                                   <a href={`https://www.groov.bio/database/${alias}`} target="_blank" >
+                                <TableCell component="th" scope="row" sx={{fontSize: {xs:14, sm:16}}}>
+                                   <a href={`https://www.groov.bio/entry/${alias.split("/").shift()}/${match_id}`} target="_blank" >
                                     {alias.split("/").pop()}
                                     </a>
                                 </TableCell>
 
-                        <TableCell sx={{fontSize:18}} align="right">{pident.toFixed(1)}</TableCell>
-                        <TableCell sx={{fontSize:18}} align="right">{coverage.toFixed(1)}</TableCell>
+                        <TableCell sx={{fontSize: {xs:14, sm:16}}} align="right">{pident.toFixed(1)}</TableCell>
+                        <TableCell sx={{fontSize: {xs:14, sm:16}}} align="right">{coverage.toFixed(1)}</TableCell>
                         </TableRow>
                     ))}
                     </TableBody>

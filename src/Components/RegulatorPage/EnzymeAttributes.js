@@ -37,8 +37,7 @@ import {
             elevation={0}
             sx={{
               border: '1px solid #c7c7c7',
-              padding: "40px",
-              height: { xs: '150px', sm: '250px' },
+              padding: {xs:'20px', sm:'30px', md:'40px'},
             }}
           >
 
@@ -73,9 +72,7 @@ import {
                       >
                         <Typography
                           component="span"
-                          width="100px"
                           sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }}
-
                         >
                           {reg_attr[key]["name"]}
                         </Typography>
@@ -143,7 +140,6 @@ import {
                           component="div"
                           width="250px"
                           sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }}
-
                         >
                           {name}
                         </Typography>

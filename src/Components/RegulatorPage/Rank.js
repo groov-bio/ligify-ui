@@ -1,5 +1,5 @@
 // src/Regulators.js
-import React, { useState } from 'react';
+import React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -46,8 +46,7 @@ import {
             elevation={0}
             sx={{
               border: '1px solid #c7c7c7',
-              padding: "40px",
-              height: { xs: '150px', sm: '250px' },
+              padding: {xs:'20px', sm:'30px', md:'40px'},
             }}
           >
 
@@ -64,9 +63,9 @@ import {
       }}  aria-label="simple table">
         <TableHead sx={{borderBottom: "1.5px solid black"}}>
           <TableRow>
-            <TableCell align="left" sx={{fontSize: "18px"}}><b>Metric</b></TableCell>
-            <TableCell align="right" sx={{fontSize: "18px"}}><b>Value</b></TableCell>
-            <TableCell align="right" sx={{fontSize: "18px"}}><b>Deduction</b></TableCell>
+            <TableCell align="left" sx={{fontSize: {xs:14, sm:16} }}><b>Metric</b></TableCell>
+            <TableCell align="right" sx={{fontSize: {xs:14, sm:16}}}><b>Value</b></TableCell>
+            <TableCell align="right" sx={{fontSize: {xs:14, sm:16}}}><b>Deduction</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -75,11 +74,11 @@ import {
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row" sx={{fontSize: "16px"}}>
+              <TableCell component="th" scope="row" sx={{fontSize: {xs:14, sm:16}}}>
                 {row.name}
               </TableCell>
-              <TableCell sx={{fontSize: "18px"}} align="right">{row.value}</TableCell>
-              <TableCell sx={{fontSize: "18px"}} align="right">{row.deduction}</TableCell>
+              <TableCell sx={{fontSize: {xs:14, sm:16}}} align="right">{row.value}</TableCell>
+              <TableCell sx={{fontSize: {xs:14, sm:16}}} align="right">{row.deduction}</TableCell>
             </TableRow>
           ))}
         </TableBody>
