@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 
 import Home from './Components/HomePage/Home.js';
@@ -14,14 +15,14 @@ import About from './Components/AboutPage/About.js';
 
 import './css/App.css';
 
-
-
+const queryClient = new QueryClient();
 
 export default function App() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   
   return (
+    <QueryClientProvider client={queryClient}>
     <BrowserRouter>
     <Box
       display="grid"
@@ -44,5 +45,6 @@ export default function App() {
       </Box>
     </Box>
     </BrowserRouter>
+    </QueryClientProvider>
   )
 }

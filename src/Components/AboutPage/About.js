@@ -12,10 +12,11 @@ import {
   } from '@mui/material';
 
 import LigifyDB from "./LigifyDB.js";
-import Usage from "./Usage.js"
-import Statistics from "./Statistics.js"
-import Citation from "./Citation.js"
-import Contact from "./Contact.js"
+import Usage from "./Usage.js";
+import Statistics from "./Statistics.js";
+import Download from "./Download.js";
+import Citation from "./Citation.js";
+import Contact from "./Contact.js";
 
 export default function About() {
 
@@ -27,6 +28,7 @@ export default function About() {
     const usageRef    = useRef(null);
     const statisticsRef  = useRef(null);
     const citationRef    = useRef(null);
+    const downloadRef    = useRef(null);
     const contactRef     = useRef(null);
 
       // Generic scroll handler
@@ -86,6 +88,14 @@ export default function About() {
 
                     <ListItem
                     button
+                    onClick={() => handleScroll(downloadRef)}
+                    style={{ marginLeft: '10px' }}
+                    >
+                    <ListItemText primary="Download" />
+                    </ListItem>
+
+                    <ListItem
+                    button
                     onClick={() => handleScroll(citationRef)}
                     style={{ marginLeft: '10px' }}
                     >
@@ -138,6 +148,14 @@ export default function About() {
             sx={{ scrollMarginTop: '80px' }}
           >
             <Statistics />
+          </Box>
+
+          <Box
+            ref={downloadRef}
+            id="download"
+            sx={{ scrollMarginTop: '80px' }}
+          >
+            <Download />
           </Box>
 
           <Box
