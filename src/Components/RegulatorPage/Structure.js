@@ -7,19 +7,41 @@ import Grid from '@mui/material/Grid';
 export default function Structure({ accession }) {
   const [isComponentLoaded, setIsComponentLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [structureExists, setStructureExists] = useState(false);
 
 
 
-  // Lazy load ProtvistaStructure only when needed
+  // Check if structure exists, then load component
   useEffect(() => {
-    if (
-      !isComponentLoaded
-    ) {
+    if (!accession) return;
+
+    const checkAndLoad = async () => {
       setIsLoading(true);
-      import('@nightingale-elements/nightingale-structure')
-        .then((module) => {
+      
+      // Check if structure exists
+      try {
+        const response = await fetch(`https://alphafold.ebi.ac.uk/api/prediction/${accession}`);
+        if (!response.ok) {
+          console.warn(`Structure not found for accession: ${accession}`);
+          setHasError(true);
+          setIsLoading(false);
+          return;
+        }
+        setStructureExists(true);
+      } catch (error) {
+        console.error('Error checking structure:', error);
+        setHasError(true);
+        setIsLoading(false);
+        return;
+      }
+
+      // If structure exists and component not loaded, load it
+      if (!isComponentLoaded) {
+        try {
+          const module = await import('@nightingale-elements/nightingale-structure');
           const NightingaleStructureComponent = module.default;
-          // Define the custom element only after the component is loaded
+          
           if (!window.customElements.get('nightingale-structure')) {
             window.customElements.define(
               'nightingale-structure',
@@ -28,12 +50,17 @@ export default function Structure({ accession }) {
           }
           setIsComponentLoaded(true);
           setIsLoading(false);
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error('Failed to load NightingaleStructure:', error);
+          setHasError(true);
           setIsLoading(false);
-        });
-    }
+        }
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    checkAndLoad();
   }, [accession, isComponentLoaded]);
 
 
@@ -80,25 +107,33 @@ export default function Structure({ accession }) {
 
         <Grid size={12}>
           {isLoading ? (
-            <Typography variant="h6">Loading...</Typography>
+            <Typography variant="h6">Loading structure viewer...</Typography>
+          ) : hasError ? (
+            <div style={{ textAlign: 'center' }}>
+              <Typography variant="h6" color="error">
+                Error: Unable to load structure viewer
+              </Typography>
+            </div>
           ) : accession ? (
-            !isComponentLoaded ? (
+            !isComponentLoaded || !structureExists ? (
               <div style={{ textAlign: 'center' }}>
                 <Typography variant="h6" color="error">
-                  Error: Structure not found (404)
+                  Structure not found
                 </Typography>
               </div>
             ) : (
-              <nightingale-structure
-                protein-accession={accession} // Forces re-mounting on accession change
-                height="500px"
-                structure-id={`AF-${accession}-F1`}
-                hide-table
-              />
+              <div>
+                <nightingale-structure
+                  protein-accession={accession}
+                  height="500px"
+                  structure-id={`AF-${accession}-F1`}
+                  hide-table
+                />
+              </div>
             )
           ) : (
             <div style={{ textAlign: 'center' }}>
-              <Typography variant="h6" mt={"50%"}>No structure available</Typography>
+              <Typography variant="h6">No structure available</Typography>
             </div>
           )}
         </Grid>

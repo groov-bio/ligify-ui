@@ -7,7 +7,17 @@ import {
   useTheme,
   useMediaQuery,
   Tab,
-  Tabs
+  Tabs,
+  CircularProgress,
+  Typography,
+  Card,
+  CardContent,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Alert,
+  Chip
 } from '@mui/material';
 
 // import '../css/App.css';
@@ -46,11 +56,8 @@ export default function Search() {
       navigate(`/database/${encodeURIComponent(refseq)}`);
     }
     if (smiles) {
-
-      var chemical = encodeURIComponent(smiles);
-      console.log(chemical);
-      setSmiles(chemical);
-      handleLigandSearch();
+      setSmiles(smiles);
+      handleLigandSearch(smiles);
 
       // navigate(`/database/${encodeURIComponent(smiles)}`);
     }
@@ -60,8 +67,8 @@ export default function Search() {
 
   // Ligand search function
 
-  const handleLigandSearch = async () => {
-    if (!smiles.trim()) {
+  const handleLigandSearch = async (smilesInput = smiles) => {
+    if (!smilesInput.trim()) {
       setError('Please enter a SMILES string');
       return;
     }
@@ -73,19 +80,16 @@ export default function Search() {
     
     try {
       const response = await fetch(
-        'https://api.groov.bio/ligandSearch',
+        'https://cqhagqjop4.execute-api.us-east-2.amazonaws.com/dev/ligifyLigandSearch',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            smiles,
+            smiles: smilesInput,
             threshold,
             maxResults
-            // smiles,
-            // threshold,
-            // maxResults
           }),
         }
       );
@@ -104,7 +108,7 @@ export default function Search() {
           // const alias = rawData[result.sensorId].alias;
 
           return {
-            sensorId: result.sensorId,
+            sensorId: result.regulatorId,
             ligandId: result.ligandId,
             name: result.name || result.ligandId,
             similarity: result.similarity,
@@ -131,7 +135,7 @@ export default function Search() {
 
 
   return (
-    <>
+    <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <Tabs value={searchTab} onChange={handleTabChange} centered>
             <Tab label="RefSeq" />
@@ -182,6 +186,87 @@ export default function Search() {
       //   )
       }    
 
-    </>
+      {/* Results Area - Fixed Height Container */}
+      <Box sx={{ 
+        mt: 2, 
+        minHeight: searchTab === 1 ? '400px' : '0px',
+        maxHeight: '500px',
+        overflow: 'auto'
+      }}>
+        {/* Loading State */}
+        {loading && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
+            <CircularProgress size={60} />
+            <Typography sx={{ mt: 2, color: 'text.secondary' }}>
+              Searching ligands... This may take 10-15 seconds
+            </Typography>
+          </Box>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {/* Search Results */}
+        {hasSearched && !loading && searchResults.length > 0 && (
+          <Box sx={{ mt: 1 }}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Found {searchResults.length} similar ligands:
+            </Typography>
+            <List sx={{ pt: 0 }}>
+              {searchResults.map((result, index) => (
+                <Card key={index} sx={{ mb: 1 }}>
+                  <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+                    <ListItem disablePadding>
+                      <ListItemButton 
+                        onClick={() => navigate(`/database/${result.sensorId}`)}
+                        sx={{ p: 0 }}
+                      >
+                        <ListItemText
+                          primary={
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="subtitle1">{result.name}</Typography>
+                              <Chip 
+                                label={`${(result.similarity * 100).toFixed(1)}% similar`} 
+                                size="small" 
+                                color="primary" 
+                                variant="outlined"
+                              />
+                            </Box>
+                          }
+                          secondary={
+                            <Box sx={{ mt: 0.5 }}>
+                              <Typography variant="body2" color="text.secondary">
+                                Sensor ID: {result.sensorId}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Ligand ID: {result.ligandId}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  </CardContent>
+                </Card>
+              ))}
+            </List>
+          </Box>
+        )}
+
+        {/* No Results */}
+        {hasSearched && !loading && searchResults.length === 0 && !error && (
+          <Box sx={{ mt: 3, textAlign: 'center' }}>
+            <Typography color="text.secondary">
+              No similar ligands found. Try adjusting your search parameters.
+            </Typography>
+          </Box>
+        )}
+      </Box>
+
+    </Box>
   );
 }
