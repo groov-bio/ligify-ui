@@ -80,7 +80,7 @@ export default function Search() {
     
     try {
       const response = await fetch(
-        'https://cqhagqjop4.execute-api.us-east-2.amazonaws.com/dev/ligifyLigandSearch',
+        'https://api.groov.bio/ligifyLigandSearch',
         {
           method: 'POST',
           headers: {
