@@ -6,8 +6,6 @@ import {
   Box,
   Typography,
   Paper,
-  Link,
-  Divider,
   Pagination,
   Stack,
 } from '@mui/material';

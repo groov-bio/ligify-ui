@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   Box,
   TextField,
-  useTheme,
-  useMediaQuery,
   Tab,
   Tabs,
   CircularProgress,
@@ -22,9 +20,6 @@ import {
 
 
 export default function Search() {
-  //Capture screen size
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [searchTab, setSearchTab] = useState(0);
   const handleTabChange = (event, newValue) => {

@@ -4,7 +4,6 @@ import {
     Grid,
     Drawer,
     List,
-    Typography,
     ListItem,
     ListItemText,
     useMediaQuery,

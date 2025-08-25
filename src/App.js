@@ -4,14 +4,12 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-
 import Home from './Components/HomePage/Home.js';
 import NavigationBar from './Components/NavigationBar.js';
-import RegulatorTable from './Components/BrowsePage/RegulatorTable.js'
+import BrowsePage from './Components/BrowsePage.js'
 import RegulatorPage from './Components/RegulatorPage/RegulatorPage.js'
 import About from './Components/AboutPage/About.js';
 import DBLoader from './stores/DBLoader.js';
-
 
 import './css/App.css';
 
@@ -40,7 +38,7 @@ export default function App() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/" element={<Home />} />
-          <Route path="/database" element={<RegulatorTable />} />
+          <Route path="/database" element={<BrowsePage />} />
           <Route path="/database/:refseq" element={<RegulatorPage />} />
           <Route path="/about" element={<About />} />
         </Routes>

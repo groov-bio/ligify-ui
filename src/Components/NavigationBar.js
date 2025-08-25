@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
   AppBar,
@@ -6,8 +6,6 @@ import {
   IconButton,
   Toolbar,
   Button,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
 
 import { Link } from 'react-router-dom';
@@ -21,11 +19,6 @@ const linkItems = ['/home', '/database', '/about'];
 const indexes = [0, 1, 2];
 
 export default function NavigationBar() {
-
-  //To detect size of screen
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
 
   return (
     <>

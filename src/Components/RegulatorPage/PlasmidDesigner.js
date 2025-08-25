@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Grid, Typography, Paper, Button, Link } from '@mui/material';
+import { Box, Grid, Typography, Paper, Button } from '@mui/material';
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,7 +14,6 @@ import {
     downloadGenBank
 } from "../../utils/genbank-generator.js";
 import optimizeForEcoli from "../../utils/codon-optimizer.js";
-import { Toys } from '@mui/icons-material';
 
 export default function PlasmidDesigner(data) {
 

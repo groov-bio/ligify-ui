@@ -69,10 +69,11 @@ export function generateGraphic(operon_data, reg_index) {
     var operonEnd = Math.max(operon_data.at(-1)['start'], operon_data.at(-1)['stop']);
     var operonLength = operonEnd - operonStart;
 
+    var displayLength;
     if (operonLength >= 6000){
-      var displayLength = operonLength*1.05;
+      displayLength = operonLength*1.05;
     } else {
-      var displayLength = 6500;
+      displayLength = 6500;
     }
 
     var graphic = []

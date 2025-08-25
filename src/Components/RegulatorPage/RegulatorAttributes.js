@@ -1,8 +1,6 @@
 // src/RegulatorAttributes.js
-import React, { useState } from 'react';
+import React from 'react';
 import {
-    Box,
-    Button,
     Link,
     Typography,
   } from '@mui/material';
@@ -63,7 +61,7 @@ import {
                     {/* Overflow text onto two lines */}
                     
                 <Grid size={{xs:5, sm:6, md:4}} textAlign="left" ml={3}>
-                {reg_attr[key]["link"] != "None" ?
+                {reg_attr[key]["link"] !== "None" ?
                   <Link
                         href={reg_attr[key]["link"]}
                         target="_blank"

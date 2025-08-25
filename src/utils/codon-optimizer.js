@@ -530,22 +530,6 @@ const ECOLI_CODON_TABLE = {
           warnings.push(`${forbiddenViolations.length} forbidden sequence violations found`);
         }
         
-        // Calculate optimization statistics
-        const stats = {
-          codonUsage: codonUsage,
-          gcContent: finalGcContent,
-          homopolymerViolations: homopolymerViolations,
-          forbiddenSequenceViolations: forbiddenViolations,
-          optimizationScore: score,
-          warnings: warnings,
-          attempt: attempt + 1
-        };
-
-            // keep just to know that there are useful stats that we can pull later if needed
-        // const result = {
-        //     optimizedDna: optimizedDna,
-        //     statistics: stats
-        //   };
 
         // Add a stop codon
         const result =  optimizedDna + "TAA";
