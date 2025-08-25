@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from 'react-router-dom';
 
-import { Box, Typography, Tooltip, Badge, Grid } from '@mui/material';
+import { Box, Typography, Tooltip, Badge, Grid, LinearProgress, Alert  } from '@mui/material';
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -14,18 +14,56 @@ import {
   ExportCsv,
 } from '@mui/x-data-grid';
 
+import useLigifyDB from "../useLigifyDB";
 
 // Import data
-import regulators from '../../ligifyDB.json'
+function asArray(db) {
+  if (!db) return [];
+  return Array.isArray(db) ? db : Object.values(db);
+}
 
-console.log(regulators[0])
+
+
+function CustomToolbar() {
+  
+  return (
+    <Toolbar>
+
+      <Tooltip title="Columns">
+        <ColumnsPanelTrigger render={<ToolbarButton />}>
+          <ViewColumnIcon />
+        </ColumnsPanelTrigger>
+      </Tooltip>
+
+      <Tooltip title="Filters">
+        <FilterPanelTrigger
+          render={(props, state) => (
+            <ToolbarButton {...props} color="default">
+              <Badge badgeContent={state.filterCount} color="primary" variant="dot">
+                <FilterListIcon />
+              </Badge>
+            </ToolbarButton>
+          )}
+        />
+      </Tooltip>
+      <ExportCsv variant="outlined"
+      >Export
+        <FileDownloadIcon/>
+      </ExportCsv>
+    </Toolbar>
+  );
+}
+
 
 
 export default function RegulatorTable() {
+
+  const { data, loading, error } = useLigifyDB("/ligifyDB.json");
   const [rows, setRows] = useState([]);
 
 
-  const columns = [
+  const columns = useMemo(
+    () => [
     { field: 'id', headerName: 'Index', width: 80 },
     {
       field: 'refseq',
@@ -72,79 +110,73 @@ export default function RegulatorTable() {
             target="_blank">
           {params.value}
         </a>
-
       ),
     },
-  ];
+  ],
+  []
+);
 
-
+  // Build rows when data is available
   useEffect(() => {
 
-    const rowsToAdd = [];
+    if (!data) return;
+    const regs = asArray(data);
 
-      for (var index in regulators) {
-        var reg = regulators[index]
-        var entry = {
-          id: index,
-          refseq: reg.refseq,
-          rank: reg.rank.rank,
-          length: reg.protein_seq.length,
-          uniprot: reg.uniprot_id,
-          annotation: reg.annotation,
-          organismKingdom: reg.protein.organism[1],
-          organismPhylum: reg.protein.organism[2],
-          organismClass: reg.protein.organism[3],
-          organismOrder: reg.protein.organism[4],
-          organismFamily: reg.protein.organism[5],
-          organismGenus: reg.protein.organism[6],
-          aligned: reg.hits.length,
-          operonLength: reg.rank.metrics["Genes within operon"].Value,
-          enzymeDistance: reg.rank.metrics["Enzyme-regulator distance"].Value,
-          additionalRegulators: reg.rank.metrics["Additional regulators"].Value,
-          enzyme_uniprot: reg.protein.enzyme.uniprot_id,
-        };
-        rowsToAdd.push(entry);
+    const mapped = regs.map((reg, i) => ({
+      // Prefer a stable ID if you have one; fallback to index
+      id: reg.refseq ?? reg.id ?? i + 1,
+      refseq: reg.refseq ?? reg.protein?.refseq ?? "",
+      rank: reg.rank?.rank ?? null,
+      length:
+        reg.protein_seq?.length ??
+        reg.protein?.sequence?.length ??
+        reg.length ??
+        null,
+      uniprot:
+        reg.uniprot_id ?? reg.protein?.uniprot_id ?? reg.protein?.uniprot ?? "",
+      annotation: reg.annotation ?? reg.protein?.annotation ?? "",
+      organismKingdom: reg.protein?.organism?.[1] ?? "",
+      organismPhylum: reg.protein?.organism?.[2] ?? "",
+      organismClass: reg.protein?.organism?.[3] ?? "",
+      organismOrder: reg.protein?.organism?.[4] ?? "",
+      organismFamily: reg.protein?.organism?.[5] ?? "",
+      organismGenus: reg.protein?.organism?.[6] ?? "",
+      aligned: reg.hits?.length ?? 0,
+      operonLength:
+        reg.rank?.metrics?.["Genes within operon"]?.Value ??
+        reg.rank?.metrics?.["Genes within operon"]?.value ??
+        null,
+      enzymeDistance:
+        reg.rank?.metrics?.["Enzyme-regulator distance"]?.Value ??
+        reg.rank?.metrics?.["Enzyme-regulator distance"]?.value ??
+        null,
+      additionalRegulators:
+        reg.rank?.metrics?.["Additional regulators"]?.Value ??
+        reg.rank?.metrics?.["Additional regulators"]?.value ??
+        null,
+      enzyme_uniprot: reg.protein?.enzyme?.uniprot_id ?? "",
+    }));
 
-      setRows(rowsToAdd);
-    }
-  }, []);
+    setRows(mapped);
+  }, [data]);
 
 
 
-
-  function CustomToolbar() {
-  
+  if (loading) {
     return (
-      <Toolbar>
-  
-        <Tooltip title="Columns">
-          <ColumnsPanelTrigger render={<ToolbarButton />}>
-            <ViewColumnIcon />
-          </ColumnsPanelTrigger>
-        </Tooltip>
-  
-        <Tooltip title="Filters">
-          <FilterPanelTrigger
-            render={(props, state) => (
-              <ToolbarButton {...props} color="default">
-                <Badge badgeContent={state.filterCount} color="primary" variant="dot">
-                  <FilterListIcon />
-                </Badge>
-              </ToolbarButton>
-            )}
-          />
-        </Tooltip>
-        <ExportCsv variant="outlined"
-        >Export
-          <FileDownloadIcon/>
-        </ExportCsv>
-      </Toolbar>
+      <Box sx={{ p: 2 }}>
+        <LinearProgress />
+      </Box>
     );
   }
-  
 
-
-
+  if (error) {
+    return (
+      <Box sx={{ p: 2 }}>
+        <Alert severity="error">{String(error)}</Alert>
+      </Box>
+    );
+  }
 
   return (
     // Container
