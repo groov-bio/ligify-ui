@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -10,7 +10,7 @@ import NavigationBar from './Components/NavigationBar.js';
 import RegulatorTable from './Components/BrowsePage/RegulatorTable.js'
 import RegulatorPage from './Components/RegulatorPage/RegulatorPage.js'
 import About from './Components/AboutPage/About.js';
-
+import DBLoader from './stores/DBLoader.js';
 
 
 import './css/App.css';
@@ -20,6 +20,8 @@ const queryClient = new QueryClient();
 export default function App() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  <DBLoader/>
   
   return (
     <QueryClientProvider client={queryClient}>
