@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -20,7 +20,6 @@ import {
   Chip
 } from '@mui/material';
 
-// import '../css/App.css';
 
 export default function Search() {
   //Capture screen size
@@ -189,7 +188,7 @@ export default function Search() {
       {/* Results Area - Fixed Height Container */}
       <Box sx={{ 
         mt: 2, 
-        minHeight: searchTab === 1 ? '400px' : '0px',
+        // minHeight: searchTab === 1 ? '400px' : '0px',
         maxHeight: '500px',
         overflow: 'auto'
       }}>
