@@ -19,7 +19,7 @@ export default function Download() {
         dataToDownload = { sensors: sensorsData };
       } else {
         // Fallback to direct fetch if cache is empty
-        const response = await fetch('https://groov-api.com/all-sensors.json');
+        const response = await fetch('https://groov-api.com/ligifyDB.json');
         dataToDownload = await response.json();
       }
 
@@ -34,7 +34,7 @@ export default function Download() {
       // Create a link element and trigger download
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'all-sensors.json';
+      link.download = 'ligifyDB.json';
       document.body.appendChild(link);
       link.click();
 
@@ -90,21 +90,9 @@ export default function Download() {
     </Button>
 
       <Typography mt={2} sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
-          All sensor data can be downloaded as a single JSON file via the link above. The file is 11 MB.
+          All sensor data can be downloaded as a single JSON file via the link above. The file is 15.6 MB.
       </Typography>
 
-
-      {/* <Typography
-        sx={{ fontSize: { xs: 24, sm: 28, md: 32 } }}
-        mt={5}
-        fontWeight="300"
-        gutterBottom
-      >
-        Creating Ligify<sup>DB</sup>
-      </Typography>
-      <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
-        Words
-      </Typography> */}
 
     </Box>
   );

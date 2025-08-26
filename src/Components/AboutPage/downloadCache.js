@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useAllSensors = () => {
   return useQuery({
-    queryKey: ['allSensors'],
+    queryKey: ['ligifyDB'],
     queryFn: async () => {
-      const response = await fetch('https://groov-api.com/all-sensors.json', {
+      const response = await fetch('https://groov-api.com/ligifyDB.json', {
         headers: {
           Accept: 'application/json',
         },
