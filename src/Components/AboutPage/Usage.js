@@ -1,7 +1,16 @@
 import React from 'react';
 
 import { Box, Typography, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
+
+import SearchIcon from '@mui/icons-material/Search';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
+
 import SpeedIcon from '@mui/icons-material/Speed';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import TurnRightIcon from '@mui/icons-material/TurnRight';
+import DonutLargeOutlinedIcon from '@mui/icons-material/DonutLargeOutlined';
+import HexagonOutlinedIcon from '@mui/icons-material/HexagonOutlined';
 
 export default function Usage() {
   return (
@@ -29,15 +38,48 @@ export default function Usage() {
         Querying LigifyDB
       </Typography >
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
-        ligify<sup>DB</sup> is an open-source database of bacterial transcription factor-ligand associations
-        predicted by genome context. The objective of ligify<sup>DB</sup> is to help researchers reveal the 
-        landscape of small molecules that bacteria respond to, which also aims to grow the catalog of chemical-responsive
-        geneitic sensors available for biotechnological applications. This resource was created in 2025 by{' '}
-        <a href="https://simondoelsnitz.com" target="__blank__">
-          Simon d'Oelsnitz
-        </a>{' '}
-        and Joshua D. Love.
+        Users can search the database via the search bar on the Home Page or the data table on the Browse Page.
+        Below are the available query methods.
       </Typography>
+
+
+      <List>
+          <ListItem>
+            <ListItemIcon >
+              <HexagonOutlinedIcon fontSize="large"/>
+            </ListItemIcon>
+            <ListItemText sx={{ '& .MuiListItemText-primary': { fontSize: { xs: 14, sm: 16, md: 18 } } }}>
+            <b><i>Chemical similarity search</i></b> on the Home Page using a chemical input in SMILES format
+            </ListItemText>
+          </ListItem>
+
+          <ListItem>
+            <ListItemIcon >
+              <FingerprintIcon fontSize="large"/>
+            </ListItemIcon>
+            <ListItemText sx={{ '& .MuiListItemText-primary': { fontSize: { xs: 14, sm: 16, md: 18 } } }}>
+            <b><i>RefSeq lookup</i></b> on the Home Page using the regulator's NCBI RefSeq ID
+            </ListItemText>
+          </ListItem>
+
+          <ListItem>
+            <ListItemIcon >
+              <FilterListIcon fontSize="large"/>
+            </ListItemIcon>
+            <ListItemText sx={{ '& .MuiListItemText-primary': { fontSize: { xs: 14, sm: 16, md: 18 } } }}>
+            <b><i>Attribute filtering</i></b> on the Browse Page using the filters tab on the data table
+            </ListItemText>
+          </ListItem>
+
+          <ListItem>
+            <ListItemIcon >
+              <SearchIcon fontSize="large"/>
+            </ListItemIcon>
+            <ListItemText sx={{ '& .MuiListItemText-primary': { fontSize: { xs: 14, sm: 16, md: 18 } } }}>
+            <b><i>Full text search</i></b> on the Browse Page using the search tab on the data table
+            </ListItemText>
+          </ListItem>
+      </List>
 
 
         <Typography
@@ -53,7 +95,8 @@ export default function Usage() {
           component="img"
           mb={2}
           ml={"25%"}
-          sx={{ width:'50%'}}
+          sx={{ ml: {xs:'5%', sm:'15%',md:"25%"}, 
+              width:{xs:'90%', sm:'70%', md:'50%'} }}
           src={'/Ligify_PlasmidDesigner.png'}
           alt="Ligify Plasmid Designer"
         />
@@ -67,37 +110,40 @@ export default function Usage() {
       <List>
           <ListItem alignItems="flex-start">
             <ListItemIcon >
-              <SpeedIcon fontSize="large"/>
+              <LightModeIcon fontSize="large"/>
             </ListItemIcon>
             <ListItemText sx={{ '& .MuiListItemText-primary': { fontSize: { xs: 14, sm: 16, md: 18 } } }}>
             <b><i>Reporter</i></b><br/> 
-            Accessing predictions is much faster (milliseconds vs minutes) and computationally less expensive, since 
-            all data is pulled from a JSON file and requires virtually zero compute. Furthermore, the entire database can be downloaded locally
-            (scroll down).
+            Users can choose between bright and fast maturing{' '}<a href="https://www.fpbase.org/protein/gfpmut2/" target="__blank__">
+            GFP</a> or{' '}<a href="https://www.fpbase.org/protein/mscarlet-i3/" target="__blank__">
+            RFP</a>. GFP is generally brighter and easier to see by eye on an agar plate, making it better for screening.
+            RFP has lower background, due to lower cell autofluorescence, and produces a higher dynamic range.
             </ListItemText>
           </ListItem>
 
           <ListItem alignItems="flex-start">
             <ListItemIcon>
-              <SpeedIcon fontSize="large"/>
+              <HexagonOutlinedIcon fontSize="medium"/>
             </ListItemIcon>
             <ListItemText sx={{ '& .MuiListItemText-primary': { fontSize: { xs: 14, sm: 16, md: 18 } } }}>
               <b><i>Inducible Promoter</i></b><br/> 
-                Data visualizations are much more rich and interactive since they are now hosted from a React application 
-                rather than a streamlit server. This includes features for protein structure, ligand structure, and genome context.
+                Forward or reverse orientations can be selected for the predicted promoter region.
+                We advise users to look carefully into the operon structure and any associated literature
+                to help identify which orientation likely produces the highest response.
             </ListItemText>
           </ListItem>
 
           <ListItem alignItems="flex-start">
             <ListItemIcon>
-              <SpeedIcon fontSize="large" />
+              <TurnRightIcon fontSize="large" />
             </ListItemIcon>
             <ListItemText sx={{ '& .MuiListItemText-primary': { fontSize: { xs: 14, sm: 16, md: 18 } } }}>
               <b><i>Expression Promoter</i></b><br/> 
-                Advanced searches can be performed by applying various filters to the entire dataset. For example, a user can 
-                filter the dataset based on a regulator's size, annotation, rank, organism, operon size, or distance to the associated enzyme. In 
-                addition, characterized regulators in groovDB with over 40% identity to ligifyDB regulators are linked, enabling users to support
-                inferences about the ligand or DNA binding properties of the predicted regulator.
+                Variable strength promoters from an{' '}<a href="https://pubs.acs.org/doi/10.1021/acssynbio.1c00402" target="__blank__">
+                extended Anderson series</a>{' '} can be used to tune the expression of the regulator. 
+                Fine-tuning the regulator transcription level is needed to optimize the circuit's 
+                dynamic range. See this {' '}<a href="https://academic.oup.com/nar/article/43/3/1955/2411344" target="__blank__">
+                excellent paper</a>{' '} for detail on how regulator expression affects circuit performance.
             </ListItemText>
           </ListItem>
 
@@ -107,23 +153,22 @@ export default function Usage() {
             </ListItemIcon>
             <ListItemText sx={{ '& .MuiListItemText-primary': { fontSize: { xs: 14, sm: 16, md: 18 } } }}>
               <b><i>RBS</i></b><br/> 
-                A new plasmid designer interface enables users to construct their own reporter plasmid that uses the target biosensor
-                to regulate the expression of a fluorescent protein. The output of the function is an annotated
-                GenBank file that users can download, build and test in the lab. A modular and well-insulated circuit architecture
-                is used by default.
+                Context-independent variable strength{' '}<a href="https://pubs.acs.org/doi/abs/10.1021/acssynbio.3c00093" target="__blank__">
+                ribosome binding sites</a>{' '} can be used to tune the expression of the regulator. As with the above, 
+                fine-tuning the regulator translation level is needed to optimize the circuit's dynamic range. 
             </ListItemText>
           </ListItem>
           
           <ListItem alignItems="flex-start">
             <ListItemIcon>
-              <SpeedIcon fontSize="large" />
+              <DonutLargeOutlinedIcon fontSize="large" />
             </ListItemIcon>
             <ListItemText sx={{ '& .MuiListItemText-primary': { fontSize: { xs: 14, sm: 16, md: 18 } } }}>
               <b><i>Backbone</i></b><br/> 
-                A new plasmid designer interface enables users to construct their own reporter plasmid that uses the target biosensor
-                to regulate the expression of a fluorescent protein. The output of the function is an annotated
-                GenBank file that users can download, build and test in the lab. A modular and well-insulated circuit architecture
-                is used by default.
+                A plasmid backbone can be selected with either chloramphenicol, kanamycin, or ampicillin resistance.
+                All backbones contain the medium-low copy p15A origin, which has lower copy number variability than high-copy origins.
+                For ordering convenience, all backbones are onboarded as {' '}<a href="https://www.twistbioscience.com/products/genes/vectors?tab=catalog-vectors" target="__blank__">
+                cloning vectors at TWIST</a>.
             </ListItemText>
           </ListItem>
 
