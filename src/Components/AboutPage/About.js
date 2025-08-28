@@ -10,7 +10,7 @@ import {
     useTheme,
   } from '@mui/material';
 
-import LigifyDB from "./LigifyDB.js";
+import Introduction from "./Introduction.js";
 import Usage from "./Usage.js";
 import Statistics from "./Statistics.js";
 import Download from "./Download.js";
@@ -23,7 +23,7 @@ export default function About() {
     const isNotSmallScreen = useMediaQuery(theme.breakpoints.up('sm'));
 
       // Create refs for each section
-    const ligifyDBRef    = useRef(null);
+    const introductionRef    = useRef(null);
     const usageRef    = useRef(null);
     const statisticsRef  = useRef(null);
     const citationRef    = useRef(null);
@@ -63,7 +63,7 @@ export default function About() {
                 <List sx={{ marginTop: 15 }}>
                     <ListItem
                     button
-                    onClick={() => handleScroll(ligifyDBRef)}
+                    onClick={() => handleScroll(introductionRef)}
                     style={{ marginLeft: '10px' }}
                     >
                     <ListItemText primary="Introduction" />
@@ -117,25 +117,24 @@ export default function About() {
             component="main"
             sx={{
                 flexGrow: 1,
-                bgcolor: 'background.default',
-                p: 3,
-                ml: 0,
                 mt: 10,
             }}
             >
                 {/* Default About section */}
 
         <Box
-            ref={ligifyDBRef}
+            ref={introductionRef}
             id="introduction"
+            mb={10}
             sx={{ scrollMarginTop: '80px' }}  // adjust for any fixed headers
           >
-            <LigifyDB/>
+            <Introduction/>
         </Box>
 
         <Box
             ref={usageRef}
             id="usage"
+            mb={10}
             sx={{ scrollMarginTop: '80px' }}
           >
             <Usage />
@@ -144,6 +143,7 @@ export default function About() {
           <Box
             ref={statisticsRef}
             id="statistics"
+            mb={10}
             sx={{ scrollMarginTop: '80px' }}
           >
             <Statistics />
@@ -152,6 +152,7 @@ export default function About() {
           <Box
             ref={downloadRef}
             id="download"
+            mb={10}
             sx={{ scrollMarginTop: '80px' }}
           >
             <Download />
@@ -160,6 +161,7 @@ export default function About() {
           <Box
             ref={citationRef}
             id="citation"
+            mb={10}
             sx={{ scrollMarginTop: '80px' }}
           >
             <Citation />
