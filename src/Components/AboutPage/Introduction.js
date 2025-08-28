@@ -76,9 +76,9 @@ export default function Introduction() {
 
       <Box
           component="img"
-          sx={{ width:'40%'}}
-          src={'/Biosensor_structure.png'}
-          alt="Biosensor structure"
+          sx={{ ml:"10%", width:'80%'}}
+          src={'/GraphicAbstract.png'}
+          alt="Graphic abstract"
         />
 
 
@@ -109,9 +109,10 @@ export default function Introduction() {
 
       <Box
           component="img"
-          sx={{ width:'40%'}}
-          src={'/Biosensor_structure.png'}
-          alt="Biosensor structure"
+          mt={3}
+          sx={{ width:'100%'}}
+          src={'/Ligify-Workflow.png'}
+          alt="Ligify Workflow"
         />
 
 
