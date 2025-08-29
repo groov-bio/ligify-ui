@@ -115,6 +115,34 @@ export default function Introduction() {
           alt="Ligify Workflow"
         />
 
+      <Typography
+        sx={{ fontSize: { xs: 18, sm: 22, md: 24 } }}
+        mt={3}
+        fontWeight="300"
+        gutterBottom
+      >
+        Database creation
+      </Typography >
+      <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
+        To create the database, we started by fetching all unique small molecules from the Rhea database in ChEBI format, 
+        which was 13,972 at the time of database generation. Among these, 10,965 could be converted into SMILES format, 
+        which is the input for Ligify. We then filtered out generic molecules, such as “water” or “hydron”, and the Ligify
+        workflow was performed on the resulting chemicals. 1,685 unique molecules were predicted to be associated with a
+        total of 3,215 unique regulators. To reduce false positives we filtered out regulators smaller than 80 amino acids,
+        since some of the shortest regulators known to bind DNA and a small molecule are around 90 amino acids long. This
+        produced 3,164 unique regulators associated with 1,667 unique molecules. To finalize the database, we (1) removed
+        unnecessary data fields to reduce file size, (2) added the protein regulator sequence, (3) added Uniprot links to
+        each regulator when possible, and (4) added links to homologous characterized transcription factors in {' '}
+        <a href="https://groov.bio" target="_blank" rel="noopener noreferrer">groov<sup>DB</sup></a>.
+      </Typography >   
+      <Box
+          component="img"
+          mt={3}
+          sx={{ width:'100%'}}
+          src={'/DatabaseCreation.png'}
+          alt="Database creation"
+        />
+
 
         <Typography
         sx={{ fontSize: { xs: 18, sm: 22, md: 24 } }}
