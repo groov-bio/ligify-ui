@@ -33,7 +33,7 @@ export default function Home() {
             opacity: { xs: '40%', sm: '40%', md: '100%' },
             marginTop: { xs: '200px', sm: '200px', md: 0 },
           }}
-          src={'/Biosensor_structure.png'}
+          src={'/Biosensor_Structure.png'}
           alt="Biosensor structure"
           mb={4}
         />
