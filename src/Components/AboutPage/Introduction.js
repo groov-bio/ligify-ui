@@ -81,6 +81,38 @@ export default function Introduction() {
           alt="Graphic abstract"
         />
 
+      <Typography
+        sx={{ fontSize: { xs: 18, sm: 22, md: 24 } }}
+        mt={3}
+        fontWeight="300"
+        gutterBottom
+      >
+        Using genome context to predict function 
+      </Typography >
+      <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
+      Transcription factors allosterically bind to two elements: a DNA sequence and a small molecule ligand. 
+      Genome context has proven useful to help predict these interactions. 
+      For example, a TetR-family regulator co-transcribed with an enzyme that glycosylates the antibiotic kijanimicin 
+      {' '}<a href="https://www.sciencedirect.com/science/article/pii/S1074552112004644" target="__blank__">was found to bind</a>{' '}
+      specifically to kijanimicin as a ligand.
+      Transcription factors also typically 
+      {' '}<a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0050562" target="__blank__">regulate their own expression</a>
+      , so the DNA sequence they bind is oftentimes located 
+      nearby their gene sequence.
+      While genome context has been used to manually infer DNA and ligand binding interactions, software tools have been recently 
+      built to automate the prediction workflow, including{' '}
+      <a href="https://pubs.acs.org/doi/10.1021/acssynbio.2c00679" target="__blank__"> TFBMiner</a> and
+      <a href="https://pubs.acs.org/doi/10.1021/acssynbio.4c00372" target="__blank__"> Ligify</a>.
+
+      </Typography > 
+      <Box
+          component="img"
+          mt={3}
+          sx={{ ml: {xs:'10%', sm: "15%", md: "20%", lg:"25%"}, width:{xs:"80%", sm:'70%', md:"60%", lg:'50%'} }}
+          src={'/GenomeContextPrediction.png'}
+          alt="Predict Function from Genome Context"
+        />
+
 
       <Typography
         sx={{ fontSize: { xs: 18, sm: 22, md: 24 } }}
@@ -88,7 +120,7 @@ export default function Introduction() {
         fontWeight="300"
         gutterBottom
       >
-        Prediction method
+        Prediction workflow
       </Typography >
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
         The Ligify workflow starts by using the small molecule input 
