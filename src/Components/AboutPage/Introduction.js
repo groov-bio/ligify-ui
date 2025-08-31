@@ -76,7 +76,7 @@ export default function Introduction() {
 
       <Box
           component="img"
-          sx={{ ml:"10%", width:'80%'}}
+          sx={{ ml:{xs:0, sm:"10%"}, width:{xs:'100%', sm:'80%'} }}
           src={'/GraphicAbstract.png'}
           alt="Graphic abstract"
         />
