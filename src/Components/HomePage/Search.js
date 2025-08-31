@@ -132,35 +132,35 @@ export default function Search() {
     <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <Tabs value={searchTab} onChange={handleTabChange} centered>
-            <Tab label="RefSeq" />
             <Tab label="Ligand" />
+            <Tab label="RefSeq" />
             {/* <Tab label="Sequence" /> */}
           </Tabs>
         </Box>
 
         {searchTab === 0 ? (
 
-    <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
-        <TextField
-                name="refseq"
-                sx={{ width: '100%' }}
-                label= 'RefSeq ID'
-                variant="outlined"
-                placeholder="Enter RefSeq (e.g., WP_003963520.1)"
-              />
-    </Box>
+          <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
+            <TextField
+                    name="smiles"
+                    sx={{ width: '100%' }}
+                    label= 'Ligand SMILES'
+                    variant="outlined"
+                    placeholder="Enter SMILES (e.g., C1=CC(=C(C=C1C(=O)O)O)[O-])"
+                  />
+          </Box>
 
         ) : (
-          
-      <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
-          <TextField
-                  name="smiles"
-                  sx={{ width: '100%' }}
-                  label= 'Ligand SMILES'
-                  variant="outlined"
-                  placeholder="Enter SMILES (e.g., C1=CC(=C(C=C1C(=O)O)O)[O-])"
-                />
-      </Box>
+
+          <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
+            <TextField
+                    name="refseq"
+                    sx={{ width: '100%' }}
+                    label= 'RefSeq ID'
+                    variant="outlined"
+                    placeholder="Enter RefSeq (e.g., WP_003963520.1)"
+                  />
+          </Box>
 
         ) 
 
