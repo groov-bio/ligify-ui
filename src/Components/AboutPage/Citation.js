@@ -41,8 +41,9 @@ export default function Citation() {
       </Typography>
 
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }} mt={4}>
-        When referencing individual biosensors, please also consider citing literature
-        on the associated enzyme or ligand-interacting protein listed in the "References"
+        When referencing individual biosensors, please also consider citing the{' '}
+        <a href="https://academic.oup.com/nar/article/50/D1/D693/6424769" target="__blank">Rhea Database</a>{' '}
+        and any literature on the associated enzyme or ligand-interacting protein listed in the "References"
         section under "Associated Enzyme".
       </Typography>
 

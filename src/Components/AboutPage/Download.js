@@ -67,6 +67,10 @@ export default function Download() {
         Download the Database
       </Typography>
 
+      <Typography mt={2} mb={2} sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
+          All sensor data can be downloaded as a single JSON file via the link above. The file is 15.6 MB.
+      </Typography>
+
       <Button
       variant="contained"
       startIcon={
@@ -88,10 +92,6 @@ export default function Download() {
         ? 'Error loading data'
         : 'Download'}
     </Button>
-
-      <Typography mt={2} sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
-          All sensor data can be downloaded as a single JSON file via the link above. The file is 15.6 MB.
-      </Typography>
 
 
     </Box>
