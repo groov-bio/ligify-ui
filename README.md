@@ -113,6 +113,55 @@ public/
 ├── ligifyDB.json
 ```
 
+### Data Structure
+
+```
+ligifyDB.json/
+├── List/                                 # Each sensor is a dictionary item within a list
+│   ├── refseq                            # Regulator refseq ID (string)
+│   ├── annotation                        # Regulator annotation (string)
+│   ├── protein
+│       ├── organism                      # A list containing the phyla --> genus (as strings)
+│       └── enzyme
+│           ├── description               # Enzyme annotation (string)
+│           ├── uniprot_id                # Enzyme Uniprot ID (string)
+│           └── dois                      # A list of reference DOIs, as strings
+│       └── context
+│           └── operon                    # A list of genes in the operon
+│               ├── alias                 # Gene name (string)
+│               ├── description           # Gene annotation (string)
+│               ├── accession             # Gene refseq ID (string)
+│               ├── direction             # Gene direction: + or - (string)
+│               ├── start                 # Gene start position in genome (int)
+│               └── stop                  # Gene stop position in genome (int)
+│           ├── enzyme_index              # Index of associated enzyme in operon (int)
+│           ├── enzyme_direction          # Enzyme direction: + or - (string)
+│           └── promoter                  # Dictionary
+│               ├── regulated_seq         # Hypothetic promoter sequence (string)
+│               └── reg_type              # same (1) or opposite (2) direction as enzyme (int)
+│           └── genome                    # genome ID (string)
+│       ├── equation                      # annotation of the enzyme reaction (string)
+│       ├── rhea_id                       # Rhea ID (int)
+│       └── candidate_ligands             # List of dictionaries for each ligand
+│           ├── name                      # Name of chemical (string)
+│           └── smiles                    # SMILES code for chemical (string)
+│       └── rank                          # Dictionary
+│           ├── rank                      # Summary rank score (int)
+│           └── metrics                   # Dictionary
+│               ├── Genes within operon
+│                   ├── Value
+│                   └── Deduction
+│               ├── Genes within operon
+│                   ├── Value
+│                   └── Deduction
+│               └── Genes within operon
+│                   ├── Value
+│                   └── Deduction
+│       ├── uniprot_id                    # Regulator Uniprot ID (string)
+│       ├── protein_seq                   # Regulator amino acid sequence (string)
+│       └── hits                          # List of homologs within groovDB
+```
+
 ## Citation
 
 If you use ligifyDB in your research, please cite:
