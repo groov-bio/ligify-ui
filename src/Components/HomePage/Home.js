@@ -1,8 +1,10 @@
 import Search from './Search.js';
 import Stats from './Stats.js';
+import Banner from './Banner.js';
+import AccessStatement from './AccessStatement.js';
 
 import { Box, Grid, Typography } from '@mui/material';
-import Banner from './Banner.js';
+
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -81,7 +83,8 @@ export default function Home() {
 
           <Search width="100%" />
 
-        <Stats />
+        <Stats/>
+        <AccessStatement/>
       </Grid>
     </Grid>
   );
