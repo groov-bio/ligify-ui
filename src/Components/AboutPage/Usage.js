@@ -35,7 +35,7 @@ export default function Usage() {
         fontWeight="300"
         gutterBottom
       >
-        Querying LigifyDB
+        Querying Ligify
       </Typography >
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
         Users can search the database via the search bar on the Home Page or the data table on the Browse Page.

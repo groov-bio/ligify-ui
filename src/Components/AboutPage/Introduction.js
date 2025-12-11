@@ -24,11 +24,11 @@ export default function Introduction() {
         fontWeight="500"
         gutterBottom
       >
-        A database of predicted biosensors
+        A web server for predicted biosensors
       </Typography>
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
-        Ligify<sup>DB</sup> is an open-source database of bacterial transcription factor-ligand associations
-        predicted from genome context. The objective of Ligify<sup>DB</sup> is to <b> provide researchers with leads </b>
+        Ligify is an open-source web server for bacterial transcription factor-ligand associations
+        predicted from genome context and enzyme reaction data. The objective of Ligify is to <b> provide researchers with leads </b>
         to biosensors responsive to any desired chemical. Ultimately, we hope this tool will help grow the catalog of chemical-responsive
         geneitic sensors available for biotechnological applications. 
       </Typography>
@@ -162,7 +162,7 @@ export default function Introduction() {
         workflow was performed on the resulting chemicals. 1,685 unique molecules were predicted to be associated with a
         total of 3,215 unique regulators. To reduce false positives we filtered out regulators smaller than 80 amino acids,
         since some of the shortest regulators known to bind DNA and a small molecule are around 90 amino acids long. This
-        produced 3,164 unique regulators associated with 1,667 unique molecules. To finalize the database, we (1) removed
+        produced 3,164 unique regulators associated with 1,362 unique molecules. To finalize the database, we (1) removed
         unnecessary data fields to reduce file size, (2) added the protein regulator sequence, (3) added Uniprot links to
         each regulator when possible, and (4) added links to homologous characterized transcription factors in {' '}
         <a href="https://groov.bio" target="_blank" rel="noopener noreferrer">groov<sup>DB</sup></a>.
@@ -186,7 +186,7 @@ export default function Introduction() {
       </Typography >
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
         The previous version of Ligify was hosted on a streamlit app and required computing predictions on demand.
-        The new version, Ligify<sup>DB</sup>, is a standalone database of pre-computed predictions that provides the following benefits. 
+        The new version, Ligify 2.0, is a custom web server that hosts pre-computed predictions, which provides the following benefits. 
       </Typography>
 
       <List>
@@ -221,7 +221,7 @@ export default function Introduction() {
               <b><i>SEARCH</i></b><br/> 
                 Advanced searches can be performed by applying various filters to the entire dataset. For example, a user can 
                 filter the dataset based on a regulator's size, annotation, rank, organism, operon size, or distance to the associated enzyme. In 
-                addition, characterized regulators in groovDB with over 40% identity to ligifyDB regulators are linked, enabling users to support
+                addition, characterized regulators in groov<sup>DB</sup> with over 40% identity to Ligify regulators are linked, enabling users to support
                 inferences about the ligand or DNA binding properties of the predicted regulator.
             </ListItemText>
           </ListItem>

@@ -77,7 +77,7 @@ export default function Home() {
           component="div"
           textAlign="center"
         >
-          A web server for predicted ligand-inducible transcription factors
+          A web server for predicted small molecule biosensors
         </Typography>
 
 

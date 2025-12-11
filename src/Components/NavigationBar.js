@@ -42,7 +42,7 @@ export default function NavigationBar() {
               <Box
                 component="img"
                 sx={{ height: '50px' }}
-                src="/Ligify_Logo_Dark.png"
+                src="/Ligify_Logo_Dark2.png"
                 alt="Ligify logo dark"
               />
             </Link>

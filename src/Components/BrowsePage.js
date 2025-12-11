@@ -131,7 +131,7 @@ export default function BrowsePage() {
     <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center" sx={{ mt: 5 }}>
       <Box sx={{ width: { xs: '90%', sm: '80%', md: '70%', lg: '60%' } }}>
         <Typography textAlign="center" sx={{ fontSize: { xs:18, sm: 24, md: 32 }, mb: { xs: 2, sm: 3, md: 5 }, mt: { xs: 0, sm: 0, md: "5%" }, fontWeight: 500 }}>
-          Predicted Regulators
+          Predicted Biosensors
         </Typography>
 
         <DataGrid

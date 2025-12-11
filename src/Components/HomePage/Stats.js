@@ -16,7 +16,7 @@ export default function Stats() {
         Regulators: 3,164
       </Typography>
       <Typography sx={{ fontSize: { xs: 14, sm: 22 } }}>
-        Unique ligands: 1,374
+        Unique ligands: 1,362
       </Typography>
     </Grid>
   );

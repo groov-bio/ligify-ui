@@ -29,7 +29,7 @@ export default function Statistics() {
       </Typography >
 
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
-        Regulators within Ligify<sup>DB</sup> belong to some of the most common structural families, including LysR and TetR.
+        Regulators within Ligify belong to some of the most common structural families, including LysR and TetR.
         Compared to past analyses of structural family frequencies in all bacteria, the LacI family is more represented and 
         the AraC family is less represented.
 
@@ -69,7 +69,7 @@ export default function Statistics() {
       </Typography >
 
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
-        A small fraction of the 1,374 ligands in Ligify<sup>DB</sup> are associated with a large fraction of the regulators 
+        A small fraction of the 1,362 ligands in Ligify are associated with a large fraction of the regulators 
         in the database. Twenty two ligands are associated with over 100 regulators, while 434 ligands are associated with 
         just one regulator. This bias is likely due to the overrepresentation of cofactors involved in the enzyme reactions 
         from which most predicted interactions are derived. Looking at the top 10 most common ligands, most of them are indeed
