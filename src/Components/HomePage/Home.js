@@ -2,6 +2,7 @@ import Search from './Search.js';
 import Stats from './Stats.js';
 
 import { Box, Grid, Typography } from '@mui/material';
+import Banner from './Banner.js';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -21,6 +22,10 @@ export default function Home() {
         background: 'linear-gradient(to right bottom, #fffa91, #ffffff)',
       }}
     >
+
+      <Banner/>
+
+
       <Grid
         size={{xs:12, sm:12, md:6}}
 
@@ -55,7 +60,7 @@ export default function Home() {
           component="div"
           textAlign="center"
         >
-          Ligify<sup>DB</sup>
+          Ligify
         </Typography>
 
 
@@ -70,7 +75,7 @@ export default function Home() {
           component="div"
           textAlign="center"
         >
-          A database of predicted ligand-inducible transcription factors
+          A web server for predicted ligand-inducible transcription factors
         </Typography>
 
 
