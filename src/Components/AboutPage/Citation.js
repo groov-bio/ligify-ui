@@ -19,7 +19,7 @@ export default function Citation() {
         Citing
       </Typography>
       <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 18 } }}>
-        If you have used ligify<sup>DB</sup> in a publication, please cite the following
+        If you have used Ligify in a publication, please cite the following
         paper
       </Typography>
 

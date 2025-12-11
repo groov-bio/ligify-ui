@@ -1,6 +1,6 @@
 // RegulatorPage.jsx
 import React, { useEffect, useMemo } from "react";
-import { Box, Typography, LinearProgress, Alert } from "@mui/material";
+import { Box, Typography, LinearProgress, Alert, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useParams } from "react-router-dom";
 import { useDBStore } from "../../stores/db.store"; // your zustand store
@@ -76,37 +76,49 @@ export default function RegulatorPage() {
 
         {/* Header */}
         <Grid container size={12} mb={6}>
+
+        <Paper sx={{ p: 1, borderRadius: 2, background: 'linear-gradient(135deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 100%)' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 2 }}>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+
           <Grid size={12} mt={3} textAlign="center">
+
             <Typography
               component="div"
               gutterBottom
               sx={{
-                fontSize: { xs: 30, sm: 55 },
+                fontSize: { xs: 30, sm: 40 },
                 textAlign: "center",
-                fontWeight: 300,
+                fontWeight: 400,
               }}
             >
               {title}
             </Typography>
           </Grid>
+
+          <Grid size={12} mb={2} mt={6}>
+            <RegulatorAttributes data={regulator} />
+          </Grid>
+
+          </Box>
+        </Box>
+      </Paper>
+
         </Grid>
 
         {/* Body */}
         <Grid container spacing={3} mt={3}>
-          <Grid size={12} mb={6}>
-            <RegulatorAttributes data={regulator} />
-          </Grid>
 
-          <Grid size={{xs:12,md:6}} md={6} mb={9}>
+          <Grid size={{xs:12,md:6}} md={6} mb={4}>
             <LigandViewer ligand={ligandList} />
           </Grid>
 
-          <Grid size={{xs:12,md:6}} md={6} mb={9}>
+          <Grid size={{xs:12,md:6}} md={6} mb={4}>
             <Structure accession={accession} />
           </Grid>
 
           <Grid size={12} mb={6}>
-            <PlasmidDesigner data={regulator} />
+            <GenomeContext data={genomeContext} />
           </Grid>
 
           <Grid size={12} mb={6}>
@@ -115,10 +127,6 @@ export default function RegulatorPage() {
 
           <Grid size={12} mb={6}>
             <PredictedPromoter promoter={promoter} />
-          </Grid>
-
-          <Grid size={12} mb={6}>
-            <GenomeContext data={genomeContext} />
           </Grid>
 
           <Grid size={{xs:12,md:6}} md={6} mb={6}>
@@ -134,6 +142,11 @@ export default function RegulatorPage() {
               <SimilarProteins data={hits} />
             </Grid>
           )}
+
+          <Grid size={12} mb={6}>
+            <PlasmidDesigner data={regulator} />
+          </Grid>
+
         </Grid>
       </Box>
     </Grid>
