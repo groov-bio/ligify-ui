@@ -1,16 +1,16 @@
-# LigifyDB
+# Ligify
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The web interface for [LigifyDB](https://ligify.groov.bio) - a database of predicted transcription factor biosensors for synthetic biology applications.
+The Web Server for [Ligify](https://ligify.groov.bio) - predicted transcription factor biosensors for synthetic biology applications.
 
-## About LigifyDB
+## About Ligify
 
-LigifyDB is an open-source database of bacterial transcription factor-ligand associations predicted from genome context. Bacterial transcription factors are core "sensor" components that power synthetic biology applications, such as high-throughput chemical screening, diagnostics, dynamic feedback regulation, cellular logic, and live cell therapeutics.
+Ligify is an open-source platform for bacterial transcription factor-ligand interactions predicted from genome context and enzyme reaction data. Bacterial transcription factors are core "sensor" components that power synthetic biology applications, such as high-throughput chemical screening, diagnostics, dynamic feedback regulation, cellular logic, and live cell therapeutics.
 
 ### Key Features
 
-- **Large Dataset**: Contains 3,164 unique sensors and 1,667 unique ligands
+- **Large Dataset**: Contains 3,164 unique sensors and 1,362 unique ligands
 - **Rich Visualizations**: React app enables viewing 3D protein structures, chemical structures, genome context
 - **Search & Filter**: Query the database via chemical similarity or filtering by sensor properties
 - **Plasmid Designer**: Custom tool to build fluorescent reporter circuits with modular parts
@@ -164,7 +164,7 @@ ligifyDB.json/
 
 ## Citation
 
-If you use ligifyDB in your research, please cite:
+If you use Ligify in your research, please cite:
 
 > d'Oelsnitz, S., Love, J.D., et al. "Ligify: Automated Genome Mining for Ligand-Inducible Transcription Factors" _ACS Synthetic Biology_ (2024). DOI: [10.1021/acssynbio.4c00372](https://doi.org/10.1021/acssynbio.4c00372)
 
