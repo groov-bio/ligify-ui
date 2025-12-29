@@ -100,7 +100,7 @@ export default function Structure({ accession }) {
             component="div"
             style={{ marginLeft: '5%', fontSize: 28, fontWeight: 300 }}
           >
-            Predicted Structure
+            Structure
           </Typography>
         </Grid>
 

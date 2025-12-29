@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { Stage, Layer, Line } from 'react-konva';
 
 import {
   Box,
+  Grid,
   Typography,
   Paper,
   Link,
   useMediaQuery,
   useTheme,
+  Chip,
+  Stack
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
+
 
 import { generateGraphic } from '../../lib/FormatOperon';
 
@@ -19,9 +22,14 @@ export default function GenomeContext({ data }) {
   const [operon, setOperon] = useState([]);
   const [geneFocus, setGeneFocus] = useState(undefined);
   const [formattedData, setFormattedData] = useState([]);
+  const [calculatedWidth, setCalculatedWidth] = useState(800);
 
   const lineRef = React.useRef(null);
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    // Use desktop dimensions for consistency
   const arrowLength = parseInt(window.innerHeight) > 800 ? 20 : 15;
   const geneHeight = parseInt(window.innerHeight) > 800 ? 40 : 30;
   const yOffset = 3;
@@ -29,15 +37,25 @@ export default function GenomeContext({ data }) {
   const strokeWidth = parseInt(window.innerHeight) > 800 ? 3 : 2;
   // Needed to arbitrarily set to 0.87 because operon extends past viewport otherwise
   //To detect size of screen
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  let operonWidth;
-  if (isSmallScreen === true) {
-    operonWidth = parseInt(window.innerWidth) * 0.87;
-  } else {
-    operonWidth = parseInt(window.innerWidth) * 0.62;
-  }
+    // Use desktop width as base, but allow override for calculated width
+  const baseOperonWidth = isSmallScreen ? 800 : parseInt(window.innerWidth) * 0.62;
+
+
+  // const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  // const isXSScreen = useMediaQuery(theme.breakpoints.down('xs'));
+
+  // let operonWidth;
+  // if (isXSScreen === true) {
+  //   operonWidth = parseInt(window.innerWidth) * 2.0;
+  // } else if (isSmallScreen === true) {
+  //     operonWidth = parseInt(window.innerWidth) * 1.8;
+  // } else if (isMediumScreen === true) {
+  // operonWidth = parseInt(window.innerWidth) * 1.4;
+  // } else {
+  //   operonWidth = parseInt(window.innerWidth) * .64;
+  // }
 
   useEffect(() => {
     //the if statement here is used to prevent this from running on initialization.
@@ -49,7 +67,29 @@ export default function GenomeContext({ data }) {
     }
   }, [data]);
 
+
+  
   useEffect(() => {
+    if (formattedData.length === 0) return;
+
+    // First pass: calculate total required width
+    let totalWidth = xOffset;
+    for (var gene of formattedData) {
+      var genePercent = parseInt(gene.length);
+      var geneLength =
+        genePercent > 2
+          ? baseOperonWidth * (genePercent * 0.01) - arrowLength
+          : baseOperonWidth * (genePercent * 0.01);
+      var spacerLength = baseOperonWidth * (parseInt(gene.spacer) * 0.01);
+      totalWidth += geneLength + arrowLength + spacerLength;
+    }
+    
+    // On desktop, use base width. On mobile, use calculated width for natural scrolling
+    const finalWidth = isSmallScreen ? Math.max(800, totalWidth + 50) : baseOperonWidth;
+    setCalculatedWidth(finalWidth);
+
+
+    // Second pass: render genes with final width
     var x_pos = xOffset;
     const genes = [];
     var counter = 0;
@@ -60,9 +100,9 @@ export default function GenomeContext({ data }) {
 
       var geneLength =
         genePercent > 2
-          ? operonWidth * (genePercent * 0.01) - arrowLength
-          : operonWidth * (genePercent * 0.01);
-      var spacerLength = operonWidth * (parseInt(gene.spacer) * 0.01);
+          ? finalWidth * (genePercent * 0.01) - arrowLength
+          : finalWidth * (genePercent * 0.01);
+      var spacerLength = finalWidth * (parseInt(gene.spacer) * 0.01);
 
       genes.push(
         <Line
@@ -145,23 +185,47 @@ export default function GenomeContext({ data }) {
           </Typography>
         </Grid>
 
-        {/* Operon */}
-
-        <Grid size={12}>
-          <Paper
-            elevation={0}
-            sx={{
+       {/* Operon */}
+       <Grid size={12} mt={1}>
+          <Paper 
+            elevation={0} 
+            sx={{ 
+              pl: {xs:0, sm:3}, 
+              pr: {xs:0, sm:3}, 
+              pt: 3, 
+              pb: 3, 
               border: '1px solid #c7c7c7',
-              padding: 3,
+              marginLeft: {xs:1,sm:0},
+              marginRight: {xs:1,sm:0}
             }}
           >
-
-
-            <Grid container spacing={5} columns={12}>
-              <Grid size={12} align="center" >
-                <Stage width={operonWidth} height={50}>
-                  <Layer>{operon}</Layer>
-                </Stage>
+            <Grid container spacing={4} columns={12}>
+              <Grid size={12} align="center">
+                <Box 
+                  sx={{ 
+                    overflowX: 'auto', 
+                    overflowY: 'hidden',
+                    width: '100%',
+                    '&::-webkit-scrollbar': {
+                      height: '8px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: '#f1f1f1',
+                      borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#c1c1c1',
+                      borderRadius: '4px',
+                      '&:hover': {
+                        backgroundColor: '#a1a1a1',
+                      },
+                    },
+                  }}
+                >
+                  <Stage width={calculatedWidth} height={50}>
+                    <Layer>{operon}</Layer>
+                  </Stage>
+                </Box>
               </Grid>
 
               {/* Color-coded Legend */}
