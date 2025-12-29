@@ -65,12 +65,12 @@ import {
                   </Grid>
 
                       {/* Copy button */}
-                  <Grid size={{xs:3, sm:6.6}} textAlign="right" mb={-3}>
+                  {/* <Grid size={{xs:3, sm:6.6}} textAlign="right" mb={-3}>
                       <Button
                       variant="outlined">
                         Copy
                       </Button>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Grid>
   
