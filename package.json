@@ -19,6 +19,7 @@
     "idb-keyval": "^6.2.2",
     "molstar": "^3.31.2",
     "react": "^18.3.1",
+    "react-cookie-consent": "^10.0.1",
     "react-dom": "^18.3.1",
     "react-konva": "^18.2.10",
     "react-router-dom": "^7.6.2",
