@@ -20,6 +20,22 @@ const queryClient = new QueryClient();
 
 const GA_TRACKING_ID = 'G-NRFVY69VS2';
 
+function clearAnalyticsCookies() {
+  const gaCookieNames = document.cookie
+    .split(';')
+    .map((c) => c.trim().split('=')[0])
+    .filter((name) => /^_ga/.test(name) || name === '_gid' || name === '_gat');
+
+  const hostname = window.location.hostname;
+  const rootDomain = '.' + hostname.split('.').slice(-2).join('.');
+
+  gaCookieNames.forEach((name) => {
+    Cookies.remove(name);
+    Cookies.remove(name, { domain: hostname });
+    Cookies.remove(name, { domain: rootDomain });
+  });
+}
+
 function loadGoogleAnalytics() {
   if (window.gaLoaded) return;
 
@@ -37,17 +53,19 @@ export default function App() {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [showBanner, setShowBanner] = useState(
-    getCookieConsentValue('ligify-cookie-consent') === undefined
+    getCookieConsentValue('groov-cookie-consent') === undefined
   );
 
   useEffect(() => {
-    if (getCookieConsentValue('ligify-cookie-consent') === 'true') {
+    if (getCookieConsentValue('groov-cookie-consent') === 'true') {
       loadGoogleAnalytics();
+    } else {
+      clearAnalyticsCookies();
     }
   }, []);
 
   const handleCloseBanner = () => {
-    Cookies.set('ligify-cookie-consent', 'false', { expires: 365 });
+    Cookies.set('groov-cookie-consent', 'false', { expires: 365 });
     setShowBanner(false);
   };
 
@@ -78,7 +96,7 @@ export default function App() {
       {showBanner && (
         <CookieConsent
           location="bottom"
-          cookieName="ligify-cookie-consent"
+          cookieName="groov-cookie-consent"
           enableDeclineButton
           onAccept={loadGoogleAnalytics}
           onDecline={() => setShowBanner(false)}
