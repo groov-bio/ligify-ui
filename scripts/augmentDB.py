@@ -6,9 +6,6 @@ import json
 import requests
 import time
 
-# load the database into memory
-with open("../public/ligifyDB.json", "r") as f:
-    data = json.load(f)
 
 
 # Add Protein Seq ID from input Uniprot ID:
@@ -60,6 +57,10 @@ def get_refseq_metadata(refseq_id: str) -> dict:
 # Add the "organism name" and "taxonomy ID" from input RefSeq ID:
 
 def add_org_tax():
+    # load the database into memory
+    with open("../public/ligifyDB.json", "r") as f:
+        data = json.load(f)
+
     for i in range(2500, len(data)):
         time.sleep(0.5)
         org_tax = get_refseq_metadata(data[i]['refseq'])
@@ -72,5 +73,68 @@ def add_org_tax():
         json.dump(data,f)
 
 
-with open("../public/ligifyDB.json") as f:
-    json.dumps(data)
+def create_fasta():
+    # load the database into memory
+    with open("../public/ligifyDB.json", "r") as f:
+        data = json.load(f)
+
+    fasta = ""
+    for i in data:
+        refseq = i['refseq']
+        proteinSeq = i['protein_seq']
+        fasta = fasta + ">" + refseq + "\n" + proteinSeq + "\n"
+
+    with open("ligifyRegs.fasta", "w") as f:
+        f.write(fasta)
+
+
+
+def smiles_to_name(smiles: str, name_type: str = "iupac") -> str:
+    # Step 1: Get CID from SMILES
+    url_cid = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/{}/cids/JSON".format(smiles)
+    r = requests.get(url_cid)
+    if r.status_code != 200:
+        return None
+
+    data = r.json()
+    try:
+        cid = data["IdentifierList"]["CID"][0]
+    except (KeyError, IndexError):
+        return None
+
+    # Step 2: Fetch name
+    url_name = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/property/Title/JSON"
+    r = requests.get(url_name)
+    if r.status_code != 200:
+        return None
+
+    data = r.json()
+    try:
+        name = data["PropertyTable"]["Properties"][0]["Title"]
+        return name
+    except (KeyError, IndexError):
+        return None
+
+
+# Example usage
+# if __name__ == "__main__":
+#     smiles = "C[C@@]12CC(=O)[C@@H](C1(C)C)CC2=O"
+#     print(smiles_to_name(smiles))
+
+
+def add_common_name():
+    # load the database into memory
+    with open("../public/ligifyDB.json", "r") as f:
+        data = json.load(f)
+
+    for i in range(0, len(data)):
+        time.sleep(0.5)
+        for k in data[i]['candidate_ligands']:
+            smiles = k['smiles']
+            common_name = smiles_to_name(smiles)
+            k['common_name'] = common_name
+
+        print(i)
+
+    with open("../public/ligifyDB_chemName.json", "w") as f:
+        json.dump(data,f)

@@ -18,11 +18,13 @@ import {
       var uniprot_name = "None"
     }
 
-    if (data.protein.organism[6] !== undefined){
-      var organismName = data.protein.organism[5] + ", " + data.protein.organism[6]
+    console.log(data);
+
+    if (data.organism !== undefined){
+      var organismName = data.organism
     }
     else {
-      var organismName = data.protein.organism[5]
+            var organismName = data.protein.organism[5]
     }
 
     // format the data to display regulator attributes
