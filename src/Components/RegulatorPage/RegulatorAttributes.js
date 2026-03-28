@@ -31,11 +31,21 @@ import {
     console.log(data)
 
     // format the data to display regulator attributes
-    const reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
+          var reg_attr = {}
+    {data.protein_id !== "None" ? 
+      reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
+                        "Protein ID": {"name": data.protein_id, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.protein_id).toString()}, 
+                        "Uniprot ID": {"name": uniprot_name, "link":uniprot_link},
+                        "Organism": {"name":organismName, "link":organism_link} 
+                      }
+    :
+      reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
                         "Protein ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
                         "Uniprot ID": {"name": uniprot_name, "link":uniprot_link},
                         "Organism": {"name":organismName, "link":organism_link} 
                       }
+    }
+
 
       return (
 
