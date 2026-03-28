@@ -21,6 +21,7 @@ import {
     console.log(data);
 
     if (data.organism !== undefined){
+      var organism_link = "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?lvl=0&id="+(data.taxon).toString()
       var organismName = data.organism
     }
     else {
@@ -31,7 +32,7 @@ import {
     const reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
                         "RefSeq ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
                         "Uniprot ID": {"name": uniprot_name, "link":uniprot_link},
-                        "Organism": {"name":organismName, "link":"None"} 
+                        "Organism": {"name":organismName, "link":organism_link} 
                       }
 
       return (
