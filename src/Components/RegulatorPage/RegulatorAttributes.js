@@ -28,9 +28,11 @@ import {
             var organismName = data.protein.organism[5]
     }
 
+    console.log(data)
+
     // format the data to display regulator attributes
     const reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
-                        "RefSeq ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
+                        "Protein ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
                         "Uniprot ID": {"name": uniprot_name, "link":uniprot_link},
                         "Organism": {"name":organismName, "link":organism_link} 
                       }
