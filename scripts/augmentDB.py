@@ -13,6 +13,7 @@ import time
 
 
 
+# Add organism name and taxon ID
 def get_refseq_metadata(refseq_id: str) -> dict:
     """
     Given a RefSeq protein ID, return organism name and taxon ID using NCBI E-utilities.
@@ -55,7 +56,6 @@ def get_refseq_metadata(refseq_id: str) -> dict:
 
 
 # Add the "organism name" and "taxonomy ID" from input RefSeq ID:
-
 def add_org_tax():
     # load the database into memory
     with open("../public/ligifyDB.json", "r") as f:
@@ -89,6 +89,9 @@ def create_fasta():
 
 
 
+
+# Add common chemical name
+
 def smiles_to_name(smiles: str, name_type: str = "iupac") -> str:
     # Step 1: Get CID from SMILES
     url_cid = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/{}/cids/JSON".format(smiles)
@@ -116,25 +119,159 @@ def smiles_to_name(smiles: str, name_type: str = "iupac") -> str:
         return None
 
 
-# Example usage
-# if __name__ == "__main__":
-#     smiles = "C[C@@]12CC(=O)[C@@H](C1(C)C)CC2=O"
-#     print(smiles_to_name(smiles))
 
 
-def add_common_name():
-    # load the database into memory
+from rdkit import Chem
+import requests
+from functools import lru_cache
+from chembl_webresource_client.new_client import new_client
+
+# Reuse HTTP connection
+session = requests.Session()
+
+def canonicalize(smiles: str) -> str:
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        raise ValueError("Invalid SMILES")
+    return Chem.MolToSmiles(mol)
+
+# --- PubChem (fast primary) ---
+@lru_cache(maxsize=10000)
+def query_pubchem(smiles: str):
+    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/{smiles}/property/Title/JSON"
+
+    try:
+        r = session.get(url, timeout=3)
+        if r.status_code != 200:
+            return None
+
+        data = r.json()
+        return data["PropertyTable"]["Properties"][0].get("Title")
+
+    except Exception:
+        return None
+
+# --- ChEMBL (fallback only) ---
+@lru_cache(maxsize=10000)
+def query_chembl(smiles: str):
+    molecule = new_client.molecule
+
+    results = molecule.filter(
+        molecule_structures__canonical_smiles=smiles
+    )
+
+    for res in results:
+        if res.get("pref_name"):
+            return res["pref_name"]
+
+    return None
+
+# --- FAST main function ---
+def smiles_to_name(smiles: str):
+    smiles = canonicalize(smiles)
+
+    # 1. Try PubChem first (fast)
+    name = query_pubchem(smiles)
+    if name:
+        return name
+
+    # 2. Fallback to ChEMBL (slower)
+    name = query_chembl(smiles)
+    if name:
+        return name
+
+    return None
+
+
+
+
+
+# Create dictionary with all chemicals
+def create_chemMap_base():
     with open("../public/ligifyDB.json", "r") as f:
         data = json.load(f)
 
-    for i in range(0, len(data)):
-        time.sleep(0.5)
-        for k in data[i]['candidate_ligands']:
-            smiles = k['smiles']
-            common_name = smiles_to_name(smiles)
-            k['common_name'] = common_name
+    chemMap = []
+    for i in data:
+        for chem in i["candidate_ligands"]:
+            entry = {
+                "iupac": chem["name"],
+                "smiles": chem["smiles"]
+            }
+            if entry in chemMap:
+                pass
+            else:
+                chemMap.append(entry)
 
-        print(i)
+    with open("chemMap3.json", "w") as f:
+        json.dump(chemMap, f)
+    print('done')
 
-    with open("../public/ligifyDB_chemName.json", "w") as f:
-        json.dump(data,f)
+
+# First function to add common names
+def add_commonNames():
+    with open("chemMap3.json", "r") as f:
+        data = json.load(f)
+
+    c = 0
+    for i in data:
+        if "name" in i:
+            c += 1
+        else:
+            try:
+                i['name'] = smiles_to_name(i['smiles']).capitalize()
+            except:
+                i['name'] = None
+            with open("chemMap4.json", "w") as f:
+                json.dump(data, f)
+            print(str(c)+": file saved")
+            c += 1
+
+
+
+
+# Run this to fill in the entries with "none" in their "name" field
+# session = requests.Session()
+def iupac_to_common_name(iupac_name: str):
+    try:
+        # Step 1: Get CID from IUPAC name
+        url_cid = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{iupac_name}/cids/JSON"
+        r = session.get(url_cid, timeout=5)
+        r.raise_for_status()
+        cid = r.json()["IdentifierList"]["CID"][0]
+
+        # Step 2: Get common name (Title)
+        url_name = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/property/Title/JSON"
+        r = session.get(url_name, timeout=5)
+        r.raise_for_status()
+
+        data = r.json()
+        return data["PropertyTable"]["Properties"][0].get("Title")
+
+    except Exception:
+        return None
+    
+
+# in ligifyDB file, rename "name" to "iupac", and add new common "name" field.
+def add_ChemName_to_DB():
+    with open('../public/ligifyDB.json', 'r') as f:
+        data = json.load(f)
+
+    with open('chemMap_final.json', 'r') as m:
+        chemMap = json.load(m)
+
+    for reg in data:
+        for chem in reg['candidate_ligands']:
+            chem['iupac'] = chem.pop('name')
+            #find common name using map
+            chemName = [i for i in chemMap if i['iupac'] == chem['iupac']][0]['name']
+            if chemName == None:
+                print('error')
+            else:
+                chem['name'] = chemName
+
+    with open('../public/ligifyDB.json', "w") as out:
+        json.dump(data, out)
+    print('updated ligifyDB.json')
+
+add_ChemName_to_DB()

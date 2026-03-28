@@ -14,6 +14,7 @@ import Grid from '@mui/material/Grid';
 export default function LigandViewer({ ligand }) {
   const [ligandNumber, setLigandNumber] = useState(1);
   const [ligandName, setLigandName] = useState('Loading ...');
+  const [ligandSMILES, setLigandSMILES] = useState([]);
   const [smileValid, setSmileValid] = useState([]);
 
   const changeLigand = (event, value) => {
@@ -28,7 +29,8 @@ export default function LigandViewer({ ligand }) {
       ligand[ligandNumber - 1].smiles !== ''
     ) {
       setLigandName(ligand[ligandNumber - 1]['name']);
-      let ligandSMILES = ligand[ligandNumber - 1]['smiles'];
+      setLigandSMILES(ligand[ligandNumber - 1]['smiles']);
+      // let ligandSMILES = ligand[ligandNumber - 1]['smiles'];
 
 
       let options = {
@@ -58,7 +60,7 @@ export default function LigandViewer({ ligand }) {
       context.font = '30px Arial';
       context.fillText('Please enter a SMILES to get started.', 0, 200);
     }
-  }, [ligandNumber, ligand]);
+  }, [ligandNumber, ligandSMILES, ligand]);
 
   //Mark is a ligand has at least SMILES
   useEffect(() => {
@@ -99,7 +101,7 @@ export default function LigandViewer({ ligand }) {
               height: { xs: '300px', sm: '500px' },
             }}
           >
-            <a href={"https://pubchem.ncbi.nlm.nih.gov/#query="+ligandName} target="_blank">
+            <a href={"https://pubchem.ncbi.nlm.nih.gov/#query="+ligandSMILES} target="_blank">
             <Box
               sx={{
                 width: { xs: '300px' }, //This is being driven by the paper above
