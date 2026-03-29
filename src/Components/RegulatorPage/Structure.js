@@ -3,90 +3,27 @@ import React, { useState, useEffect } from 'react';
 
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { useAlphaFold } from '../../lib/queries';
 
 export default function Structure({ accession }) {
   const [isComponentLoaded, setIsComponentLoaded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [structureExists, setStructureExists] = useState(false);
 
+  const { isLoading, isError: hasError, isSuccess: structureExists } = useAlphaFold(accession);
 
-
-  // Check if structure exists, then load component
+  // Load the nightingale web component once we know the structure exists
   useEffect(() => {
-    if (!accession) return;
+    if (!structureExists || isComponentLoaded) return;
 
-    const checkAndLoad = async () => {
-      setIsLoading(true);
-      
-      // Check if structure exists
-      try {
-        const response = await fetch(`https://alphafold.ebi.ac.uk/api/prediction/${accession}`);
-        if (!response.ok) {
-          console.warn(`Structure not found for accession: ${accession}`);
-          setHasError(true);
-          setIsLoading(false);
-          return;
+    import('@nightingale-elements/nightingale-structure')
+      .then(module => {
+        if (!window.customElements.get('nightingale-structure')) {
+          window.customElements.define('nightingale-structure', module.default);
         }
-        setStructureExists(true);
-      } catch (error) {
-        console.error('Error checking structure:', error);
-        setHasError(true);
-        setIsLoading(false);
-        return;
-      }
+        setIsComponentLoaded(true);
+      })
+      .catch(err => console.error('Failed to load NightingaleStructure:', err));
+  }, [structureExists, isComponentLoaded]);
 
-      // If structure exists and component not loaded, load it
-      if (!isComponentLoaded) {
-        try {
-          const module = await import('@nightingale-elements/nightingale-structure');
-          const NightingaleStructureComponent = module.default;
-          
-          if (!window.customElements.get('nightingale-structure')) {
-            window.customElements.define(
-              'nightingale-structure',
-              NightingaleStructureComponent
-            );
-          }
-          setIsComponentLoaded(true);
-          setIsLoading(false);
-        } catch (error) {
-          console.error('Failed to load NightingaleStructure:', error);
-          setHasError(true);
-          setIsLoading(false);
-        }
-      } else {
-        setIsLoading(false);
-      }
-    };
-
-    checkAndLoad();
-  }, [accession, isComponentLoaded]);
-
-
-
-  //   const fetchStructure = async () => {
-  //     try {
-  //       const response = await fetch(`https://alphafold.ebi.ac.uk/api/prediction/${accession}`);
-
-  //       if (response.status === 404) {
-  //         // Handle 404 error without throwing
-  //         setHasError(true);
-  //         console.warn(`Structure not found for accession: ${accession}`);
-  //       } else if (response.ok) {
-  //         setHasError(false);
-  //       }
-  //     } catch (error) {
-  //       // Handle network or parsing errors
-  //       console.error('Error fetching structure:', error);
-  //       setHasError(true);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchStructure();
-  // }, [accession]);
 
 
 
@@ -136,6 +73,18 @@ export default function Structure({ accession }) {
               <Typography variant="h6">No structure available</Typography>
             </div>
           )}
+
+                <a href={`https://alphafold.ebi.ac.uk/entry/${accession}`} target="__blank" 
+                  style={{textDecoration:"None", display:'block',textAlign:"center", marginTop: 10}}>
+                  <Typography variant="h6" display="inline" color="black"
+                      sx={{fontSize: { xs: 18, sm: 20 }}}>
+                    Source: 
+                  </Typography>
+                  <Typography variant="h6" display="inline" color="blue" marginLeft="3px"
+                      sx={{fontSize: { xs: 18, sm: 20 }}}>
+                    AlphaFold DB
+                  </Typography>
+                </a>
         </Grid>
       </Grid>
     </Box>

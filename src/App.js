@@ -12,6 +12,7 @@ import NavigationBar from './Components/NavigationBar.js';
 import BrowsePage from './Components/BrowsePage.js'
 import RegulatorPage from './Components/RegulatorPage/RegulatorPage.js'
 import About from './Components/AboutPage/About.js';
+import BlastPage from './Components/BlastPage.js';
 import DBLoader from './stores/DBLoader.js';
 
 import './css/App.css';
@@ -91,6 +92,7 @@ export default function App() {
           <Route path="/database" element={<BrowsePage />} />
           <Route path="/database/:refseq" element={<RegulatorPage />} />
           <Route path="/about" element={<About />} />
+          <Route path="/blast" element={<BlastPage />} />
         </Routes>
       </Box>
       {showBanner && (

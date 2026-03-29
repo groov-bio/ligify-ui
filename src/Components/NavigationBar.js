@@ -13,10 +13,10 @@ import { Link } from 'react-router-dom';
 
 
 
-const navItems = ['Home', 'Browse', 'About'];
-const linkItems = ['/home', '/database', '/about'];
+const navItems = ['Home', 'Browse', 'BLAST', 'About'];
+const linkItems = ['/home', '/database', '/blast', '/about'];
 
-const indexes = [0, 1, 2];
+const indexes = [0, 1, 2, 3];
 
 export default function NavigationBar() {
 
@@ -126,6 +126,27 @@ export default function NavigationBar() {
                   }}
                 >
                   Browse
+                </Link>
+            </Button>
+
+            <Button
+                sx={{
+                  color: '#fff',
+                  marginLeft: 5,
+                  marginRight: { sm: 2, md: 5 },
+                }}
+              >
+                <Link
+                  to={'/blast'}
+                  style={{
+                    color: 'white',
+                    textDecoration: 'none',
+                    textTransform: 'none',
+                    fontSize: 16,
+                    fontWeight: 300,
+                  }}
+                >
+                  BLAST
                 </Link>
             </Button>
 
