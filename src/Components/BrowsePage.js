@@ -6,6 +6,7 @@ import {
   ToggleButton, ToggleButtonGroup,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
   IconButton, Collapse, TablePagination, TextField,
+  FormControlLabel, Switch,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -13,13 +14,14 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { DataGrid } from '@mui/x-data-grid';
 
 import { useDBStore } from "../stores/db.store";
+import { useChemMap, useLigandMap } from "../lib/queries";
 
 
 // Normalize the root into an array, regardless of shape
 function normalizeToArray(data) {
   if (!data) return [];
   if (Array.isArray(data)) return data;
-  if (Array.isArray(data.regulators)) return data.regulators; // common case
+  if (Array.isArray(data.regulators)) return data.regulators;
   return Object.values(data);
 }
 
@@ -56,11 +58,7 @@ function LigandRow({ name, regulators }) {
 
 export default function BrowsePage() {
   const [view, setView] = useState("regulator");
-
-  const [ligandMap, setLigandMap]     = useState(null);
-  const [ligandLoading, setLigandLoading] = useState(false);
-  const [ligandError, setLigandError] = useState(null);
-
+  const [showCommonNames, setShowCommonNames] = useState(true);
   const [page, setPage]               = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [search, setSearch]           = useState("");
@@ -70,34 +68,34 @@ export default function BrowsePage() {
   const data   = useDBStore(s => s.data);
   const loadDB = useDBStore(s => s.loadDB);
 
-  // Defensive autoload (if you didn't mount <DBLoader />)
   useEffect(() => { if (status === "idle") loadDB("/ligifyDB.json"); }, [status, loadDB]);
 
-  useEffect(() => {
-    if (view !== "ligand" || ligandMap !== null || ligandLoading) return;
-    setLigandLoading(true);
-    fetch("https://groov-api.com/ligify-ligand-map.json")
-      .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
-      .then(d => { setLigandMap(d); setLigandLoading(false); })
-      .catch(e => { setLigandError(e.message); setLigandLoading(false); });
-  }, [view, ligandMap, ligandLoading]);
+  // Ligand data — only fetched when switching to ligand view; cached by React Query
+  const { data: ligandMap, isLoading: ligandLoading, error: ligandError } = useLigandMap();
+  const { data: chemMap = [] } = useChemMap();
+
+  // iupac (lowercase) → common name
+  const iupacToName = useMemo(() => {
+    const map = {};
+    for (const entry of chemMap) {
+      if (entry.iupac) map[entry.iupac.toLowerCase()] = entry.name;
+    }
+    return map;
+  }, [chemMap]);
 
   // Reset page when search changes
   useEffect(() => setPage(0), [search]);
 
-  // --- Build safe rows with a guaranteed id ---
+  // --- Build safe regulator rows ---
   const rows = useMemo(() => {
-    const regs = normalizeToArray(data)
-      .filter(Boolean); // drop null/undefined rows if any
-
+    const regs = normalizeToArray(data).filter(Boolean);
     return regs.map((reg, i) => {
       const refseq = reg?.refseq ?? reg?.protein?.refseq ?? "";
       const id =
         refseq ||
         reg?.uniprot_id ||
         reg?.protein?.uniprot_id ||
-        String(i + 1); // last-resort stable id
-
+        String(i + 1);
       return {
         id,
         refseq,
@@ -148,27 +146,23 @@ export default function BrowsePage() {
       width: 120,
       renderCell: (params) =>
         params.value ? (
-          <a
-            href={`https://www.uniprot.org/uniprotkb/${params.value}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={`https://www.uniprot.org/uniprotkb/${params.value}`} target="_blank" rel="noopener noreferrer">
             {params.value}
           </a>
         ) : null,
     },
-    { field: "annotation", headerName: "Annotation", width: 350 },
-    { field: "organism", headerName: "Organism", width: 170 },
-    { field: "taxon", headerName: "Taxon", width: 170 },
-    { field: "organismKingdom", headerName: "Organism kingdom", width: 170 },
-    { field: "organismPhylum",  headerName: "Organism phylum",  width: 170 },
-    { field: "organismClass",   headerName: "Organism class",   width: 190 },
-    { field: "organismOrder",   headerName: "Organism order",   width: 170 },
-    { field: "organismFamily",  headerName: "Organism family",  width: 170 },
-    { field: "organismGenus",   headerName: "Organism genus",   width: 170 },
-    { field: "groovDB",         headerName: "groovDB", width: 200 },
-    { field: "operonLength",    headerName: "Operon length", width: 120 },
-    { field: "enzymeDistance",  headerName: "Distance to enzyme", width: 170 },
+    { field: "annotation",           headerName: "Annotation",            width: 350 },
+    { field: "organism",             headerName: "Organism",              width: 170 },
+    { field: "taxon",                headerName: "Taxon",                 width: 170 },
+    { field: "organismKingdom",      headerName: "Organism kingdom",      width: 170 },
+    { field: "organismPhylum",       headerName: "Organism phylum",       width: 170 },
+    { field: "organismClass",        headerName: "Organism class",        width: 190 },
+    { field: "organismOrder",        headerName: "Organism order",        width: 170 },
+    { field: "organismFamily",       headerName: "Organism family",       width: 170 },
+    { field: "organismGenus",        headerName: "Organism genus",        width: 170 },
+    { field: "groovDB",              headerName: "groovDB",               width: 200 },
+    { field: "operonLength",         headerName: "Operon length",         width: 120 },
+    { field: "enzymeDistance",       headerName: "Distance to enzyme",    width: 170 },
     { field: "additionalRegulators", headerName: "Additional regulators", width: 170 },
     {
       field: "enzyme_uniprot",
@@ -176,24 +170,24 @@ export default function BrowsePage() {
       width: 120,
       renderCell: (params) =>
         params.value ? (
-          <a
-            href={`https://www.uniprot.org/uniprotkb/${params.value}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={`https://www.uniprot.org/uniprotkb/${params.value}`} target="_blank" rel="noopener noreferrer">
             {params.value}
           </a>
         ) : null,
     },
   ], []);
 
+  // --- Ligand table data ---
   const filteredLigands = useMemo(() => {
     if (!ligandMap) return [];
     const entries = Object.entries(ligandMap);
     if (!search.trim()) return entries;
     const q = search.toLowerCase();
-    return entries.filter(([name]) => name.toLowerCase().includes(q));
-  }, [ligandMap, search]);
+    return entries.filter(([iupac]) => {
+      const common = iupacToName[iupac.toLowerCase()] ?? "";
+      return iupac.toLowerCase().includes(q) || common.toLowerCase().includes(q);
+    });
+  }, [ligandMap, search, iupacToName]);
 
   const pagedLigands = useMemo(
     () => filteredLigands.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
@@ -210,7 +204,7 @@ export default function BrowsePage() {
           Predicted Biosensors
         </Typography>
 
-        {/* Toggle */}
+        {/* View toggle */}
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <ToggleButtonGroup
             value={view}
@@ -237,20 +231,11 @@ export default function BrowsePage() {
               pagination: { paginationModel: { pageSize: 10 } },
               columns: {
                 columnVisibilityModel: {
-                  id: false,
-                  uniprot: false,
-                  taxon: false,
-                  organismKingdom: false,
-                  organismPhylum: false,
-                  organismFamily: false,
-                  organismClass: false,
-                  organismOrder: false,
-                  organismGenus: false,
-                  groovDB: false,
-                  enzymeDistance: false,
-                  additionalRegulators: false,
-                  operonLength: false,
-                  enzyme_uniprot: false,
+                  id: false, uniprot: false, taxon: false,
+                  organismKingdom: false, organismPhylum: false, organismFamily: false,
+                  organismClass: false, organismOrder: false, organismGenus: false,
+                  groovDB: false, enzymeDistance: false, additionalRegulators: false,
+                  operonLength: false, enzyme_uniprot: false,
                 },
               },
             }}
@@ -268,16 +253,28 @@ export default function BrowsePage() {
         {view === "ligand" && (
           <>
             {ligandLoading && <LinearProgress />}
-            {ligandError && <Alert severity="error">{ligandError}</Alert>}
+            {ligandError && <Alert severity="error">{String(ligandError)}</Alert>}
             {ligandMap && (
               <>
-                <TextField
-                  size="small"
-                  placeholder="Search ligands…"
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  sx={{ mb: 1, width: 280 }}
-                />
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+                  <TextField
+                    size="small"
+                    placeholder="Search ligands…"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    sx={{ width: 280 }}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        size="small"
+                        checked={showCommonNames}
+                        onChange={e => setShowCommonNames(e.target.checked)}
+                      />
+                    }
+                    label="Common names"
+                  />
+                </Box>
                 <TableContainer component={Paper} variant="outlined">
                   <Table size="small">
                     <TableHead>
@@ -288,9 +285,14 @@ export default function BrowsePage() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {pagedLigands.map(([name, regulators]) => (
-                        <LigandRow key={name} name={name} regulators={regulators} />
-                      ))}
+                      {pagedLigands.map(([iupac, regulators]) => {
+                        const displayName = showCommonNames
+                          ? (iupacToName[iupac.toLowerCase()] ?? iupac)
+                          : iupac;
+                        return (
+                          <LigandRow key={iupac} name={displayName} regulators={regulators} />
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </TableContainer>

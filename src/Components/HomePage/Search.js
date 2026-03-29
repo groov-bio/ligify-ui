@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -20,6 +20,7 @@ import {
   Button
 } from '@mui/material';
 
+import { useChemMap } from '../../lib/queries';
 
 export default function Search() {
 
@@ -41,14 +42,7 @@ export default function Search() {
   // Chemical name search state
   const [selectedChem, setSelectedChem] = useState(null);
   const [chemInputValue, setChemInputValue] = useState('');
-  const [chemMap, setChemMap] = useState([]);
-
-  useEffect(() => {
-    fetch('https://groov-api.com/ligify_chem_map.json')
-      .then(res => res.json())
-      .then(data => setChemMap(data))
-      .catch(() => {}); // fail silently; autocomplete just stays empty
-  }, []);
+  const { data: chemMap = [] } = useChemMap();
 
   const iupacToName = useMemo(() => {
     const map = {};
