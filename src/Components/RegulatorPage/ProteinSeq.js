@@ -98,6 +98,11 @@ export default function ProteinSeq(data) {
               </Box>
             ))}
 
+            <Grid size={12} mt={2}>
+              <Button href={`https://papers.genomics.lbl.gov/cgi-bin/litSearch.cgi?query=${protein_seq}`} target="__blank" 
+                sx={{textTransform:"None", fontSize: { xs: 12, sm:16 }, padding:1, backgroundColor:'yellow', color: "black"}} variant="contained">
+                  <i>PaperBLAST</i></Button>
+            </Grid>
           </Paper>
         </Grid>
       </Grid>

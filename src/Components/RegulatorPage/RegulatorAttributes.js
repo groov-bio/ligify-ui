@@ -18,19 +18,34 @@ import {
       var uniprot_name = "None"
     }
 
-    if (data.protein.organism[6] !== undefined){
-      var organismName = data.protein.organism[5] + ", " + data.protein.organism[6]
+    console.log(data);
+
+    if (data.organism !== undefined){
+      var organism_link = "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?lvl=0&id="+(data.taxon).toString()
+      var organismName = data.organism
     }
     else {
-      var organismName = data.protein.organism[5]
+            var organismName = data.protein.organism[5]
     }
 
+    console.log(data)
+
     // format the data to display regulator attributes
-    const reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
-                        "RefSeq ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
+          var reg_attr = {}
+    {data.protein_id !== "None" ? 
+      reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
+                        "Protein ID": {"name": data.protein_id, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.protein_id).toString()}, 
                         "Uniprot ID": {"name": uniprot_name, "link":uniprot_link},
-                        "Organism": {"name":organismName, "link":"None"} 
+                        "Organism": {"name":organismName, "link":organism_link} 
                       }
+    :
+      reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
+                        "Protein ID": {"name": data.refseq, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.refseq).toString()}, 
+                        "Uniprot ID": {"name": uniprot_name, "link":uniprot_link},
+                        "Organism": {"name":organismName, "link":organism_link} 
+                      }
+    }
+
 
       return (
 

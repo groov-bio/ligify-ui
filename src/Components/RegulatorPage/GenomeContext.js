@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Stage, Layer, Line } from 'react-konva';
 
@@ -10,8 +10,6 @@ import {
   Link,
   useMediaQuery,
   useTheme,
-  Chip,
-  Stack
 } from '@mui/material';
 
 
@@ -185,6 +183,7 @@ export default function GenomeContext({ data }) {
           </Typography>
         </Grid>
 
+
        {/* Operon */}
        <Grid size={12} mt={1}>
           <Paper 
@@ -199,6 +198,42 @@ export default function GenomeContext({ data }) {
               marginRight: {xs:1,sm:0}
             }}
           >
+            {/* Genome ID tag */}
+            <Grid size={12} mb={3}>
+              <Grid container>
+                <Grid size={{xs:2, sm:1}} textAlign="right">
+                  <Typography
+                    component="span"
+                    width="100px"
+                    sx={{
+                      fontSize: { xs: 14, sm: 16, md: 16 },
+                      paddingRight: '15px',
+                      borderRight: '2px solid #0084ff',
+                    }}
+                  >
+                    <b>Genome ID</b>
+                  </Typography>
+                </Grid>
+
+                <Grid size={{xs:5, sm:4}} textAlign="left" ml={'15px'}>
+                  <a  
+                    href={`https://www.ncbi.nlm.nih.gov/nuccore/${data.genome}`}
+                    target="__blank" style={{textDecoration:"None"}}>
+                  <Typography
+                    component="span"
+
+                    width="100px"
+                    sx={{ fontSize: { xs: 14, sm: 16, md: 16 },
+                          paddingLeft: {xs:0, sm:3, md:1.5}  }}
+                  >
+                    {data.genome}
+                  </Typography>
+                  </a>
+                </Grid>
+              </Grid>
+            </Grid>
+
+
             <Grid container spacing={4} columns={12}>
               <Grid size={12} align="center">
                 <Box 

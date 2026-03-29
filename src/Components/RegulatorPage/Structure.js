@@ -136,6 +136,18 @@ export default function Structure({ accession }) {
               <Typography variant="h6">No structure available</Typography>
             </div>
           )}
+
+                <a href={`https://alphafold.ebi.ac.uk/entry/${accession}`} target="__blank" 
+                  style={{textDecoration:"None", display:'block',textAlign:"center", marginTop: 10}}>
+                  <Typography variant="h6" display="inline" color="black"
+                      sx={{fontSize: { xs: 18, sm: 20 }}}>
+                    Source: 
+                  </Typography>
+                  <Typography variant="h6" display="inline" color="blue" marginLeft="3px"
+                      sx={{fontSize: { xs: 18, sm: 20 }}}>
+                    AlphaFold DB
+                  </Typography>
+                </a>
         </Grid>
       </Grid>
     </Box>
