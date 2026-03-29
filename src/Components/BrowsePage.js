@@ -1,8 +1,14 @@
 // BrowsePage.js
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Typography, Grid, LinearProgress, Alert } from "@mui/material";
-
+import {
+  Box, Typography, Grid, LinearProgress, Alert,
+  ToggleButton, ToggleButtonGroup,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
+  IconButton, Collapse, TablePagination, TextField,
+} from "@mui/material";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -17,7 +23,48 @@ function normalizeToArray(data) {
   return Object.values(data);
 }
 
+// Collapsible row for the ligand table
+function LigandRow({ name, regulators }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableCell width={48} sx={{ py: 0.5 }}>
+          <IconButton size="small" onClick={() => setOpen(!open)}>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell>{name}</TableCell>
+        <TableCell align="right">{regulators.length}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell colSpan={3} sx={{ py: 0 }}>
+          <Collapse in={open} unmountOnExit>
+            <Box sx={{ py: 1, px: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
+              {regulators.map((refseq) => (
+                <Link key={refseq} to={`/database/${refseq}`} style={{ marginRight: 8 }}>
+                  {refseq}
+                </Link>
+              ))}
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+}
+
 export default function BrowsePage() {
+  const [view, setView] = useState("regulator");
+
+  const [ligandMap, setLigandMap]     = useState(null);
+  const [ligandLoading, setLigandLoading] = useState(false);
+  const [ligandError, setLigandError] = useState(null);
+
+  const [page, setPage]               = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [search, setSearch]           = useState("");
+
   const status = useDBStore(s => s.status);
   const error  = useDBStore(s => s.error);
   const data   = useDBStore(s => s.data);
@@ -25,6 +72,18 @@ export default function BrowsePage() {
 
   // Defensive autoload (if you didn't mount <DBLoader />)
   useEffect(() => { if (status === "idle") loadDB("/ligifyDB.json"); }, [status, loadDB]);
+
+  useEffect(() => {
+    if (view !== "ligand" || ligandMap !== null || ligandLoading) return;
+    setLigandLoading(true);
+    fetch("https://groov-api.com/ligify-ligand-map.json")
+      .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+      .then(d => { setLigandMap(d); setLigandLoading(false); })
+      .catch(e => { setLigandError(e.message); setLigandLoading(false); });
+  }, [view, ligandMap, ligandLoading]);
+
+  // Reset page when search changes
+  useEffect(() => setPage(0), [search]);
 
   // --- Build safe rows with a guaranteed id ---
   const rows = useMemo(() => {
@@ -128,53 +187,126 @@ export default function BrowsePage() {
     },
   ], []);
 
+  const filteredLigands = useMemo(() => {
+    if (!ligandMap) return [];
+    const entries = Object.entries(ligandMap);
+    if (!search.trim()) return entries;
+    const q = search.toLowerCase();
+    return entries.filter(([name]) => name.toLowerCase().includes(q));
+  }, [ligandMap, search]);
+
+  const pagedLigands = useMemo(
+    () => filteredLigands.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    [filteredLigands, page, rowsPerPage]
+  );
+
   if (status === "loading") return <Box sx={{ p: 2 }}><LinearProgress /></Box>;
   if (status === "error")   return <Box sx={{ p: 2 }}><Alert severity="error">{String(error)}</Alert></Box>;
 
   return (
     <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center" sx={{ mt: 5 }}>
       <Box sx={{ width: { xs: '90%', sm: '80%', md: '70%', lg: '60%' } }}>
-        <Typography textAlign="center" sx={{ fontSize: { xs:18, sm: 24, md: 32 }, mb: { xs: 2, sm: 3, md: 5 }, mt: { xs: 0, sm: 0, md: "5%" }, fontWeight: 500 }}>
+        <Typography textAlign="center" sx={{ fontSize: { xs:18, sm: 24, md: 32 }, mb: { xs: 2, sm: 3, md: 3 }, mt: { xs: 0, sm: 0, md: "5%" }, fontWeight: 500 }}>
           Predicted Biosensors
         </Typography>
 
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          getRowId={(row) => row.id}  // id is guaranteed above
-          autoHeight
-          pageSizeOptions={[10, 20, 30]}
-          density="compact"
-          sx={{ fontSize: { xs: 12, sm: 16 } }}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 10 } },
-            columns: {
-              columnVisibilityModel: {
-                id: false,
-                uniprot: false,
-                taxon: false,
-                organismKingdom: false,
-                organismPhylum: false,
-                organismFamily: false,
-                organismClass: false,
-                organismOrder: false,
-                organismGenus: false,
-                groovDB: false,
-                enzymeDistance: false,
-                additionalRegulators: false,
-                operonLength: false,
-                enzyme_uniprot: false,
+        {/* Toggle */}
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          <ToggleButtonGroup
+            value={view}
+            exclusive
+            onChange={(_, val) => { if (val) setView(val); }}
+            size="small"
+          >
+            <ToggleButton value="regulator">Regulator</ToggleButton>
+            <ToggleButton value="ligand">Ligand</ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+
+        {/* Regulator table */}
+        {view === "regulator" && (
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            getRowId={(row) => row.id}
+            autoHeight
+            pageSizeOptions={[10, 20, 30]}
+            density="compact"
+            sx={{ fontSize: { xs: 12, sm: 16 } }}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 10 } },
+              columns: {
+                columnVisibilityModel: {
+                  id: false,
+                  uniprot: false,
+                  taxon: false,
+                  organismKingdom: false,
+                  organismPhylum: false,
+                  organismFamily: false,
+                  organismClass: false,
+                  organismOrder: false,
+                  organismGenus: false,
+                  groovDB: false,
+                  enzymeDistance: false,
+                  additionalRegulators: false,
+                  operonLength: false,
+                  enzyme_uniprot: false,
+                },
               },
-            },
-          }}
-          showToolbar
-          slotProps={{
-            toolbar: {
-              printOptions: { disableToolbarButton: true },
-              csvOptions: { disableToolbarButton: true },
-            },
-          }}
-        />
+            }}
+            showToolbar
+            slotProps={{
+              toolbar: {
+                printOptions: { disableToolbarButton: true },
+                csvOptions: { disableToolbarButton: true },
+              },
+            }}
+          />
+        )}
+
+        {/* Ligand table */}
+        {view === "ligand" && (
+          <>
+            {ligandLoading && <LinearProgress />}
+            {ligandError && <Alert severity="error">{ligandError}</Alert>}
+            {ligandMap && (
+              <>
+                <TextField
+                  size="small"
+                  placeholder="Search ligands…"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  sx={{ mb: 1, width: 280 }}
+                />
+                <TableContainer component={Paper} variant="outlined">
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell width={48} />
+                        <TableCell><strong>Ligand</strong></TableCell>
+                        <TableCell align="right"><strong>Regulators</strong></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {pagedLigands.map(([name, regulators]) => (
+                        <LigandRow key={name} name={name} regulators={regulators} />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  component="div"
+                  count={filteredLigands.length}
+                  page={page}
+                  onPageChange={(_, p) => setPage(p)}
+                  rowsPerPage={rowsPerPage}
+                  onRowsPerPageChange={e => { setRowsPerPage(+e.target.value); setPage(0); }}
+                  rowsPerPageOptions={[10, 25, 50]}
+                />
+              </>
+            )}
+          </>
+        )}
       </Box>
     </Grid>
   );
