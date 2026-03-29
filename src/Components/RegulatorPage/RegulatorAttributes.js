@@ -32,7 +32,7 @@ import {
 
     // format the data to display regulator attributes
           var reg_attr = {}
-    {data.protein_id !== "None" ? 
+    {data.protein_id ? 
       reg_attr = {  "Annotation": {"name": data.annotation, "link": "None"}, 
                         "Protein ID": {"name": data.protein_id, "link": "https://www.ncbi.nlm.nih.gov/protein/"+(data.protein_id).toString()}, 
                         "Uniprot ID": {"name": uniprot_name, "link":uniprot_link},
