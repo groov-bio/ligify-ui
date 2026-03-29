@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -15,7 +15,9 @@ import {
   ListItemButton,
   ListItemText,
   Alert,
-  Chip
+  Chip,
+  Autocomplete,
+  Button
 } from '@mui/material';
 
 
@@ -28,39 +30,75 @@ export default function Search() {
 
 
   const [smiles, setSmiles] = useState('');
-  const [threshold, setThreshold] = useState(0.2);
-  const [maxResults, setMaxResults] = useState(10);
+  const threshold = 0.2;
+  const maxResults = 10;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
 
+  // Chemical name search state
+  const [selectedChem, setSelectedChem] = useState(null);
+  const [chemInputValue, setChemInputValue] = useState('');
+  const [chemMap, setChemMap] = useState([]);
 
+  useEffect(() => {
+    fetch('https://groov-api.com/ligify_chem_map.json')
+      .then(res => res.json())
+      .then(data => setChemMap(data))
+      .catch(() => {}); // fail silently; autocomplete just stays empty
+  }, []);
+
+  const chemFilterOptions = (options, { inputValue }) => {
+    const lower = inputValue.toLowerCase().trim();
+    if (!lower) return options.slice(0, 20);
+
+    const scored = [];
+    for (const o of options) {
+      const name = o.name.toLowerCase();
+      const iupac = o.iupac.toLowerCase();
+      let score;
+      if (name === lower)              score = 0; // exact
+      else if (name.startsWith(lower)) score = 1; // name starts-with
+      else if (iupac.startsWith(lower))score = 2; // iupac starts-with
+      else if (name.includes(lower))   score = 3; // name contains
+      else if (iupac.includes(lower))  score = 4; // iupac contains
+      else continue;
+      scored.push({ score, o });
+    }
+
+    scored.sort((a, b) => a.score - b.score || a.o.name.localeCompare(b.o.name));
+    return scored.slice(0, 50).map(s => s.o);
+  };
 
 
   const navigate = useNavigate();
   const handleSubmit = (event) => {
-    event.preventDefault();                       // prevent page reload
+    event.preventDefault();
     const data = new FormData(event.currentTarget);
     const refseq = (data.get("refseq") || "").trim();
-    const smiles = (data.get("smiles") || "").trim();
+    const smilesVal = (data.get("smiles") || "").trim();
 
     if (refseq) {
       navigate(`/database/${encodeURIComponent(refseq)}`);
     }
-    if (smiles) {
-      setSmiles(smiles);
-      handleLigandSearch(smiles);
-
-      // navigate(`/database/${encodeURIComponent(smiles)}`);
+    if (smilesVal) {
+      setSmiles(smilesVal);
+      handleLigandSearch(smilesVal);
     }
   };
 
+  const handleChemNameSearch = () => {
+    if (!selectedChem) {
+      setError('Please select a chemical from the list');
+      return;
+    }
+    handleLigandSearch(selectedChem.smiles);
+  };
 
 
   // Ligand search function
-
   const handleLigandSearch = async (smilesInput = smiles) => {
     if (!smilesInput.trim()) {
       setError('Please enter a SMILES string');
@@ -71,7 +109,7 @@ export default function Search() {
     setError('');
     setSearchResults([]);
     setHasSearched(true);
-    
+
     try {
       const response = await fetch(
         'https://api.groov.bio/ligifyLigandSearch',
@@ -93,33 +131,23 @@ export default function Search() {
       }
 
       const data = await response.json();
-      
-      // Format results
-      if (data.results && data.results.length > 0) {
-        
-        const formattedResults = data.results.map(result => {
-          // const family = rawData[result.sensorId].family;
-          // const alias = rawData[result.sensorId].alias;
 
-          return {
-            sensorId: result.regulatorId,
-            ligandId: result.ligandId,
-            name: result.name || result.ligandId,
-            similarity: result.similarity,
-            // link: `/database/${family}/${alias}`,
-            label: `${result.name || result.ligandId}`
-          }
-        });
+      if (data.results && data.results.length > 0) {
+        const formattedResults = data.results.map(result => ({
+          sensorId: result.regulatorId,
+          ligandId: result.ligandId,
+          name: result.name || result.ligandId,
+          similarity: result.similarity,
+          label: `${result.name || result.ligandId}`
+        }));
 
         console.log(formattedResults);
-
         setSearchResults(formattedResults);
-        
       } else {
         setSearchResults([]);
       }
-    } catch (error) {
-      setError('Error searching: ' + error.message);
+    } catch (err) {
+      setError('Error searching: ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -134,7 +162,7 @@ export default function Search() {
           <Tabs value={searchTab} onChange={handleTabChange} centered>
             <Tab label="Ligand" />
             <Tab label="RefSeq" />
-            {/* <Tab label="Sequence" /> */}
+            <Tab label="Chemical Name" />
           </Tabs>
         </Box>
 
@@ -150,7 +178,7 @@ export default function Search() {
                   />
           </Box>
 
-        ) : (
+        ) : searchTab === 1 ? (
 
           <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
             <TextField
@@ -162,31 +190,47 @@ export default function Search() {
                   />
           </Box>
 
-        ) 
+        ) : (
 
-        // Eventually enable "search via sequencing" using BLAST
+          <Box>
+            <Autocomplete
+              options={chemMap}
+              getOptionLabel={(option) => option.name}
+              filterOptions={chemFilterOptions}
+              value={selectedChem}
+              onChange={(_, newValue) => setSelectedChem(newValue)}
+              inputValue={chemInputValue}
+              onInputChange={(_, newInputValue) => setChemInputValue(newInputValue)}
+              loading={chemMap.length === 0}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Chemical Name"
+                  variant="outlined"
+                  placeholder="e.g., glucose, caffeine, ATP"
+                  sx={{ width: '100%' }}
+                />
+              )}
+            />
+            {selectedChem && (
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                SMILES: {selectedChem.smiles}
+              </Typography>
+            )}
+            <Button
+              variant="contained"
+              onClick={handleChemNameSearch}
+              disabled={!selectedChem || loading}
+              sx={{ mt: 1.5, width: '100%' }}
+            >
+              Search
+            </Button>
+          </Box>
 
-      //   : (
+        )}
 
-      // <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
-      //     <TextField
-      //             name="seq"
-      //             sx={{ width: '100%' }}
-      //             label= 'Regulator sequence'
-      //             variant="outlined"
-      //             placeholder="Enter sequence (e.g., MPEVQTDHPETAELSKP...)"
-      //           />
-      // </Box>
-      //   )
-      }    
-
-      {/* Results Area - Fixed Height Container */}
-      <Box sx={{ 
-        mt: 2, 
-        // minHeight: searchTab === 1 ? '400px' : '0px',
-        maxHeight: '500px',
-        overflow: 'auto'
-      }}>
+      {/* Results Area */}
+      <Box sx={{ mt: 2, maxHeight: '500px', overflow: 'auto' }}>
         {/* Loading State */}
         {loading && (
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
@@ -215,7 +259,7 @@ export default function Search() {
                 <Card key={index} sx={{ mb: 1 }}>
                   <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
                     <ListItem disablePadding>
-                      <ListItemButton 
+                      <ListItemButton
                         onClick={() => navigate(`/database/${result.sensorId}`)}
                         sx={{ p: 0 }}
                       >
@@ -223,10 +267,10 @@ export default function Search() {
                           primary={
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                               <Typography variant="subtitle1">{result.name}</Typography>
-                              <Chip 
-                                label={`${(result.similarity * 100).toFixed(1)}% similar`} 
-                                size="small" 
-                                color="primary" 
+                              <Chip
+                                label={`${(result.similarity * 100).toFixed(1)}% similar`}
+                                size="small"
+                                color="primary"
                                 variant="outlined"
                               />
                             </Box>
