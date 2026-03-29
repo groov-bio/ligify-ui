@@ -166,9 +166,9 @@ export default function Search() {
     <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <Tabs value={searchTab} onChange={handleTabChange} centered>
-            <Tab label="Ligand" />
-            <Tab label="RefSeq" />
-            <Tab label="Chemical Name" />
+            <Tab label="SMILES" />
+            {/* <Tab label="RefSeq" /> */}
+            <Tab label="Name" />
           </Tabs>
         </Box>
 
@@ -178,25 +178,27 @@ export default function Search() {
             <TextField
                     name="smiles"
                     sx={{ width: '100%' }}
-                    label= 'Ligand SMILES'
+                    label= 'Chemical SMILES'
                     variant="outlined"
                     placeholder="Enter SMILES (e.g., C1=CC(=C(C=C1C(=O)O)O)[O-])"
                   />
           </Box>
 
-        ) : searchTab === 1 ? (
+        ) 
+        // : searchTab === 1 ? (
 
-          <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
-            <TextField
-                    name="refseq"
-                    sx={{ width: '100%' }}
-                    label= 'RefSeq ID'
-                    variant="outlined"
-                    placeholder="Enter RefSeq (e.g., WP_003963520.1)"
-                  />
-          </Box>
+        //   <Box component="form" noValidate justify="center" onSubmit={handleSubmit}>
+        //     <TextField
+        //             name="refseq"
+        //             sx={{ width: '100%' }}
+        //             label= 'RefSeq ID'
+        //             variant="outlined"
+        //             placeholder="Enter RefSeq (e.g., WP_003963520.1)"
+        //           />
+        //   </Box>
 
-        ) : (
+        // ) 
+        : (
 
           <Box>
             <Autocomplete
@@ -208,6 +210,7 @@ export default function Search() {
               inputValue={chemInputValue}
               onInputChange={(_, newInputValue) => setChemInputValue(newInputValue)}
               loading={chemMap.length === 0}
+              openOnFocus={false}
               renderInput={(params) => (
                 <TextField
                   {...params}
