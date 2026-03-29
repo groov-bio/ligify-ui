@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -49,6 +49,14 @@ export default function Search() {
       .then(data => setChemMap(data))
       .catch(() => {}); // fail silently; autocomplete just stays empty
   }, []);
+
+  const iupacToName = useMemo(() => {
+    const map = {};
+    for (const entry of chemMap) {
+      if (entry.iupac) map[entry.iupac.toLowerCase()] = entry.name;
+    }
+    return map;
+  }, [chemMap]);
 
   const chemFilterOptions = (options, { inputValue }) => {
     const lower = inputValue.toLowerCase().trim();
@@ -133,13 +141,17 @@ export default function Search() {
       const data = await response.json();
 
       if (data.results && data.results.length > 0) {
-        const formattedResults = data.results.map(result => ({
-          sensorId: result.regulatorId,
-          ligandId: result.ligandId,
-          name: result.name || result.ligandId,
-          similarity: result.similarity,
-          label: `${result.name || result.ligandId}`
-        }));
+        const formattedResults = data.results.map(result => {
+          const apiName = result.name || result.ligandId;
+          const commonName = iupacToName[apiName?.toLowerCase()] || apiName;
+          return {
+            sensorId: result.regulatorId,
+            ligandId: result.ligandId,
+            name: commonName,
+            similarity: result.similarity,
+            label: commonName
+          };
+        });
 
         console.log(formattedResults);
         setSearchResults(formattedResults);
