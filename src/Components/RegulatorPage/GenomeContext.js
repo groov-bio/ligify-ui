@@ -201,7 +201,7 @@ export default function GenomeContext({ data }) {
             {/* Genome ID tag */}
             <Grid size={12} mb={3}>
               <Grid container>
-                <Grid size={{xs:2, sm:1}} textAlign="right">
+                <Grid size={{xs:2, sm:2}} textAlign="right">
                   <Typography
                     component="span"
                     width="100px"
@@ -215,7 +215,7 @@ export default function GenomeContext({ data }) {
                   </Typography>
                 </Grid>
 
-                <Grid size={{xs:5, sm:4}} textAlign="left" ml={'15px'}>
+                <Grid size={{xs:5, sm:4}} textAlign="left" ml={'10px'}>
                   <a  
                     href={`https://www.ncbi.nlm.nih.gov/nuccore/${data.genome}`}
                     target="__blank" style={{textDecoration:"None"}}>
