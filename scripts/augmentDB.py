@@ -37,8 +37,8 @@ def get_protein_id(uniprot_id: str) -> str | None:
 
 
 # for entries that fail, fetch protein ID via entrez ipg
-from Bio import Entrez
-Entrez.email = "simonsnitz@gmail.com"
+# from Bio import Entrez
+# Entrez.email = "simonsnitz@gmail.com"
 
 def fetch_ipg_info(protein_accession: str):
     """
@@ -173,14 +173,14 @@ def fill_in_uniprotIDs():
 
 
 
-with open('ligifyDB_protID2.json', 'r') as f:
-    data = json.load(f)
+# with open('ligifyDB_protID2.json', 'r') as f:
+#     data = json.load(f)
 
-c = 0
-for reg in data:
-    if reg['uniprot_id'] == None:
-        c += 1
-print(c)
+# c = 0
+# for reg in data:
+#     if reg['uniprot_id'] == None:
+#         c += 1
+# print(c)
 
 
 # Add organism name and taxon ID
@@ -225,17 +225,63 @@ def get_refseq_metadata(refseq_id: str) -> dict:
 
 
 
+# get organism name & Tax ID based on genome ID
+from Bio import Entrez
+
+# Always set your email (NCBI requirement)
+Entrez.email = "your_email@example.com"
+
+def fetch_org_and_taxid(accession):
+    try:
+        # Step 1: Fetch the nucleotide record
+        handle = Entrez.efetch(
+            db="nucleotide",
+            id=accession,
+            rettype="gb",
+            retmode="xml"
+        )
+        records = Entrez.read(handle)
+        handle.close()
+
+        if not records:
+            raise ValueError("No records found")
+
+        record = records[0]
+
+        # Step 2: Extract organism name
+        organism = record["GBSeq_organism"]
+
+        # Step 3: Extract taxonomy info → taxon ID
+        taxon_id = None
+        for feature in record["GBSeq_feature-table"]:
+            if feature["GBFeature_key"] == "source":
+                for qualifier in feature["GBFeature_quals"]:
+                    if qualifier["GBQualifier_name"] == "db_xref":
+                        if qualifier["GBQualifier_value"].startswith("taxon:"):
+                            taxon_id = qualifier["GBQualifier_value"].split(":")[1]
+                            break
+
+        return organism, taxon_id
+
+    except Exception as e:
+        return None, f"Error: {e}"
+
+
+
+
+
 # Add the "organism name" and "taxonomy ID" from input RefSeq ID:
 def add_org_tax():
     # load the database into memory
     with open("../public/ligifyDB.json", "r") as f:
         data = json.load(f)
 
-    for i in range(2500, len(data)):
+    for i in range(2206, len(data)):
         time.sleep(0.5)
-        org_tax = get_refseq_metadata(data[i]['refseq'])
-        data[i]["organism"] = org_tax["organism"]
-        data[i]["taxon"] = org_tax["taxon"]
+        organism, taxon_id = fetch_org_and_taxid(data[i]['protein']['context']['genome'])
+        # org_tax = get_refseq_metadata(data[i]['refseq'])
+        data[i]["organism"] = organism
+        data[i]["taxon"] = taxon_id
 
         print(i)
 
@@ -243,6 +289,10 @@ def add_org_tax():
         json.dump(data,f)
 
 
+add_org_tax()
+
+
+# create fasta of all TFs for BLASTing
 def create_fasta():
     # load the database into memory
     with open("../public/ligifyDB.json", "r") as f:
@@ -292,12 +342,11 @@ def smiles_to_name(smiles: str, name_type: str = "iupac") -> str:
 
 
 from rdkit import Chem
-import requests
 from functools import lru_cache
 from chembl_webresource_client.new_client import new_client
 
-# Reuse HTTP connection
-session = requests.Session()
+# # Reuse HTTP connection
+# session = requests.Session()
 
 def canonicalize(smiles: str) -> str:
     mol = Chem.MolFromSmiles(smiles)
