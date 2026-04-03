@@ -37,8 +37,8 @@ def get_protein_id(uniprot_id: str) -> str | None:
 
 
 # for entries that fail, fetch protein ID via entrez ipg
-from Bio import Entrez
-Entrez.email = "simonsnitz@gmail.com"
+# from Bio import Entrez
+# Entrez.email = "simonsnitz@gmail.com"
 
 def fetch_ipg_info(protein_accession: str):
     """
@@ -173,14 +173,14 @@ def fill_in_uniprotIDs():
 
 
 
-with open('ligifyDB_protID2.json', 'r') as f:
-    data = json.load(f)
+# with open('ligifyDB_protID2.json', 'r') as f:
+#     data = json.load(f)
 
-c = 0
-for reg in data:
-    if reg['uniprot_id'] == None:
-        c += 1
-print(c)
+# c = 0
+# for reg in data:
+#     if reg['uniprot_id'] == None:
+#         c += 1
+# print(c)
 
 
 # Add organism name and taxon ID
@@ -225,17 +225,63 @@ def get_refseq_metadata(refseq_id: str) -> dict:
 
 
 
+# get organism name & Tax ID based on genome ID
+from Bio import Entrez
+
+# Always set your email (NCBI requirement)
+Entrez.email = "your_email@example.com"
+
+def fetch_org_and_taxid(accession):
+    try:
+        # Step 1: Fetch the nucleotide record
+        handle = Entrez.efetch(
+            db="nucleotide",
+            id=accession,
+            rettype="gb",
+            retmode="xml"
+        )
+        records = Entrez.read(handle)
+        handle.close()
+
+        if not records:
+            raise ValueError("No records found")
+
+        record = records[0]
+
+        # Step 2: Extract organism name
+        organism = record["GBSeq_organism"]
+
+        # Step 3: Extract taxonomy info → taxon ID
+        taxon_id = None
+        for feature in record["GBSeq_feature-table"]:
+            if feature["GBFeature_key"] == "source":
+                for qualifier in feature["GBFeature_quals"]:
+                    if qualifier["GBQualifier_name"] == "db_xref":
+                        if qualifier["GBQualifier_value"].startswith("taxon:"):
+                            taxon_id = qualifier["GBQualifier_value"].split(":")[1]
+                            break
+
+        return organism, taxon_id
+
+    except Exception as e:
+        return None, f"Error: {e}"
+
+
+
+
+
 # Add the "organism name" and "taxonomy ID" from input RefSeq ID:
 def add_org_tax():
     # load the database into memory
     with open("../public/ligifyDB.json", "r") as f:
         data = json.load(f)
 
-    for i in range(2500, len(data)):
+    for i in range(0, len(data)):
         time.sleep(0.5)
-        org_tax = get_refseq_metadata(data[i]['refseq'])
-        data[i]["organism"] = org_tax["organism"]
-        data[i]["taxon"] = org_tax["taxon"]
+        organism, taxon_id = fetch_org_and_taxid(data[i]['protein']['context']['genome'])
+        # org_tax = get_refseq_metadata(data[i]['refseq'])
+        data[i]["organism"] = organism
+        data[i]["taxon"] = taxon_id
 
         print(i)
 
@@ -243,6 +289,100 @@ def add_org_tax():
         json.dump(data,f)
 
 
+# add_org_tax()
+
+
+
+# remove blacklisted chemicals
+# water (15377), hydron (15378), dioxygen (15379), hydrogen peroxide (16240), nitrite (16301), carbon monoxide (17245), sulfite (17359), bicarbonate (17544), nitrate (17632), hydrosulfide (29919), ATP(4-) (30616), dTTP(4−) (37568), hydrogen phosphate (43474), Uridine triphosphase (46398), CoA (57287), FMNH2 (57618), UDP-α-D-glucuronate(3−) (58053)
+# ATP (1102), Phosphate (837), ADP (836), Diphosphate (626), Ammonium (384), APAD (358), Carboxy-SAM (284), Coenzyme A (273), Oxygen (270), Acetyl CoA (209),  5-phosphoribosyl-PP (154), and D-glyceraldehyde 3-phosphate (130)
+
+# remove:
+    # (hydroxy(oxido)phosphoryl) phosphate 626
+    # Acetyl-coa(4-) 209
+    # Coenzyme a(4-) 273
+    # Oxygen 270
+    # Atp(4-) 1102
+    # Hydrogen phosphate 837
+    # Adp(3-) 836
+    # (r)-s-adenosyl-l-methionine 284
+    # D-glyceraldehyde 3-phosphate(2-) 130
+    # Amp(2-) 358
+    # Ammonium 384
+    # 5-o-phosphonato-1-o-((phosphonatooxy)phosphinato)pentofuranose 154
+
+
+# This should be L-glutamine?    
+    # (2s)-5-amino-2-ammonio-5-oxopentanoate 161
+
+
+# Flag entries with 1 word for their organism name
+    # And try to update their org name / tax ID
+def fix_orgs():
+    with open("../public/ligifyDB.json", "r") as f:
+        newDB = json.load(f)
+    # Cnew = 0
+    for i in range(0, len(newDB)):
+        if len(newDB[i]["organism"].split(" ")) < 2:
+            # Cnew += 1
+            organism, taxon_id = fetch_org_and_taxid(newDB[i]['protein']['context']['genome'])
+            if len(organism.split(" ")) > 2:
+                print('fixed for '+str(i))
+                print(organism, taxon_id)
+                newDB[i]["organism"] = organism
+                newDB[i]["taxon"] = taxon_id
+                with open("../public/ligifyDB.json", "w") as f:
+                    json.dump(newDB, f)
+            else:
+                print("failed to fix for "+str(i))
+fix_orgs()
+
+
+
+
+
+
+blacklisted_ligands = [
+    "(hydroxy(oxido)phosphoryl) phosphate",
+    "Acetyl-coa(4-)",
+    "Coenzyme a(4-)",
+    "Oxygen",
+    "Atp(4-)",
+    "Hydrogen phosphate",
+    "Adp(3-)",
+    "(r)-s-adenosyl-l-methionine",
+    "D-glyceraldehyde 3-phosphate(2-)",
+    "Amp(2-)",
+    "Ammonium",
+    "5-o-phosphonato-1-o-((phosphonatooxy)phosphinato)pentofuranose",
+    ]
+
+def remove_blacklisted_ligands():
+    with open("../public/ligifyDB.json", "r") as f:
+        DB = json.load(f)
+    for i in DB:
+        i["candidate_ligands"] = [
+            ligand for ligand in i["candidate_ligands"]
+            if ligand["name"] not in blacklisted_ligands
+        ]
+    with open("../public/ligifyDB.json", "w") as f:
+        json.dump(DB, f)
+        print('removed blacklisted ligands from DB')
+
+# chemicals = {}
+# for i in DB:
+#     for c in i["candidate_ligands"]:
+#         if c['name'] not in chemicals:
+#             chemicals[c["name"]] = 1
+#         else:
+#             chemicals[c["name"]] += 1
+# for i in chemicals:
+#     if chemicals[i] >100:
+#         print(i, chemicals[i])
+
+
+
+# create fasta of all TFs for BLASTing
 def create_fasta():
     # load the database into memory
     with open("../public/ligifyDB.json", "r") as f:
@@ -291,157 +431,156 @@ def smiles_to_name(smiles: str, name_type: str = "iupac") -> str:
 
 
 
-from rdkit import Chem
-import requests
-from functools import lru_cache
-from chembl_webresource_client.new_client import new_client
+# from rdkit import Chem
+# from functools import lru_cache
+# from chembl_webresource_client.new_client import new_client
 
-# Reuse HTTP connection
-session = requests.Session()
+# # # Reuse HTTP connection
+# # session = requests.Session()
 
-def canonicalize(smiles: str) -> str:
-    mol = Chem.MolFromSmiles(smiles)
-    if mol is None:
-        raise ValueError("Invalid SMILES")
-    return Chem.MolToSmiles(mol)
+# def canonicalize(smiles: str) -> str:
+#     mol = Chem.MolFromSmiles(smiles)
+#     if mol is None:
+#         raise ValueError("Invalid SMILES")
+#     return Chem.MolToSmiles(mol)
 
-# --- PubChem (fast primary) ---
-@lru_cache(maxsize=10000)
-def query_pubchem(smiles: str):
-    url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/{smiles}/property/Title/JSON"
+# # --- PubChem (fast primary) ---
+# @lru_cache(maxsize=10000)
+# def query_pubchem(smiles: str):
+#     url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/{smiles}/property/Title/JSON"
 
-    try:
-        r = session.get(url, timeout=3)
-        if r.status_code != 200:
-            return None
+#     try:
+#         r = session.get(url, timeout=3)
+#         if r.status_code != 200:
+#             return None
 
-        data = r.json()
-        return data["PropertyTable"]["Properties"][0].get("Title")
+#         data = r.json()
+#         return data["PropertyTable"]["Properties"][0].get("Title")
 
-    except Exception:
-        return None
+#     except Exception:
+#         return None
 
-# --- ChEMBL (fallback only) ---
-@lru_cache(maxsize=10000)
-def query_chembl(smiles: str):
-    molecule = new_client.molecule
+# # --- ChEMBL (fallback only) ---
+# @lru_cache(maxsize=10000)
+# def query_chembl(smiles: str):
+#     molecule = new_client.molecule
 
-    results = molecule.filter(
-        molecule_structures__canonical_smiles=smiles
-    )
+#     results = molecule.filter(
+#         molecule_structures__canonical_smiles=smiles
+#     )
 
-    for res in results:
-        if res.get("pref_name"):
-            return res["pref_name"]
+#     for res in results:
+#         if res.get("pref_name"):
+#             return res["pref_name"]
 
-    return None
+#     return None
 
-# --- FAST main function ---
-def smiles_to_name(smiles: str):
-    smiles = canonicalize(smiles)
+# # --- FAST main function ---
+# def smiles_to_name(smiles: str):
+#     smiles = canonicalize(smiles)
 
-    # 1. Try PubChem first (fast)
-    name = query_pubchem(smiles)
-    if name:
-        return name
+#     # 1. Try PubChem first (fast)
+#     name = query_pubchem(smiles)
+#     if name:
+#         return name
 
-    # 2. Fallback to ChEMBL (slower)
-    name = query_chembl(smiles)
-    if name:
-        return name
+#     # 2. Fallback to ChEMBL (slower)
+#     name = query_chembl(smiles)
+#     if name:
+#         return name
 
-    return None
-
+#     return None
 
 
 
 
-# Create dictionary with all chemicals
-def create_chemMap_base():
-    with open("../public/ligifyDB.json", "r") as f:
-        data = json.load(f)
 
-    chemMap = []
-    for i in data:
-        for chem in i["candidate_ligands"]:
-            entry = {
-                "iupac": chem["name"],
-                "smiles": chem["smiles"]
-            }
-            if entry in chemMap:
-                pass
-            else:
-                chemMap.append(entry)
+# # Create dictionary with all chemicals
+# def create_chemMap_base():
+#     with open("../public/ligifyDB.json", "r") as f:
+#         data = json.load(f)
 
-    with open("chemMap3.json", "w") as f:
-        json.dump(chemMap, f)
-    print('done')
+#     chemMap = []
+#     for i in data:
+#         for chem in i["candidate_ligands"]:
+#             entry = {
+#                 "iupac": chem["name"],
+#                 "smiles": chem["smiles"]
+#             }
+#             if entry in chemMap:
+#                 pass
+#             else:
+#                 chemMap.append(entry)
 
-
-# First function to add common names
-def add_commonNames():
-    with open("chemMap3.json", "r") as f:
-        data = json.load(f)
-
-    c = 0
-    for i in data:
-        if "name" in i:
-            c += 1
-        else:
-            try:
-                i['name'] = smiles_to_name(i['smiles']).capitalize()
-            except:
-                i['name'] = None
-            with open("chemMap4.json", "w") as f:
-                json.dump(data, f)
-            print(str(c)+": file saved")
-            c += 1
+#     with open("chemMap3.json", "w") as f:
+#         json.dump(chemMap, f)
+#     print('done')
 
 
+# # First function to add common names
+# def add_commonNames():
+#     with open("chemMap3.json", "r") as f:
+#         data = json.load(f)
+
+#     c = 0
+#     for i in data:
+#         if "name" in i:
+#             c += 1
+#         else:
+#             try:
+#                 i['name'] = smiles_to_name(i['smiles']).capitalize()
+#             except:
+#                 i['name'] = None
+#             with open("chemMap4.json", "w") as f:
+#                 json.dump(data, f)
+#             print(str(c)+": file saved")
+#             c += 1
 
 
-# Run this to fill in the entries with "none" in their "name" field
-# session = requests.Session()
-def iupac_to_common_name(iupac_name: str):
-    try:
-        # Step 1: Get CID from IUPAC name
-        url_cid = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{iupac_name}/cids/JSON"
-        r = session.get(url_cid, timeout=5)
-        r.raise_for_status()
-        cid = r.json()["IdentifierList"]["CID"][0]
 
-        # Step 2: Get common name (Title)
-        url_name = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/property/Title/JSON"
-        r = session.get(url_name, timeout=5)
-        r.raise_for_status()
 
-        data = r.json()
-        return data["PropertyTable"]["Properties"][0].get("Title")
+# # Run this to fill in the entries with "none" in their "name" field
+# # session = requests.Session()
+# def iupac_to_common_name(iupac_name: str):
+#     try:
+#         # Step 1: Get CID from IUPAC name
+#         url_cid = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/{iupac_name}/cids/JSON"
+#         r = session.get(url_cid, timeout=5)
+#         r.raise_for_status()
+#         cid = r.json()["IdentifierList"]["CID"][0]
 
-    except Exception:
-        return None
+#         # Step 2: Get common name (Title)
+#         url_name = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{cid}/property/Title/JSON"
+#         r = session.get(url_name, timeout=5)
+#         r.raise_for_status()
+
+#         data = r.json()
+#         return data["PropertyTable"]["Properties"][0].get("Title")
+
+#     except Exception:
+#         return None
     
 
-# in ligifyDB file, rename "name" to "iupac", and add new common "name" field.
-def add_ChemName_to_DB():
-    with open('../public/ligifyDB.json', 'r') as f:
-        data = json.load(f)
+# # in ligifyDB file, rename "name" to "iupac", and add new common "name" field.
+# def add_ChemName_to_DB():
+#     with open('../public/ligifyDB.json', 'r') as f:
+#         data = json.load(f)
 
-    with open('chemMap_final.json', 'r') as m:
-        chemMap = json.load(m)
+#     with open('chemMap_final.json', 'r') as m:
+#         chemMap = json.load(m)
 
-    for reg in data:
-        for chem in reg['candidate_ligands']:
-            chem['iupac'] = chem.pop('name')
-            #find common name using map
-            chemName = [i for i in chemMap if i['iupac'] == chem['iupac']][0]['name']
-            if chemName == None:
-                print('error')
-            else:
-                chem['name'] = chemName
+#     for reg in data:
+#         for chem in reg['candidate_ligands']:
+#             chem['iupac'] = chem.pop('name')
+#             #find common name using map
+#             chemName = [i for i in chemMap if i['iupac'] == chem['iupac']][0]['name']
+#             if chemName == None:
+#                 print('error')
+#             else:
+#                 chem['name'] = chemName
 
-    with open('../public/ligifyDB.json', "w") as out:
-        json.dump(data, out)
-    print('updated ligifyDB.json')
+#     with open('../public/ligifyDB.json', "w") as out:
+#         json.dump(data, out)
+#     print('updated ligifyDB.json')
 
-# add_ChemName_to_DB()
+# # add_ChemName_to_DB()

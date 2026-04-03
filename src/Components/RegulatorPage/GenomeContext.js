@@ -201,13 +201,13 @@ export default function GenomeContext({ data }) {
             {/* Genome ID tag */}
             <Grid size={12} mb={3}>
               <Grid container>
-                <Grid size={{xs:2, sm:1}} textAlign="right">
+                <Grid size={{xs:3.5, sm:2.5, md: 2}} textAlign="right">
                   <Typography
                     component="span"
                     width="100px"
                     sx={{
-                      fontSize: { xs: 14, sm: 16, md: 16 },
-                      paddingRight: '15px',
+                      fontSize: { xs: 14, sm: 14, md: 16 },
+                      paddingRight: '10px',
                       borderRight: '2px solid #0084ff',
                     }}
                   >
@@ -215,7 +215,7 @@ export default function GenomeContext({ data }) {
                   </Typography>
                 </Grid>
 
-                <Grid size={{xs:5, sm:4}} textAlign="left" ml={'15px'}>
+                <Grid size={{xs:5, sm:4}} textAlign="left" ml={'10px'}>
                   <a  
                     href={`https://www.ncbi.nlm.nih.gov/nuccore/${data.genome}`}
                     target="__blank" style={{textDecoration:"None"}}>
@@ -223,8 +223,7 @@ export default function GenomeContext({ data }) {
                     component="span"
 
                     width="100px"
-                    sx={{ fontSize: { xs: 14, sm: 16, md: 16 },
-                          paddingLeft: {xs:0, sm:3, md:1.5}  }}
+                    sx={{ fontSize: { xs: 14, sm: 14, md: 16 } }}
                   >
                     {data.genome}
                   </Typography>
