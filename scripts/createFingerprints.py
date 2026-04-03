@@ -10,7 +10,7 @@ from rdkit.Chem import rdFingerprintGenerator
 
 # Set base directory
 BASE_DIR = Path(os.path.dirname(os.path.abspath(__file__))).parent
-LIGIFY_DB_FILE = BASE_DIR / "src" / "ligifyDB.json"
+LIGIFY_DB_FILE = BASE_DIR / "public" / "ligifyDB.json"
 OUTPUT_DIR = BASE_DIR / "fingerprints"
 OUTPUT_FILE = OUTPUT_DIR / "fingerprints.json"
 GZIPPED_OUTPUT = OUTPUT_DIR / "fingerprints.json.gz"

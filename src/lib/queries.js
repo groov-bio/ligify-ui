@@ -7,7 +7,7 @@ const fetchJson = (url) =>
 export const useChemMap = () =>
   useQuery({
     queryKey: ['chemMap'],
-    queryFn: () => fetchJson('https://groov-api.com/ligify_chem_map2.json'),
+    queryFn: () => fetchJson('https://groov-api.com/ligify_chem_map.json'),
     staleTime: Infinity,
   });
 
@@ -15,7 +15,7 @@ export const useChemMap = () =>
 export const useLigandMap = () =>
   useQuery({
     queryKey: ['ligandMap'],
-    queryFn: () => fetchJson('https://groov-api.com/ligify-ligand-map2.json'),
+    queryFn: () => fetchJson('https://groov-api.com/ligify-ligand-map.json'),
     staleTime: Infinity,
   });
 
